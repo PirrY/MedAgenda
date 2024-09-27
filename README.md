@@ -1,7 +1,5 @@
-# Documento de Visión
-
-## MedAgenda
-
+# MedAgenda
+## Repositorio oficial de MedAgenda
 **Por**: Santiago Jiménez Cotrini, Miguel Suárez Obando, Diana Sofía Paque, Daniel Giraldo Valencia
 
 ### OBJETIVOS
