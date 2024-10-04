@@ -7,12 +7,11 @@ export default function Header() {
         <nav>
             <img src="/src/img/logo.jpeg" alt="" height={100} width={100}/>
             <section id='section1'>
-              <p>Servicios Medicos</p>
-              <p>Medios de contacto</p>
+              <p>La Solución Integral para la Gestión de tu Clínica</p>
             </section>
             <section id='section2'>
-                <button>Login</button>
-                <button>Register</button>
+                <button>Iniciar Sesión</button>
+                <button>Registrarse</button>
             </section>
         </nav>
     </header>

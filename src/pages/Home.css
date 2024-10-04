@@ -1,10 +1,96 @@
-.home{
+/* Elimina el espacio en la parte superior del logo */
+.home {
     background-image: url("/src/img/fondo.jpg");
     background-size: cover;
-    height: 200vh; 
-    flex-direction: column; 
-    h1 {
-        color: rgb(51, 46, 46);
-        text-align: center;
-    }
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0; /* Elimina cualquier margen superior */
+    padding: 0; /* Asegura que no haya espacio interno */
+}
+
+.recuadro {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(213, 230, 240, 0.9); /* Fondo transparente */
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 1000px;
+    width: 100%;
+    margin: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    border: 2px dotted #1e262b; /* Color y estilo del borde */
+    background-image: url('/src/img/ritmo-cardiaco.png');
+    background-size: 400px;
+    background-position: 180px 200px;
+    background-repeat: no-repeat;
+}
+
+.text-content h1,
+.text-content button,
+.image-content img {
+    position: relative;
+    z-index: 2; /* Asegura que estén sobre el fondo */
+}
+
+/* Contenido del texto */
+.text-content {
+    max-width: 50%;
+    margin-top: 1px;
+}
+
+.text-content h1 {
+    color: #003366;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.text-content p {
+    color: #008080;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+.text-content button {
+    padding: 10px 40px;
+    background-color: #007acc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.text-content button:hover {
+    background-color: #005fa3;
+}
+
+/* Imagen del médico */
+.image-content img {
+    max-width: 400px;
+    border-radius: 10px;
+}
+
+/* Ajusta el tamaño del recuadro del logo */
+.image-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 400px; 
+    height: 400px;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+/* Estilo para el ícono de la frecuencia cardiaca */
+.frec-cardiaca {
+    margin-top: 10px; /* Espacio entre el botón y el ícono */
+    max-width: 100px; /* Ajusta el tamaño */
+    height: auto;
 }
