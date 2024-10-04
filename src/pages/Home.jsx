@@ -1,5 +1,6 @@
 import React from 'react';
 import Header from '../components/molecules/Header';
+import Footer from '../components/molecules/Footer';
 import './Home.css';
 
 export function Home() {
@@ -16,6 +17,7 @@ export function Home() {
           <img src="/src/img/imgMedicos.jpg" alt="Doctor" />
         </div>
       </div>
+      <Footer/>
     </div>
   );
 }
