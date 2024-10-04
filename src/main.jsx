@@ -9,7 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import App from './App.jsx'
 
 const router = createBrowserRouter([
-  { path: '/', element: <Home/>},
+  { path: '/Home', element: <Home/>},
   { path: '/Account', element: <Account/>},
   { path: '/Login', element: <Login/>},
   { path: '/Register', element: <Register/>},

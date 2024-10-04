@@ -5,6 +5,11 @@ import SearchBar from './SearchBar';
 
 export default function Header() {
   const navigate = useNavigate();
+
+  const goToHomePage = () => {
+    navigate('/Home');
+  };  
+
   const goToLoginPage = () => {
     navigate('/Login');
   };
@@ -16,7 +21,7 @@ export default function Header() {
     <header>
 
         <nav>
-            <img src="/src/img/logo.jpeg" alt="" height={100} width={100}/>
+            <img src="/src/img/logo.jpeg" alt="" height={100} width={100} onClick={goToHomePage}/>
             <section id='section1'>
               <p>La Solución Integral para la Gestión de tu Clínica</p>
             </section>

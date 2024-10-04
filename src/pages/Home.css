@@ -6,7 +6,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: left;
     margin-top: 0; /* Elimina cualquier margen superior */
     padding: 0; /* Asegura que no haya espacio interno */
 }
