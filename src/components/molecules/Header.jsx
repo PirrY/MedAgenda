@@ -7,7 +7,7 @@ export default function Header() {
   const navigate = useNavigate();
 
   const goToHomePage = () => {
-    navigate('/Home');
+    navigate('/');
   };  
 
   const goToLoginPage = () => {
