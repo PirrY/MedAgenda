@@ -1,0 +1,10 @@
+.home{
+    background-image: url("/src/img/fondo.jpg");
+    background-size: cover;
+    height: 200vh; 
+    flex-direction: column; 
+    h1 {
+        color: rgb(51, 46, 46);
+        text-align: center;
+    }
+}
