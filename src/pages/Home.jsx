@@ -9,7 +9,7 @@ export function Home() {
       <div className="recuadro">
         <div className="text-content">
           <h1>Bienvenido a MedAgenda</h1>
-          <button>Servicios que puedes encontrar</button>
+          <button>Servicios medicos que puedes encontrar</button>
           <button>Novedades y Medios disponibles</button>
         </div>
         <div className="image-content">
