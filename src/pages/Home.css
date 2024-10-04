@@ -1,6 +1,6 @@
 /* Elimina el espacio en la parte superior del logo */
 .home {
-    background-image: url("/src/img/fondo.jpg");
+    background-color: #99BED8;
     background-size: cover;
     min-height: 100vh;
     display: flex;

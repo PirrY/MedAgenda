@@ -7,6 +7,9 @@ export default function Header() {
   const goToLoginPage = () => {
     navigate('/Login');
   };
+  const goToRegisterPage = () => {
+    navigate('/Register');
+  }
 
   return (
     <header>
@@ -18,7 +21,7 @@ export default function Header() {
             </section>
             <section id='section2'>
                 <button onClick={goToLoginPage}>Iniciar Sesión</button>
-                <button>Registrarse</button>
+                <button onClick={goToRegisterPage}>Registrarse</button>
             </section>
         </nav>
     </header>
