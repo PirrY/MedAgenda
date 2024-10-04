@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Login.css'; // Puedes añadir estilos personalizados si lo necesitas
+import './Login.css';
 import Header from '../components/molecules/Header';
 
 export function Login() {
@@ -8,7 +8,7 @@ export function Login() {
   return (
     <div className="login-page">
       <Header/>
-      <h1>Iniciar Sesión</h1>
+      <h1 className="text-h1">Iniciar Sesión</h1>
       <div className="user-type-buttons">
         {/* Botones para elegir el tipo de usuario */}
         <button onClick={() => setUserType('patient')}>Paciente</button>
