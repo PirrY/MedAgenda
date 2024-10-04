@@ -10,9 +10,9 @@ import App from './App.jsx'
 
 const router = createBrowserRouter([
   { path: '/', element: <Home/>},
-  { path: '/', element: <Account/>},
-  { path: '/', element: <Login/>},
-  { path: '/', element: <Register/>},
+  { path: '/Account', element: <Account/>},
+  { path: '/Login', element: <Login/>},
+  { path: '/Register', element: <Register/>},
 ])
 
 createRoot(document.getElementById('root')).render(

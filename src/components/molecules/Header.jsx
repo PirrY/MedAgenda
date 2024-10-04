@@ -1,6 +1,13 @@
 import './Header.css'
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Header() {
+  const navigate = useNavigate();
+  const goToLoginPage = () => {
+    navigate('/Login');
+  };
+
   return (
     <header>
 
@@ -10,7 +17,7 @@ export default function Header() {
               <p>La Solución Integral para la Gestión de tu Clínica</p>
             </section>
             <section id='section2'>
-                <button>Iniciar Sesión</button>
+                <button onClick={goToLoginPage}>Iniciar Sesión</button>
                 <button>Registrarse</button>
             </section>
         </nav>
