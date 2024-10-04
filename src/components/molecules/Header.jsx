@@ -1,6 +1,7 @@
 import './Header.css'
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import SearchBar from './SearchBar';
 
 export default function Header() {
   const navigate = useNavigate();
@@ -20,8 +21,10 @@ export default function Header() {
               <p>La Solución Integral para la Gestión de tu Clínica</p>
             </section>
             <section id='section2'>
-                <button onClick={goToLoginPage}>Iniciar Sesión</button>
-                <button onClick={goToRegisterPage}>Registrarse</button>
+                <SearchBar />
+            </section>
+            <section id='section3'>
+                <button onClick={goToLoginPage}>Mi cuenta</button>
             </section>
         </nav>
     </header>

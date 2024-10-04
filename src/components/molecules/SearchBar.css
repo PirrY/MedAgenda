@@ -1,0 +1,25 @@
+/* SearchBar.css */
+.search-bar {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+}
+
+.search-input {
+  width: 300px; /* Ajusta el ancho del recuadro de búsqueda */
+  padding: 10px;
+  border: 2px solid #ccc; /* Borde gris claro */
+  border-radius: 25px; /* Bordes redondeados */
+  font-size: 16px;
+  outline: none; /* Elimina el borde azul cuando está enfocado */
+}
+
+.search-input::placeholder {
+  color: #999; /* Color del texto del placeholder */
+  font-style: italic;
+}
+
+.search-input:focus {
+  border-color: #4CAF50; /* Cambia el color del borde cuando está enfocado */
+}
+
