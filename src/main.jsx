@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
-import { Home, Login, Account, Register } from './pages'
+import { Home, Login, Account, Register, ADashboard } from './pages'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import App from './App.jsx'
@@ -15,6 +15,7 @@ const router = createBrowserRouter([
   { path: '/Account', element: <Account/>},
   { path: '/Login', element: <Login/>},
   { path: '/Register', element: <Register/>},
+  { path: '/AHome', element: <ADashboard/>}
 ])
 
 createRoot(document.getElementById('root')).render(
