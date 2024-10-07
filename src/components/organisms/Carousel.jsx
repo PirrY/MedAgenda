@@ -1,6 +1,7 @@
 import React from 'react';
-import imagen1 from '../../img/imgMedicos.jpg';
+import imagen1 from '../../img/Slider1.png';
 import imagen2 from '../../img/Slider2.png';
+import imagen3 from '../../img/Slider3.png';
 
 const Carousel = () => {
     return (
@@ -18,7 +19,7 @@ const Carousel = () => {
                 <img src={imagen2} className="d-block w-100" alt="Segunda Imagen" />
             </div>
             <div className="carousel-item">
-                <img src={imagen1} className="d-block w-100" alt="Tercera Imagen" />
+                <img src={imagen3} className="d-block w-100" alt="Tercera Imagen" />
             </div>
         </div>
     </div>
