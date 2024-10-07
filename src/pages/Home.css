@@ -94,3 +94,37 @@
     max-width: 100px; /* Ajusta el tamaño */
     height: auto;
 }
+
+/* Estilo para la sección de Servicios a un clic */
+.servicios-click {
+    position: absolute;
+    right: 20px; /* Ajusta la posición a la derecha */
+    top: 120px; /* Ajusta la posición vertical */
+    background-color: rgba(213, 230, 240, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px; /* Ajusta el ancho de la sección */
+}
+
+/* Título y botones de la sección Servicios a un clic */
+.servicios-click h2 {
+    color: #003366;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
+
+.servicios-click button {
+    padding: 10px 20px;
+    background-color: #9cc3a2;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.servicios-click button:hover {
+    background-color: #218838;
+}

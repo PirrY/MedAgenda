@@ -6,7 +6,7 @@ export default function Footer() {
       <footer className="py-5">
         <div className="row">
           <div className="col-6 col-md-2 mb-3">
-            <h5>Section</h5>
+            <h5>Acerca de Nosotros</h5>
             <ul className="nav flex-column">
               <li className="nav-item mb-2">
                 <a href="#" className="nav-link p-0 text-body-secondary">Home</a>
@@ -27,7 +27,7 @@ export default function Footer() {
           </div>
 
           <div className="col-6 col-md-2 mb-3">
-            <h5>Section</h5>
+            <h5>Contenidos de Bienestar</h5>
             <ul className="nav flex-column">
               <li className="nav-item mb-2">
                 <a href="#" className="nav-link p-0 text-body-secondary">Home</a>
@@ -48,7 +48,7 @@ export default function Footer() {
           </div>
 
           <div className="col-6 col-md-2 mb-3">
-            <h5>Section</h5>
+            <h5>Consulta</h5>
             <ul className="nav flex-column">
               <li className="nav-item mb-2">
                 <a href="#" className="nav-link p-0 text-body-secondary">Home</a>

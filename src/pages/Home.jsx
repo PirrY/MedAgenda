@@ -11,14 +11,25 @@ export function Home() {
       <div className="recuadro">
         <div className="text-content">
           <h1>Bienvenido a MedAgenda</h1>
-          <button>Servicios medicos que puedes encontrar</button>
+          <button>Servicios médicos que puedes encontrar</button>
           <button>Novedades y Medios disponibles</button>
         </div>
         <div className="image-content">
-          <Carousel/>
+          <Carousel />
         </div>
       </div>
-      <Footer/>
+      
+      {/* Sección de Servicios a un clic fuera del recuadro */}
+      <div className="servicios-click">
+        <h2>Opciones a un click</h2>
+        <center>
+        <button>Directorio Medico</button>
+        <button>Consulta en Línea</button>
+        <button>Emergencias</button>
+        </center>
+      </div>
+
+      <Footer />
     </div>
   );
 }

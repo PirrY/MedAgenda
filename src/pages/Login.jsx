@@ -18,7 +18,6 @@ export function Login() {
       
       {/* Renderizado condicional del formulario según el tipo de usuario */}
       {userType === 'patient' ? <PatientLoginForm /> : <DoctorLoginForm />}
-      <Footer/>
     </div>
   );
 }
