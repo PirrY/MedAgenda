@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from '../components/molecules/Header';
 import './Home.css';
+import Carousel from '../components/organisms/Carousel';
 
 export function Home() {
   return (
@@ -13,7 +14,7 @@ export function Home() {
           <button>Novedades y Medios disponibles</button>
         </div>
         <div className="image-content">
-          <img src="/src/img/imgMedicos.jpg" alt="Doctor" />
+          <Carousel/>
         </div>
       </div>
     </div>

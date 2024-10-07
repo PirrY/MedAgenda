@@ -8,6 +8,8 @@ import { Home, Login, Account, Register } from './pages'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import App from './App.jsx'
 
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
 const router = createBrowserRouter([
   { path: '/', element: <Home/>},
   { path: '/Account', element: <Account/>},
