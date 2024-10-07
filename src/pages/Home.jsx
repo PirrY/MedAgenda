@@ -1,5 +1,6 @@
 import React from 'react';
 import Header from '../components/molecules/Header';
+import Footer from '../components/molecules/Footer';
 import './Home.css';
 import Carousel from '../components/organisms/Carousel';
 
@@ -17,6 +18,7 @@ export function Home() {
           <Carousel/>
         </div>
       </div>
+      <Footer/>
     </div>
   );
 }

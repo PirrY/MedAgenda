@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './Login.css';
 import Header from '../components/molecules/Header';
+import Footer from '../components/molecules/Footer';
 
 export function Login() {
   const [userType, setUserType] = useState('patient'); // Controla el tipo de usuario
@@ -17,6 +18,7 @@ export function Login() {
       
       {/* Renderizado condicional del formulario según el tipo de usuario */}
       {userType === 'patient' ? <PatientLoginForm /> : <DoctorLoginForm />}
+      <Footer/>
     </div>
   );
 }
