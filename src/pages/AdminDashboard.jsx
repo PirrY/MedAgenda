@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './AdminDashboard.css';
-import Header from '../components/molecules/Header'; // Asegúrate de que la ruta del Header sea correcta
+import Header from '../components/molecules/Header'; 
 
 function ADashboard() {
   return (
@@ -16,20 +16,20 @@ function ADashboard() {
           <div className="recuadro">
             <div className="card">
               <h2>Base de Datos de Clientes</h2>
-              <Link to="/clientes">
+              <Link to="/BDClientes">
                 <button>Ir a Clientes</button>
               </Link>
             </div>
             <div className="card">
               <h2>Calendario</h2>
-              <Link to="/calendario">
+              <Link to="/ACalendar">
                 <button>Ir al Calendario</button>
               </Link>
             </div>
             <div className="card">
-              <h2>Base de Datos de Doctores</h2>
-              <Link to="/doctores">
-                <button>Ir a Doctores</button>
+              <h2>Base de Datos de Personal</h2>
+              <Link to="/BDPersonal">
+                <button>Ir a Personal</button>
               </Link>
             </div>
           </div>

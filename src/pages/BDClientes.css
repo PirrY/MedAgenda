@@ -1,0 +1,51 @@
+/* Estilos para la página de Clientes */
+.clientes-container {
+    padding: 20px;
+    background-color: #ECF8F8;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Título de la página */
+  .clientes-title {
+    color: #003366;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  /* Barra de búsqueda */
+  .search-bar {
+    width: 60%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  /* Tabla de clientes */
+  .clientes-table {
+    width: 80%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .clientes-table th, .clientes-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .clientes-table th {
+    background-color: #007acc;
+    color: white;
+  }
+  
+  .clientes-table tr:hover {
+    background-color: #f1f1f1;
+  }
+  
