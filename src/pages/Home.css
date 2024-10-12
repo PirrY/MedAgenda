@@ -99,7 +99,7 @@
 .servicios-click {
     position: absolute;
     right: 20px; /* Ajusta la posición a la derecha */
-    top: 120px; /* Ajusta la posición vertical */
+    top: 150px; /* Ajusta la posición vertical */
     background-color: rgba(213, 230, 240, 0.9);
     padding: 20px;
     border-radius: 10px;

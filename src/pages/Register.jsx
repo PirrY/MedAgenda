@@ -1,58 +1,103 @@
 import React from 'react'
 import Header from '../components/molecules/Header'
+import './Register.css';
 
 export function Register() {
   return (
-  <div className='register'>
-    <Header/>
-    <div>
-    <form className="register-form">
-    <div class="form-row">
-      <div class="form-group col-md-6">
-        <label for="inputEmail4">Email</label>
-        <input type="email" class="form-control" id="inputEmail4" placeholder="Email"/>
-      </div>
-      <div class="form-group col-md-6">
-        <label for="inputPassword4">Password</label>
-        <input type="password" class="form-control" id="inputPassword4" placeholder="Password"/>
-      </div>
+    <div className='register'>
+      <Header />
+      <center>
+        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+          {/* Título del formulario */}
+          <h1 className="form-title">Formulario de Registro Médico</h1>
+          <form className="register-form">
+            {/* Fila de nombres y apellidos */}
+            <div className="row">
+              <div className="form-group col-md-6">
+                <label htmlFor="inputNombres">Nombres</label>
+                <input type="text" className="form-control" id="inputNombres" placeholder="Ingresa tu primer y segundo nombre" />
+              </div>
+              <div className="form-group col-md-6">
+                <label htmlFor="inputApellidos">Apellidos</label>
+                <input type="text" className="form-control" id="inputApellidos" placeholder="Ingresa tu primer y segundo apellido" />
+              </div>
+            </div>
+
+            {/* Fila de cédula y teléfono */}
+            <div className="row">
+              <div className="form-group col-md-6">
+                <label htmlFor="inputCedula">Cédula</label>
+                <input type="text" className="form-control" id="inputCedula" placeholder="Ingresa tu número de cédula" />
+              </div>
+              <div className="form-group col-md-6">
+                <label htmlFor="inputTelefono">Teléfono</label>
+                <input type="text" className="form-control" id="inputTelefono" placeholder="Ingresa tu teléfono celular" />
+              </div>
+            </div>
+
+            {/* Fila de centro de trabajo y correo */}
+            <div className="row">
+              <div className="form-group col-md-6">
+                <label htmlFor="inputCentroTrabajo">Centro de trabajo</label>
+                <input type="text" className="form-control" id="inputCentroTrabajo" placeholder="Ingresa el nombre de tu centro de trabajo" />
+              </div>
+              <div className="form-group col-md-6">
+                <label htmlFor="inputCorreoProfesional">Correo Profesional</label>
+                <input type="email" className="form-control" id="inputCorreoProfesional" placeholder="Ingresa tu correo profesional" />
+              </div>
+            </div>
+
+            {/* Fila de experiencia y universidad */}
+            <div className="row">
+              <div className="form-group col-md-6">
+                <label htmlFor="inputExperiencia">Años de experiencia</label>
+                <input type="number" className="form-control" id="inputExperiencia" placeholder="Ingresa tus años de experiencia" />
+              </div>
+              <div className="form-group col-md-6">
+                <label htmlFor="inputUniversidad">Universidad de egreso</label>
+                <input type="text" className="form-control" id="inputUniversidad" placeholder="Ingresa la universidad de egreso" />
+              </div>
+            </div>
+
+            {/* Fila de especialidad y certificación */}
+            <div className="row">
+              <div className="form-group col-md-6">
+                <label htmlFor="inputEspecialidad">Especialidad médica</label>
+                <input type="text" className="form-control" id="inputEspecialidad" placeholder="Ingresa tu especialidad médica" />
+              </div>
+              <div className="form-group col-md-6">
+                <label htmlFor="inputCertificacion">Certificación médica</label>
+                <input type="text" className="form-control" id="inputCertificacion" placeholder="Ingresa tu certificación médica" />
+              </div>
+            </div>
+
+            {/* Fila de licencia y usuario */}
+            <div className="row">
+              <div className="form-group col-md-6">
+                <label htmlFor="inputLicencia">Número de licencia médica</label>
+                <input type="text" className="form-control" id="inputLicencia" placeholder="Ingresa tu número de licencia médica" />
+              </div>
+              <div className="form-group col-md-6">
+                <label htmlFor="inputUsuario">Nombre de usuario</label>
+                <input type="text" className="form-control" id="inputUsuario" placeholder="Ingresa tu nombre de usuario" />
+              </div>
+            </div>
+
+            {/* Fila de contraseña */}
+            <div className="row">
+              <div className="form-group col-md-6">
+                <label htmlFor="inputContraseña">Contraseña</label>
+                <input type="password" className="form-control" id="inputContraseña" placeholder="Ingresa tu contraseña" />
+              </div>
+            </div>
+
+            {/* Espaciado entre los campos y el botón */}
+            <div style={{ marginTop: '20px' }}>
+              <button type="submit" className="btn btn-primary">Registrarse</button>
+            </div>
+          </form>
+        </div>
+      </center>
     </div>
-    <div class="form-group">
-      <label for="inputAddress">Address</label>
-      <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St"/>
-    </div>
-    <div class="form-group">
-      <label for="inputAddress2">Address 2</label>
-      <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor"/>
-    </div>
-    <div class="form-row">
-      <div class="form-group col-md-6">
-        <label for="inputCity">City</label>
-        <input type="text" class="form-control" id="inputCity"/>
-      </div>
-      <div class="form-group col-md-4">
-        <label for="inputState">State</label>
-        <select id="inputState" class="form-control">
-          <option selected>Choose...</option>
-          <option>...</option>
-        </select>
-      </div>
-      <div class="form-group col-md-2">
-        <label for="inputZip">Zip</label>
-        <input type="text" class="form-control" id="inputZip"/>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="gridCheck"/>
-        <label class="form-check-label" for="gridCheck">
-          Check me out
-        </label>
-      </div>
-    </div>
-    <button type="submit" class="btn btn-primary">Sign in</button>
-  </form>
-  </div>
-  </div>
-  )
+  );
 }

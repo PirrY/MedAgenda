@@ -10,7 +10,7 @@ function ADashboard() {
       <Header />
 
       {/* Contenido del Admin Dashboard */}
-      <div className="home">
+      <div className="dashboard">
         <div className="dashboard-container">
           <h1>Dashboard de Administrador</h1>
           <div className="recuadro">
