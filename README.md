@@ -3,6 +3,13 @@
 ## Repositorio oficial de MedAgenda
 **Por**: Santiago Jiménez Cotrini, Miguel Suárez Obando, Diana Sofía Paque, Daniel Giraldo Valencia
 
+#### Instalación
+```
+$ git clone https://github.com/pier123gv/MedAgenda.git
+$ cd MedAgenda
+$ npm install
+$ npm run dev
+```
 ### OBJETIVOS
 
 - Diseñar un software para administrar y gestionar de manera eficiente las agendas, citas, fórmulas y disponibilidad médica para consultorios independientes de especialistas de la salud.
@@ -214,7 +221,6 @@ Se implementarán medidas rigurosas para proteger la información médica y pers
 | 33  | Implementar la generación de recetas electrónicas    | 3                |
 | 34  | Enviar recetas electrónicas a los pacientes          | 3                |
 | 35  | Guardar un historial de recetas en la base de datos  | 3                |
-| 36  | Implementar autenticación de dos factores (2FA)      | 5                |
 | 37  | Asegurar todas las conexiones con certificados SSL/TLS | 5                |
 | 38  | Implementar roles y permisos para médicos, pacientes y administradores | 4                |
 | 39  | Realizar auditorías de seguridad periódicas          | 3                |
