@@ -30,5 +30,8 @@ header {
                 color: #ECF8F8;
             }
         }
+        img{
+            margin-top: 10px;
+        }
     }
 }
