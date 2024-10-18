@@ -225,7 +225,7 @@ Se implementarán medidas rigurosas para proteger la información médica y pers
 | 45  | Configurar despliegue automático (CD) en un entorno en la nube | 5                |
 | 46  | Crear documentación técnica para desarrolladores     | 2                |
 | 47  | Documentar el uso de las APIs para integraciones de terceros | 3                |
-| 48  | Mantener actualizada la documentación del código     | 2                |
+| 48  | Mantener actualizada la documentación del código     | 1                |
 | 49  | Investigar y conectar APIs externas con sistemas de gestión médica | 4                |
 | 50  | Implementar la lógica para sincronizar datos entre plataformas | 4                |
 | 51  | Configurar herramientas de monitoreo para medir el rendimiento | 4                |
