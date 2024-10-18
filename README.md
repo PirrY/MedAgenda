@@ -93,8 +93,8 @@ Se implementarán medidas rigurosas para proteger la información médica y pers
 3. El sistema debe soportar múltiples usuarios simultáneamente.
 
 ### DIAGRAMA DE GANTT
-![Alt text](public/Gantt1 "Gantt1")
-![Alt text](public/Gantt2 "Gantt2")
+![Alt text](public/Gantt1.png "Gantt1")
+![Alt text](public/Gantt2.png "Gantt2")
 [Enlace al diagrama](https://www.canva.com/design/DAGQPh_qNQQ/Rbu3AOmnt8hT6ZFNCmDjCg/edit?utm_content=DAGQPh_qNQQ&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 ### PRESENTACIÓN METODOLOGÍA ÁGIL
