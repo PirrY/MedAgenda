@@ -213,7 +213,6 @@ Se implementarán medidas rigurosas para proteger la información médica y pers
 | 33  | Implementar la generación de recetas electrónicas    | 3                |
 | 34  | Enviar recetas electrónicas a los pacientes          | 3                |
 | 35  | Guardar un historial de recetas en la base de datos  | 3                |
-| 36  | Implementar autenticación de dos factores (2FA)      | 5                |
 | 37  | Asegurar todas las conexiones con certificados SSL/TLS | 5                |
 | 38  | Implementar roles y permisos para médicos, pacientes y administradores | 4                |
 | 39  | Realizar auditorías de seguridad periódicas          | 3                |
