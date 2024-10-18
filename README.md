@@ -96,121 +96,82 @@ Se implementarán medidas rigurosas para proteger la información médica y pers
 
 1. **Perfil de Usuario**  
    - Como **usuario**, quiero poder ver y actualizar mi perfil para mantener mi información al día.
-   - **Tareas**:
-     - Crear la interfaz del perfil de usuario.
-     - Implementar la lógica para editar y guardar la información del perfil.
+   - **Tareas**: Crear la interfaz del perfil de usuario - Implementar la lógica para editar y guardar la información del perfil.
 
 2. **Funcionalidad para Agendar Citas**  
    - Como **paciente**, quiero poder agendar una cita médica de acuerdo con la disponibilidad para programar fácilmente mis consultas.
-   - **Tareas**:
-     - Crear el formulario para agendar citas.
-     - Implementar la lógica para seleccionar fecha, hora y médico.
+   - **Tareas**: Crear el formulario para agendar citas - Implementar la lógica para seleccionar fecha, hora y médico.
 
 3. **Buscador de Médicos**  
    - Como **usuario**, quiero buscar médicos según especialidad y ubicación para encontrar fácilmente un médico que se ajuste a mis necesidades.
-   - **Tareas**:
-     - Diseñar el buscador.
-     - Implementar filtros por especialidad y ubicación.
+   - **Tareas**: Diseñar el buscador - Implementar filtros por especialidad y ubicación.
 
 4. **Tablero Administrativo con Calendario**  
    - Como **médico**, quiero tener un calendario que muestre mis citas para gestionar mejor mi agenda.
-   - **Tareas**:
-     - Implementar un calendario interactivo.
-     - Integrar la visualización y edición de citas en el calendario.
+   - **Tareas**: Implementar un calendario interactivo - Integrar la visualización y edición de citas en el calendario.
 
 5. **Registro de Usuario**  
    - Como **nuevo usuario**, quiero poder registrarme en la plataforma con mi correo y contraseña para acceder a los servicios médicos.
    - **Tareas**:
-     - Diseñar e implementar el formulario de registro.
-     - Implementar la validación de datos y el almacenamiento de la información del usuario.
+     - Diseñar e implementar el formulario de registro - Implementar la validación de datos y el almacenamiento de la información del usuario.
 
 6. **Login de Usuario**  
    - Como **usuario registrado**, quiero poder iniciar sesión para acceder a mi cuenta y agendar citas.
-   - **Tareas**:
-     - Crear el formulario de login.
-     - Implementar la autenticación de usuarios.
+   - **Tareas**: Crear el formulario de login - Implementar la autenticación de usuarios.
 
 7. **Notificaciones de Recordatorio de Cita**  
    - Como **paciente**, quiero recibir recordatorios automáticos de mis citas médicas para no olvidarlas.
-   - **Tareas**:
-     - Integrar una API de notificaciones (correo o SMS).
-     - Implementar lógica para enviar recordatorios antes de cada cita.
+   - **Tareas**: Integrar una API de notificaciones (correo o SMS) - Implementar lógica para enviar recordatorios antes de cada cita.
 
 8. **Generación de Recetas Médicas**  
    - Como **médico**, quiero poder generar recetas médicas electrónicas para enviarlas directamente a mis pacientes.
-   - **Tareas**:
-     - Diseñar el formulario para que los médicos creen recetas.
-     - Implementar la generación de recetas electrónicas y el envío al paciente.
+   - **Tareas**: Diseñar el formulario para que los médicos creen recetas - Implementar la generación de recetas electrónicas y el envío al paciente.
 
 9. **Visualización del Historial de Citas**  
    - Como **paciente**, quiero poder ver el historial de mis citas médicas para tener un registro de mis consultas.
-   - **Tareas**:
-     - Crear una interfaz para listar todas las citas anteriores.
-     - Integrar los datos de citas pasadas con la base de datos (una vez implementada).
+   - **Tareas**: Crear una interfaz para listar todas las citas anteriores - Integrar los datos de citas pasadas con la base de datos (una vez implementada).
 
 10. **Gestión de Disponibilidad de Médicos**  
     - Como **médico**, quiero poder definir y actualizar mi disponibilidad para que los pacientes puedan agendar citas en horarios correctos.
-    - **Tareas**:
-      - Implementar la lógica para que los médicos definan su horario disponible.
-      - Actualizar la interfaz de agendamiento para reflejar la disponibilidad actual.
+    - **Tareas**: Implementar la lógica para que los médicos definan su horario disponible - Actualizar la interfaz de agendamiento para reflejar la disponibilidad actual.
 
 11. **Sistema de Pago de Citas**  
     - Como **paciente**, quiero pagar mi cita en línea para facilitar el proceso de cobro.
-    - **Tareas**:
-      - Integrar una API de pagos (MercadoPago, PayU).
-      - Implementar el proceso de generación de facturas después de cada pago.
+    - **Tareas**: Integrar una API de pagos (MercadoPago, PayU) - Implementar el proceso de generación de facturas después de cada pago.
 
 12. **Generación Automática de Facturas**  
     - Como **administrador**, quiero generar facturas automáticas para tener un registro de los cobros y facilitar la contabilidad.
-    - **Tareas**:
-      - Implementar la generación automática de facturas después de una cita.
-      - Crear una sección en el tablero administrativo para revisar las facturas generadas.
+    - **Tareas**: Implementar la generación automática de facturas después de una cita - Crear una sección en el tablero administrativo para revisar las facturas generadas.
 
 13. **Acceso Seguro a la Información Médica**  
     - Como **paciente**, quiero que mi información médica esté protegida por medidas de seguridad para garantizar que mis datos sean privados.
-    - **Tareas**:
-      - Implementar la autenticación de dos factores (2FA) para el acceso.
-      - Asegurar la conexión con certificados SSL/TLS.
+    - **Tareas**: Implementar la autenticación de dos factores (2FA) para el acceso - Asegurar la conexión con certificados SSL/TLS.
 
 14. **Reportes de Rendimiento para Médicos**  
     - Como **administrador**, quiero generar reportes del rendimiento de los médicos (número de citas, evaluaciones de pacientes, etc.) para mejorar la gestión.
-    - **Tareas**:
-      - Implementar un sistema de reportes dentro del tablero administrativo.
-      - Integrar gráficos y estadísticas sobre el rendimiento médico.
+    - **Tareas**: Implementar un sistema de reportes dentro del tablero administrativo - Integrar gráficos y estadísticas sobre el rendimiento médico.
 
 15. **Cancelación de Citas**  
     - Como **paciente**, quiero poder cancelar mis citas en línea para que otras personas puedan aprovechar ese espacio.
-    - **Tareas**:
-      - Diseñar una opción para que los pacientes cancelen citas desde su perfil.
-      - Implementar la lógica para liberar la disponibilidad en el calendario.
+    - **Tareas**: Diseñar una opción para que los pacientes cancelen citas desde su perfil - Implementar la lógica para liberar la disponibilidad en el calendario.
 
 16. **Modificación de Citas**  
     - Como **paciente**, quiero poder modificar la fecha u hora de una cita ya agendada en caso de necesitar hacer cambios.
-    - **Tareas**:
-      - Crear una funcionalidad para modificar citas desde el perfil del paciente.
-      - Actualizar la agenda del médico con los cambios.
+    - **Tareas**: Crear una funcionalidad para modificar citas desde el perfil del paciente - Actualizar la agenda del médico con los cambios.
 
 17. **Visualización de Recetas Médicas**  
     - Como **paciente**, quiero poder consultar mis recetas médicas anteriores para facilitar la continuidad de mi tratamiento.
-    - **Tareas**:
-      - Crear una interfaz para ver recetas médicas pasadas.
-      - Integrar el sistema de recetas con el historial del paciente.
+    - **Tareas**: Crear una interfaz para ver recetas médicas pasadas - Integrar el sistema de recetas con el historial del paciente.
 
 18. **Soporte Técnico Básico para Usuarios**  
     - Como **usuario**, quiero tener acceso a soporte técnico básico para resolver problemas comunes con la plataforma.
-    - **Tareas**:
-      - Crear una sección de preguntas frecuentes (FAQ).
-      - Implementar un sistema de tickets de soporte básico.
+    - **Tareas**: Crear una sección de preguntas frecuentes (FAQ) - Implementar un sistema de tickets de soporte básico.
 
 19. **Dashboard de Notificaciones**  
     - Como **administrador**, quiero tener acceso a un tablero que me permita ver todas las notificaciones pendientes o enviadas para poder gestionar la comunicación con los pacientes.
-    - **Tareas**:
-      - Crear un tablero de administración para gestionar y revisar notificaciones.
-      - Implementar filtros para notificaciones enviadas, fallidas o pendientes.
+    - **Tareas**: Crear un tablero de administración para gestionar y revisar notificaciones - Implementar filtros para notificaciones enviadas, fallidas o pendientes.
 
 20. **Conexión con APIs de Sistemas Médicos**  
     - Como **administrador de la clínica**, quiero conectar el sistema con otras plataformas médicas para sincronizar información automáticamente.
-    - **Tareas**:
-      - Investigar y conectar APIs externas con sistemas de gestión médica.
-      - Implementar la lógica para sincronizar datos entre plataformas.
+    - **Tareas**: Investigar y conectar APIs externas con sistemas de gestión médica - Implementar la lógica para sincronizar datos entre plataformas.
 
