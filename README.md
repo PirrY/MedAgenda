@@ -1,3 +1,4 @@
+
 # MedAgenda.
 ## Repositorio oficial de MedAgenda
 **Por**: Santiago Jiménez Cotrini, Miguel Suárez Obando, Diana Sofía Paque, Daniel Giraldo Valencia
@@ -174,4 +175,74 @@ Se implementarán medidas rigurosas para proteger la información médica y pers
 20. **Conexión con APIs de Sistemas Médicos**  
     - Como **administrador de la clínica**, quiero conectar el sistema con otras plataformas médicas para sincronizar información automáticamente.
     - **Tareas**: Investigar y conectar APIs externas con sistemas de gestión médica - Implementar la lógica para sincronizar datos entre plataformas.
+## Lista de tareas:
+| Nº  | Tarea                                                | Dificultad (1-5) |
+| --- | ---------------------------------------------------- | ---------------- |
+| ~~1~~   | ~~Diseñar y desarrollar el Landing Page~~            | ~~2~~                |
+| ~~2~~   | ~~Crear la interfaz de login y registro (sin funcionalidad)~~ | ~~2~~                |
+| ~~3~~   | ~~Diseñar la estructura de la base de datos~~            | ~~4~~                |
+| 4   | Implementar la conexión entre el backend y la base de datos (PostgreSQL) | 4                |
+| 5   | Crear APIs RESTful para la gestión de citas, usuarios y recetas médicas | 5                |
+| 6   | Implementar la validación de datos de usuario en el registro | 2                |
+| 7   | Conectar el registro con la base de datos            | 3                |
+| ~~8~~   | ~~Crear el formulario de login~~                         | ~~2~~                |
+| 9   | Implementar la lógica de autenticación de usuarios   | 3                |
+| 10  | Implementar manejo de sesiones seguras               | 4                |
+| 11  | Proteger la plataforma con autenticación de dos factores (2FA) | 5                |
+| 12  | Crear la interfaz del perfil de usuario              | 2                |
+| 13  | Implementar la lógica para editar y guardar el perfil de usuario | 3                |
+| 14  | Conectar el perfil con la base de datos              | 3                |
+| 15  | Implementar el formulario para agendar citas         | 3                |
+| 16  | Implementar la lógica para seleccionar fecha, hora y médico | 4                |
+| 17  | Conectar la funcionalidad para agendar citas con la base de datos | 4                |
+| 18  | Crear el buscador de médicos                         | 2                |
+| 19  | Implementar filtros por especialidad y ubicación en el buscador | 3                |
+| 20  | Conectar el buscador de médicos con la base de datos | 3                |
+| 21  | Crear el calendario interactivo para los médicos     | 4                |
+| 22  | Conectar el calendario con las citas programadas     | 4                |
+| 23  | Implementar la edición y cancelación de citas en el calendario | 4                |
+| 24  | Implementar la generación automática de facturas después de una cita | 4                |
+| 25  | Crear una sección en el tablero administrativo para revisar facturas | 3                |
+| 26  | Integrar una API de pagos (MercadoPago, PayU)        | 5                |
+| 27  | Crear la interfaz para gestionar pagos de citas      | 3                |
+| 28  | Almacenar transacciones en la base de datos          | 3                |
+| 29  | Implementar la API de notificaciones (correo o SMS)  | 4                |
+| 30  | Implementar recordatorios automáticos antes de la cita | 3                |
+| 31  | Crear la funcionalidad para que los usuarios gestionen sus preferencias de notificación | 3                |
+| 32  | Diseñar el formulario para que los médicos creen recetas | 2                |
+| 33  | Implementar la generación de recetas electrónicas    | 3                |
+| 34  | Enviar recetas electrónicas a los pacientes          | 3                |
+| 35  | Guardar un historial de recetas en la base de datos  | 3                |
+| 36  | Implementar autenticación de dos factores (2FA)      | 5                |
+| 37  | Asegurar todas las conexiones con certificados SSL/TLS | 5                |
+| 38  | Implementar roles y permisos para médicos, pacientes y administradores | 4                |
+| 39  | Realizar auditorías de seguridad periódicas          | 3                |
+| 40  | Implementar pruebas unitarias                        | 3                |
+| 41  | Crear pruebas de integración para frontend y backend | 4                |
+| 42  | Realizar pruebas de carga para verificar el rendimiento | 4                |
+| 43  | Hacer pruebas de seguridad                           | 4                |
+| 44  | Configurar integración continua (CI) para ejecutar pruebas automáticas | 4                |
+| 45  | Configurar despliegue automático (CD) en un entorno en la nube | 5                |
+| 46  | Crear documentación técnica para desarrolladores     | 2                |
+| 47  | Documentar el uso de las APIs para integraciones de terceros | 3                |
+| 48  | Mantener actualizada la documentación del código     | 2                |
+| 49  | Investigar y conectar APIs externas con sistemas de gestión médica | 4                |
+| 50  | Implementar la lógica para sincronizar datos entre plataformas | 4                |
+| 51  | Configurar herramientas de monitoreo para medir el rendimiento | 4                |
+| 52  | Implementar alertas automáticas para detectar problemas críticos | 4                |
+
+## Distribución de responsabilidades:
+| Fecha  | Miguel Suarez | Santiago Cotrini | Diana Paque | Daniel Giraldo | Observaciones |
+|:------:|:-------------:|:----------------:|:-----------:|:--------------:|:-------------:|
+| 25/10  | 3             | 4                | 6           | 5              | Ninguna       |
+| 29/10  | 7, 12         | 8                | 9           | 10, 11         | Ninguna       |
+| 1/11   | 18, 19        | 17               | 20, 22      | 16             | Ninguna       |
+| 5/11   | 26            | 27               | 28          | 23, 24         | Ninguna       |
+| 8/11   | 30, 31        | 33               | 32, 34      | 29             | Ninguna       |
+| 12/11  | 36            | 37               | 38          | 35             | Ninguna       |
+| 15/11  | 40            | 39               | 41          | 42             | Ninguna       |
+| 19/11  | 44            | 43               | 46, 47      | 45             | Ninguna       |
+| 22/11  | 49            | 48               | 50          | 51, 52         | Ninguna       |
+
+
 
