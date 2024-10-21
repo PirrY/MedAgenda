@@ -1,0 +1,6 @@
+/*Estilos para el fondo de la pagina*/
+.MedicalDirectory {
+    background-color: #99BED8;
+    min-height: 100vh; /* Asegura que el fondo cubra toda la altura de la vista */
+    padding: 20px;
+}

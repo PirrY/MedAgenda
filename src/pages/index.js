@@ -6,3 +6,5 @@ export { default as ADashboard } from './AdminDashboard';
 export { default as MostrarClientes } from './BDClientes';
 export { default as ShowCalendar } from './CalendarioAdmin';
 export { default as MostrarPersonal } from './BDPersonal';
+export { MedicalDirectory } from './MedicalDirectory';
+export { MedicalServices } from './MedicalServices';

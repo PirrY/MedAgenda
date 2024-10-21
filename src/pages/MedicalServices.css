@@ -1,0 +1,6 @@
+/* Estilo para el contenedor general */
+.medical-services-container {
+    background-color: #99BED8;
+    min-height: 100vh;
+    padding: 20px;
+}
