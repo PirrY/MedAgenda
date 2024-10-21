@@ -4,3 +4,47 @@
     min-height: 100vh;
     padding: 20px;
 }
+
+/* Estilo para el título */
+.form-title {
+    color: #1c5d99;
+    margin-bottom: 40px;
+    font-size: 36px;
+    text-align: center;
+}
+
+/* Sección de recuadros */
+.cards-section {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+/* Estilo para cada tarjeta */
+.service-card {
+    background-color: #4a90e2;
+    color: #1A353F;
+    padding: 20px;
+    border-radius: 10px;
+    width: 250px;
+    margin: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.service-card h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.service-card p {
+    font-size: 16px;
+    color: #1A353F;
+}
+
+/* Efecto hover en las tarjetas */
+.service-card:hover {
+    transform: translateY(-10px);
+}
