@@ -10,7 +10,11 @@ export function Home() {
 
   const goToMedicalServicesPage = () => {
     navigate('/medicalServices');
-};
+  };
+
+  const goToMedicalDirectoryPage = () => {
+    navigate('/medicalDirectory');
+  };
 
   return (
     <div className="home">
@@ -30,7 +34,7 @@ export function Home() {
       <div className="servicios-click">
         <h2>Opciones a un click</h2>
         <center>
-        <button>Directorio Medico</button>
+        <button onClick={goToMedicalDirectoryPage}>Directorio Medico</button>
         <button>Consulta en Línea</button>
         <button>Emergencias</button>
         </center>
