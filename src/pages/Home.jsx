@@ -17,6 +17,7 @@ export function Home() {
   };
 
   return (
+    <div>
     <div className="home">
       <Header />
       <div className="recuadro">
@@ -41,6 +42,7 @@ export function Home() {
       </div>
 
       <Footer />
+    </div>
     </div>
   );
 }
