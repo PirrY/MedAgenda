@@ -1,0 +1,71 @@
+.NovedadesYMedios {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px;
+    font-family: Arial, sans-serif;
+    background-color: #99BED8;
+    min-height: 100vh;
+}
+
+.title {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+}
+
+.infographic {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    width: 80%;
+    max-width: 1000px;
+    margin: 0 auto; /* Centramos el contenedor */
+    justify-items: center; /* Centramos cada círculo en su celda */
+}
+
+.circle-section {
+    position: relative;
+    background-color: #ffffff;
+    border-radius: 50%;
+    width: 300px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 0.9em;
+    line-height: 1.3em;
+    overflow: hidden;
+    border: 2px dotted #1e262b;
+}
+
+.icon,
+.image-icon {
+    width: 110px; /* tamaño de íconos o imágenes */
+    height: 90px;
+    margin-bottom: 10px;
+}
+
+.section-1 { background-color: #ffdddd; color: #ff4444; }
+.section-2 { background-color: #ddeeff; color: #4488ff; }
+.section-3 { background-color: #ddffdd; color: #44aa44; }
+.section-4 { background-color: #ddffdd; color: #44aa44; }
+.section-5 { background-color: #ffdddd; color: #ff4444; }
+.section-6 { background-color: #ddeeff; color: #4488ff; }
+
+@media (max-width: 600px) {
+    .infographic {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: auto;
+    }
+}
+
+/* Efecto hover en los circulos */
+.circle-section:hover {
+    transform: translateY(-10px);
+}
