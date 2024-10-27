@@ -16,6 +16,10 @@ export function Home() {
     navigate('/medicalDirectory');
   };
 
+  const goToNewsPage = () => {
+    navigate('/Novedades');
+  };
+
   return (
     <div>
     <div className="home">
@@ -24,7 +28,7 @@ export function Home() {
         <div className="text-content">
           <h1>Bienvenido a MedAgenda</h1>
           <button onClick={goToMedicalServicesPage}>Servicios médicos que puedes encontrar</button>
-          <button>Novedades y Medios disponibles</button>
+          <button onClick={goToNewsPage}>Novedades y Medios disponibles</button>
         </div>
         <div className="image-content">
           <Carousel />

@@ -6,9 +6,8 @@ import Footer from '../components/molecules/Footer';
 export function MedicalDirectory(){
     return(
         <div>
-            
+        <Header/>   
         <div className='medicaldirectory'>
-        <Header/>
             <center>
                 <h1 className = "form-title">Directorio Médico</h1>
             </center>

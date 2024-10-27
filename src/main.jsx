@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
-import { Home, Login, Account, Register, ADashboard, MostrarClientes, ShowCalendar, MostrarPersonal, MedicalDirectory, MedicalServices } from './pages'
+import { Home, Login, Account, Register, ADashboard, MostrarClientes, ShowCalendar, MostrarPersonal, MedicalDirectory, MedicalServices, NovedadesYMedios } from './pages'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import App from './App.jsx'
@@ -18,9 +18,10 @@ const router = createBrowserRouter([
   { path: '/AHome', element: <ADashboard/>},
   { path: '/BDClientes', element: <MostrarClientes/>},
   { path: '/ACalendar', element: <ShowCalendar/>},
-  { path: 'BDPersonal', element: <MostrarPersonal/>},
+  { path: '/BDPersonal', element: <MostrarPersonal/>},
   { path: '/MedicalDirectory', element: <MedicalDirectory/>},
-  { path: '/MedicalServices', element: <MedicalServices/>}
+  { path: '/MedicalServices', element: <MedicalServices/>},
+  { path: '/Novedades', element: <NovedadesYMedios/>}
 ])
 
 createRoot(document.getElementById('root')).render(

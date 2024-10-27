@@ -8,3 +8,4 @@ export { default as ShowCalendar } from './CalendarioAdmin';
 export { default as MostrarPersonal } from './BDPersonal';
 export { MedicalDirectory } from './MedicalDirectory';
 export { MedicalServices } from './MedicalServices';
+export { NovedadesYMedios } from './Novedades';
