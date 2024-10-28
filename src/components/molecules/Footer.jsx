@@ -19,12 +19,6 @@ export default function Footer() {
               <li className="nav-item mb-2">
                 <a href="#" className="nav-link p-0 text-body-secondary">Registrarse</a>
               </li>
-              <li className="nav-item mb-2">
-                <a href="#" className="nav-link p-0 text-body-secondary">FAQs</a>
-              </li>
-              <li className="nav-item mb-2">
-                <a href="#" className="nav-link p-0 text-body-secondary">Nosotros</a>
-              </li>
             </ul>
           </div>
 
@@ -32,40 +26,25 @@ export default function Footer() {
             <h5>Contenidos de Bienestar</h5>
             <ul className="nav flex-column">
               <li className="nav-item mb-2">
-                <a href="#" className="nav-link p-0 text-body-secondary">Home</a>
+                <a href="#" className="nav-link p-0 text-body-secondary">Servicios medicos</a>
               </li>
               <li className="nav-item mb-2">
-                <a href="#" className="nav-link p-0 text-body-secondary">Features</a>
-              </li>
-              <li className="nav-item mb-2">
-                <a href="#" className="nav-link p-0 text-body-secondary">Pricing</a>
-              </li>
-              <li className="nav-item mb-2">
-                <a href="#" className="nav-link p-0 text-body-secondary">FAQs</a>
-              </li>
-              <li className="nav-item mb-2">
-                <a href="#" className="nav-link p-0 text-body-secondary">About</a>
+                <a href="#" className="nav-link p-0 text-body-secondary">Directorio medico</a>
               </li>
             </ul>
           </div>
 
           <div className="col-6 col-md-2 mb-3">
-            <h5>Consulta</h5>
+            <h5>Políticas de privacidad y uso</h5>
             <ul className="nav flex-column">
               <li className="nav-item mb-2">
-                <a href="#" className="nav-link p-0 text-body-secondary">Home</a>
+                <a href="#" className="nav-link p-0 text-body-secondary">Recopilación de información</a>
               </li>
               <li className="nav-item mb-2">
-                <a href="#" className="nav-link p-0 text-body-secondary">Features</a>
+                <a href="#" className="nav-link p-0 text-body-secondary">Protección de datos</a>
               </li>
               <li className="nav-item mb-2">
-                <a href="#" className="nav-link p-0 text-body-secondary">Pricing</a>
-              </li>
-              <li className="nav-item mb-2">
-                <a href="#" className="nav-link p-0 text-body-secondary">FAQs</a>
-              </li>
-              <li className="nav-item mb-2">
-                <a href="#" className="nav-link p-0 text-body-secondary">About</a>
+                <a href="#" className="nav-link p-0 text-body-secondary">Uso de la información</a>
               </li>
             </ul>
           </div>
