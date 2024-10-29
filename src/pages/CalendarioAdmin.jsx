@@ -11,7 +11,7 @@ export default function ShowCalendar() {
 
       {/* Contenido del calendario */}
       <div className="calendario-container">
-        <h1 className="calendario-title">Calendario</h1>
+       
         
         {/* Componente de Calendario */}
         <MyCalendar />
