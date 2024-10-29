@@ -1,0 +1,46 @@
+/* Estilos para el fondo de la página */
+.PatientRegistry {
+    background-color: #99BED8;
+    min-height: 100vh; /* Asegura que el fondo cubra toda la altura de la vista */
+    padding: 20px;
+}
+
+/* Estilos para el título del formulario */
+.form-title {
+    color: #003366; 
+    margin-bottom: 20px; 
+    font-size: 32px;
+    text-align: center;
+    margin-top: 35px;
+}
+
+/* Estilos para los campos del formulario */
+.form-control {
+    background-color: #e7f3fe;
+    border: 1px solid #a3c4e0;
+    color: #333; 
+    border-radius: 5px;
+    padding: 10px;
+}
+
+/* Estilos para el botón */
+.btn-primary {
+    margin-top: 20px;
+    background-color: #003366;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+}
+
+/* Cambio de color del botón al pasar el mouse */
+.btn-primary:hover {
+    background-color: #0056b3; 
+}
+
+/* Estilos para los campos al tener el foco */
+.form-control:focus {
+    border-color: #007bff; /* Cambia el color del borde al enfocar */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Sombra alrededor del campo */
+}
+
