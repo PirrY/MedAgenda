@@ -9,7 +9,6 @@ const port = 5000;
 app.use(cors());
 app.use(bodyParser.json());
 
-// Database connection
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -22,7 +21,11 @@ connection.connect((err) => {
   console.log('Connected to MySQL database');
 });
 
-// Existing endpoint to retrieve all doctors
+app.use((req, res, next) => {
+  console.log(`${req.method} request for '${req.url}'`);
+  next();
+});
+
 app.get('/api/doctores', (req, res) => {
   connection.query('SELECT * FROM doctores', (error, results) => {
     if (error) return res.status(500).json({ error });
@@ -30,7 +33,6 @@ app.get('/api/doctores', (req, res) => {
   });
 });
 
-// Existing endpoint to add a new doctor
 app.post('/api/doctores', (req, res) => {
   const { dr_nombre1, dr_nombre2, dr_apellido1, dr_apellido2, dr_especialidad, dr_telefono, dr_correo, dr_consultorio } = req.body;
   const sql = 'INSERT INTO doctores (dr_nombre1, dr_nombre2, dr_apellido1, dr_apellido2, dr_especialidad, dr_telefono, dr_correo, dr_consultorio) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
@@ -43,7 +45,6 @@ app.post('/api/doctores', (req, res) => {
   });
 });
 
-// Existing endpoint to retrieve all appointments
 app.get('/api/citas', (req, res) => {
   connection.query('SELECT * FROM citas', (error, results) => {
     if (error) return res.status(500).json({ error });
@@ -51,7 +52,6 @@ app.get('/api/citas', (req, res) => {
   });
 });
 
-// Existing endpoint to add a new appointment
 app.post('/api/citas', (req, res) => {
   const { fecha_hora_cita, id_paciente_invol, id_dr_encar, motivo, estado_cita } = req.body;
   const sql = 'INSERT INTO citas (fecha_hora_cita, id_paciente_invol, id_dr_encar, motivo, estado_cita) VALUES (?, ?, ?, ?, ?)';
@@ -65,7 +65,6 @@ app.post('/api/citas', (req, res) => {
   });
 });
 
-// New endpoint to retrieve all patients
 app.get('/api/pacientes', (req, res) => {
   connection.query('SELECT * FROM pacientes', (error, results) => {
     if (error) {
@@ -76,7 +75,6 @@ app.get('/api/pacientes', (req, res) => {
   });
 });
 
-// New endpoint to add a new patient
 app.post('/api/pacientes', (req, res) => {
   const {
     nombre1_paciente,
@@ -96,6 +94,41 @@ app.post('/api/pacientes', (req, res) => {
       return res.status(500).json({ error: 'Database error' });
     }
     res.status(201).json({ message: 'Patient added successfully', id: result.insertId });
+  });
+});
+
+app.get('/api/pacientes/:id', (req, res) => {
+  const { id } = req.params;
+  console.log(`Fetching details for patient ID: ${id}`);
+  const sql = 'SELECT * FROM pacientes WHERE id_paciente = ?';
+  connection.query(sql, [id], (error, results) => {
+    if (error) {
+      console.error('Error fetching patient details:', error);
+      return res.status(500).json({ error: 'Error fetching patient details' });
+    }
+    if (results.length === 0) {
+      console.log(`No patient found with ID: ${id}`);
+      return res.status(404).json({ error: 'Patient not found' });
+    }
+    res.json(results[0]);
+  });
+});
+
+app.get('/api/pacientes/:id/appointments', (req, res) => {
+  const { id } = req.params;
+  const sql = 'SELECT * FROM citas WHERE id_paciente_invol = ?';
+  connection.query(sql, [id], (error, results) => {
+    if (error) return res.status(500).json({ error: 'Error fetching appointment history' });
+    res.json(results);
+  });
+});
+
+app.get('/api/pacientes/:id/recetas', (req, res) => {
+  const { id } = req.params;
+  const sql = 'SELECT * FROM recetas WHERE id_paciente = ?';
+  connection.query(sql, [id], (error, results) => {
+    if (error) return res.status(500).json({ error: 'Error fetching medical prescriptions' });
+    res.json(results);
   });
 });
 

@@ -1,190 +1,221 @@
-import React, { useState, useEffect } from 'react';
-import './BDClientes.css'; 
+import React, { useEffect, useState } from 'react';
 import Header from '../components/molecules/Header'; 
+import './BDClientes.css'; 
 
-export default function MostrarClientes() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [newClient, setNewClient] = useState({
+const BDClientes = () => {
+  const [pacientes, setPacientes] = useState([]);
+  const [selectedPatient, setSelectedPatient] = useState(null);
+  const [patientDetails, setPatientDetails] = useState(null);
+  const [appointmentHistory, setAppointmentHistory] = useState([]);
+  const [prescriptions, setPrescriptions] = useState([]);
+  const [newPatient, setNewPatient] = useState({
     nombre1_paciente: '',
-    nombre2_paciente: '', // Added this field
+    nombre2_paciente: '',
     apellido1_paciente: '',
-    apellido2_paciente: '', // Added this field
-    cedula_paciente: '', // Added this field
+    apellido2_paciente: '',
+    cedula_paciente: '',
     telefono_paciente: '',
     correo_paciente: '',
-    direccion_paciente: '' // Added this field
+    direccion_paciente: ''
   });
-  const [clientesData, setClientesData] = useState([]);
-
-  // Fetch the patient list from the server
-  const fetchClientes = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/api/pacientes");
-      const data = await response.json();
-      setClientesData(data);
-    } catch (error) {
-      console.error("Error fetching patients:", error);
-    }
-  };
 
   useEffect(() => {
-    fetchClientes(); // Fetch patients when the component mounts
+    const fetchPacientes = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/pacientes');
+        const data = await response.json();
+        setPacientes(data);
+      } catch (error) {
+        console.error('Error fetching patients:', error);
+      }
+    };
+    fetchPacientes();
   }, []);
 
-  // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handlePatientClick = async (id) => {
+    setSelectedPatient(id);
     try {
-      const response = await fetch("http://localhost:5000/api/pacientes", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newClient),
-      });
+      const response = await fetch(`http://localhost:5000/api/pacientes/${id}`);
+      const data = await response.json();
+      setPatientDetails(data);
 
-      console.log("Response Status:", response.status); 
+      const appointmentResponse = await fetch(`http://localhost:5000/api/pacientes/${id}/appointments`);
+      const appointmentData = await appointmentResponse.json();
+      setAppointmentHistory(appointmentData);
 
-      if (response.ok) {
-        alert("Client added successfully!");
-       
-        setNewClient({
-          nombre1_paciente: '',
-          nombre2_paciente: '',
-          apellido1_paciente: '',
-          apellido2_paciente: '',
-          cedula_paciente: '',
-          telefono_paciente: '',
-          correo_paciente: '',
-          direccion_paciente: ''
-        });
-        fetchClientes(); 
-      } else {
-        const errorData = await response.json();
-        console.error("Error response:", errorData); 
-        alert("Error adding client");
-      }
+      const prescriptionResponse = await fetch(`http://localhost:5000/api/pacientes/${id}/recetas`);
+      const prescriptionData = await prescriptionResponse.json();
+      setPrescriptions(prescriptionData);
     } catch (error) {
-      console.error("Error:", error);
+      console.error('Error fetching patient details:', error);
     }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewClient((prevClient) => ({
-      ...prevClient,
-      [name]: value,
-    }));
+    setNewPatient((prev) => ({ ...prev, [name]: value }));
   };
 
-  const filteredClientes = clientesData.filter((cliente) =>
-    cliente.nombre1_paciente.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    cliente.correo_paciente.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleAddPatient = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:5000/api/pacientes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newPatient),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add patient');
+      }
+
+      const addedPatient = await response.json();
+      setPacientes((prev) => [...prev, { ...newPatient, id_paciente: addedPatient.id }]);
+      setNewPatient({ 
+        nombre1_paciente: '',
+        nombre2_paciente: '',
+        apellido1_paciente: '',
+        apellido2_paciente: '',
+        cedula_paciente: '',
+        telefono_paciente: '',
+        correo_paciente: '',
+        direccion_paciente: ''
+      });
+    } catch (error) {
+      console.error('Error adding new patient:', error);
+    }
+  };
 
   return (
-    <div>
-      <Header />
-      <div className="clientes-container">
-        <h1 className="clientes-title">Lista de Clientes</h1>
-
+    <div className="clientes-container">
+      <Header /> {/* Include the Header component */}
+      <h1 className="clientes-title">Pacientes</h1>
+      <input 
+        type="text" 
+        className="search-bar" 
+        placeholder="Buscar paciente..." 
+      />
+      
+      <form onSubmit={handleAddPatient}>
+        <h2>Añadir Nuevo Paciente</h2>
         <input
           type="text"
-          placeholder="Buscar cliente por nombre o correo..."
-          className="search-bar"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          name="nombre1_paciente"
+          placeholder="Nombre 1"
+          value={newPatient.nombre1_paciente}
+          onChange={handleInputChange}
+          required
         />
+        <input
+          type="text"
+          name="nombre2_paciente"
+          placeholder="Nombre 2"
+          value={newPatient.nombre2_paciente}
+          onChange={handleInputChange}
+        />
+        <input
+          type="text"
+          name="apellido1_paciente"
+          placeholder="Apellido 1"
+          value={newPatient.apellido1_paciente}
+          onChange={handleInputChange}
+          required
+        />
+        <input
+          type="text"
+          name="apellido2_paciente"
+          placeholder="Apellido 2"
+          value={newPatient.apellido2_paciente}
+          onChange={handleInputChange}
+        />
+        <input
+          type="text"
+          name="cedula_paciente"
+          placeholder="Cédula"
+          value={newPatient.cedula_paciente}
+          onChange={handleInputChange}
+          required
+        />
+        <input
+          type="text"
+          name="telefono_paciente"
+          placeholder="Teléfono"
+          value={newPatient.telefono_paciente}
+          onChange={handleInputChange}
+          required
+        />
+        <input
+          type="email"
+          name="correo_paciente"
+          placeholder="Correo"
+          value={newPatient.correo_paciente}
+          onChange={handleInputChange}
+        />
+        <input
+          type="text"
+          name="direccion_paciente"
+          placeholder="Dirección"
+          value={newPatient.direccion_paciente}
+          onChange={handleInputChange}
+        />
+        <button type="submit">Añadir Paciente</button>
+      </form>
 
-        <table className="clientes-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-              <th>Email</th>
-              <th>Teléfono</th>
+      <table className="clientes-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Cédula</th>
+            <th>Teléfono</th>
+          </tr>
+        </thead>
+        <tbody>
+          {pacientes.map((paciente) => (
+            <tr key={paciente.id_paciente} onClick={() => handlePatientClick(paciente.id_paciente)}>
+              <td>{paciente.nombre1_paciente} {paciente.apellido1_paciente}</td>
+              <td>{paciente.cedula_paciente}</td>
+              <td>{paciente.telefono_paciente}</td>
             </tr>
-          </thead>
-          <tbody>
-            {filteredClientes.map((cliente) => (
-              <tr key={cliente.id_paciente}>
-                <td>{cliente.id_paciente}</td>
-                <td>{cliente.nombre1_paciente} {cliente.apellido1_paciente}</td>
-                <td>{cliente.correo_paciente}</td>
-                <td>{cliente.telefono_paciente}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          ))}
+        </tbody>
+      </table>
 
-        {/* Form to add new client */}
-        <h2>Agregar Nuevo Cliente</h2>
-        <form onSubmit={handleSubmit} className="add-client-form">
-          <input
-            type="text"
-            name="nombre1_paciente"
-            placeholder="Nombre"
-            value={newClient.nombre1_paciente}
-            onChange={handleInputChange}
-            required
-          />
-          <input
-            type="text"
-            name="nombre2_paciente"
-            placeholder="Segundo Nombre"
-            value={newClient.nombre2_paciente}
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            name="apellido1_paciente"
-            placeholder="Apellido"
-            value={newClient.apellido1_paciente}
-            onChange={handleInputChange}
-            required
-          />
-          <input
-            type="text"
-            name="apellido2_paciente"
-            placeholder="Segundo Apellido"
-            value={newClient.apellido2_paciente}
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            name="cedula_paciente"
-            placeholder="Cédula"
-            value={newClient.cedula_paciente}
-            onChange={handleInputChange}
-            required
-          />
-          <input
-            type="text"
-            name="telefono_paciente"
-            placeholder="Teléfono"
-            value={newClient.telefono_paciente}
-            onChange={handleInputChange}
-            required
-          />
-          <input
-            type="email"
-            name="correo_paciente"
-            placeholder="Email"
-            value={newClient.correo_paciente}
-            onChange={handleInputChange}
-            required
-          />
-          <input
-            type="text"
-            name="direccion_paciente"
-            placeholder="Dirección"
-            value={newClient.direccion_paciente}
-            onChange={handleInputChange}
-            required
-          />
-          <button type="submit">Agregar Cliente</button>
-        </form>
-      </div>
+      {patientDetails && (
+        <div className="patient-details-container">
+          <h2 className="patient-details-title">Detalles del Paciente</h2>
+          <div className="patient-info">
+            <h3 className="patient-info-header">Información Personal</h3>
+            <p>Nombre: {patientDetails.nombre1_paciente} {patientDetails.apellido1_paciente}</p>
+            <p>Cédula: {patientDetails.cedula_paciente}</p>
+            <p>Teléfono: {patientDetails.telefono_paciente}</p>
+            <p>Correo: {patientDetails.correo_paciente}</p>
+          </div>
+          <div className="patient-history">
+            <h3 className="patient-history-header">Historial de Citas</h3>
+            <ul>
+              {appointmentHistory.map((appointment) => (
+                <li key={appointment.id_cita}>
+                  Fecha: {appointment.fecha_hora_cita}, Motivo: {appointment.motivo}, Estado: {appointment.estado_cita}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="patient-history">
+            <h3 className="patient-prescriptions-header">Recetas Médicas</h3>
+            <ul>
+              {prescriptions.map((prescription) => (
+                <li key={prescription.id_receta}>
+                  Descripción: {prescription.descripcion_receta}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
     </div>
   );
-}
+};
+
+export default BDClientes;
