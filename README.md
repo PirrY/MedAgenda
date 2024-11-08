@@ -189,7 +189,7 @@ Se implementarán medidas rigurosas para proteger la información médica y pers
 | ~~1~~   | ~~Diseñar y desarrollar el Landing Page~~            | ~~2~~                |
 | ~~2~~   | ~~Crear la interfaz de login y registro (sin funcionalidad)~~ | ~~2~~                |
 | ~~3~~   | ~~Diseñar la estructura de la base de datos~~            | ~~4~~                |
-| 4   | Implementar la conexión entre el backend y la base de datos (PostgreSQL) | 4                |
+| ~~4~~   | ~~Implementar la conexión entre el backend y la base de datos (MySQL)~~ | ~~4~~                |
 | 5   | Crear APIs RESTful para la gestión de citas, usuarios y recetas médicas | 5                |
 | 6   | Implementar la validación de datos de usuario en el registro | 2                |
 | 7   | Conectar el registro con la base de datos            | 3                |
