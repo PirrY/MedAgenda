@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Header from '../components/molecules/Header';
-import './Register.css';
+import './MedicalRegister.css';
 
 export function Register() {
   // Estado para capturar los datos del formulario
