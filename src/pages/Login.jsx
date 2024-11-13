@@ -15,7 +15,7 @@ export function Login() {
       <h1 className="text-h1">Iniciar Sesión</h1>
       <form className="login-form">
         <label>Nombre de usuario:</label>
-        <input type="email" placeholder="Ingrese su email" required />
+        <input type="email" placeholder="Ingrese su nombre de usuario" required />
         <label>Contraseña:</label>
         <input type="password" placeholder="Ingrese su contraseña" required />
         <button type="submit">Iniciar Sesión como Administrador</button>

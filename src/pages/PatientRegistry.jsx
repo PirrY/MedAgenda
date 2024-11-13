@@ -4,8 +4,9 @@ import './PatientRegistry.css';
 
 export function PatientRegistry(){
     return(
+        <div>
+            <Header />
         <div className='register'>
-        <Header />
     <center>
         <div style={{ maxWidth: '900px', margin: '0 auto' }}>
           {/* Título del formulario */}
@@ -74,6 +75,7 @@ export function PatientRegistry(){
             </form>
         </div>
         </center>
+    </div>
     </div>
     )
 }

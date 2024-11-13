@@ -13,6 +13,7 @@ function ADashboard() {
       <div className="dashboard">
         <div className="dashboard-container">
           <h1>Dashboard de Administrador</h1>
+          <center>
           <div className="recuadro">
             <div className="card">
               <h2>Base de Datos de Clientes</h2>
@@ -33,6 +34,7 @@ function ADashboard() {
               </Link>
             </div>
           </div>
+          </center>
         </div>
       </div>
     </div>

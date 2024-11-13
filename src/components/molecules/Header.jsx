@@ -15,13 +15,16 @@ export default function Header() {
   };
   const goToRegisterPage = () => {
     navigate('/Register');
-  }
+  };
+  const goBack = () => {
+    navigate(-1); // Esto navega a la página anterior en el historial
+  };
 
   return (
     <header>
 
         <nav>
-            <img src="/src/img/logo.jpeg" alt="" height={100} width={100} onClick={goToHomePage}/>
+            <img src="/src/img/logo.jpeg" alt="" height={100} width={100} onClick={goBack}/>
             <section id='section1'>
               <p>La Solución Integral para la Gestión de tu Clínica</p>
             </section>

@@ -41,6 +41,6 @@
 /* Estilos para los campos al tener el foco */
 .form-control:focus {
     border-color: #007bff; /* Cambia el color del borde al enfocar */
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Sombra alrededor del campo */
+    box-shadow: 0 0 5px; /* Sombra alrededor del campo */
 }
 
