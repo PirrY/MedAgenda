@@ -1,39 +1,7 @@
 {
-  "name": "medagenda",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  },
   "dependencies": {
-    "@popperjs/core": "^2.11.8",
-    "axios": "^1.7.7",
-    "bootstrap": "^5.3.3",
     "cors": "^2.8.5",
     "express": "^4.21.1",
-    "moment": "^2.30.1",
-    "mysql2": "^3.11.3",
-    "react": "^18.3.1",
-    "react-big-calendar": "^1.15.0",
-    "react-bootstrap": "^2.10.5",
-    "react-dom": "^18.3.1",
-    "react-modal": "^3.16.1",
-    "react-router-dom": "^6.26.2"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.9.0",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react-swc": "^3.5.0",
-    "eslint": "^9.9.0",
-    "eslint-plugin-react": "^7.35.0",
-    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
-    "eslint-plugin-react-refresh": "^0.4.9",
-    "globals": "^15.9.0",
-    "vite": "^5.4.1"
+    "mysql2": "^3.11.4"
   }
 }
