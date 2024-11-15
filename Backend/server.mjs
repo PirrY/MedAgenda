@@ -11,8 +11,9 @@ app.use(bodyParser.json());
 
 const connection = mysql.createConnection({
   host: 'localhost',
-  user: 'root',
-  password: '2486',
+  user: 'medagenda',
+  password: 'MedAgenda123%',
+  port: '3307',
   database: 'MedAgendaDB'
 });
 

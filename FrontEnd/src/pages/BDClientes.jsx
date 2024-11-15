@@ -89,8 +89,9 @@ const BDClientes = () => {
   };
 
   return (
+    <div>
+    <Header /> {/* Include the Header component */}
     <div className="clientes-container">
-      <Header /> {/* Include the Header component */}
       <h1 className="clientes-title">Pacientes</h1>
       <input 
         type="text" 
@@ -214,6 +215,7 @@ const BDClientes = () => {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 };
