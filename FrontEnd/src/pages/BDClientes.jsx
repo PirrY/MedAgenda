@@ -93,16 +93,12 @@ const BDClientes = () => {
     <Header /> {/* Include the Header component */}
     <div className="clientes-container">
       <h1 className="clientes-title">Pacientes</h1>
-      <input 
-        type="text" 
-        className="search-bar" 
-        placeholder="Buscar paciente..." 
-      />
       
-      <form onSubmit={handleAddPatient}>
+      <form onSubmit={handleAddPatient} className='clientes-form'>
         <h2>Añadir Nuevo Paciente</h2>
         <input
           type="text"
+          className='input_text'
           name="nombre1_paciente"
           placeholder="Nombre 1"
           value={newPatient.nombre1_paciente}
@@ -111,6 +107,7 @@ const BDClientes = () => {
         />
         <input
           type="text"
+          className='input_text'
           name="nombre2_paciente"
           placeholder="Nombre 2"
           value={newPatient.nombre2_paciente}
@@ -118,6 +115,7 @@ const BDClientes = () => {
         />
         <input
           type="text"
+          className='input_text'
           name="apellido1_paciente"
           placeholder="Apellido 1"
           value={newPatient.apellido1_paciente}
@@ -126,6 +124,7 @@ const BDClientes = () => {
         />
         <input
           type="text"
+          className='input_text'
           name="apellido2_paciente"
           placeholder="Apellido 2"
           value={newPatient.apellido2_paciente}
@@ -133,6 +132,7 @@ const BDClientes = () => {
         />
         <input
           type="text"
+          className='input_text'
           name="cedula_paciente"
           placeholder="Cédula"
           value={newPatient.cedula_paciente}
@@ -141,6 +141,7 @@ const BDClientes = () => {
         />
         <input
           type="text"
+          className='input_text'
           name="telefono_paciente"
           placeholder="Teléfono"
           value={newPatient.telefono_paciente}
@@ -149,6 +150,7 @@ const BDClientes = () => {
         />
         <input
           type="email"
+          className='input_text'
           name="correo_paciente"
           placeholder="Correo"
           value={newPatient.correo_paciente}
@@ -156,14 +158,19 @@ const BDClientes = () => {
         />
         <input
           type="text"
+          className='input_text'
           name="direccion_paciente"
           placeholder="Dirección"
           value={newPatient.direccion_paciente}
           onChange={handleInputChange}
         />
-        <button type="submit">Añadir Paciente</button>
+        <button type="submit" className='form-button'>Añadir Paciente</button>
       </form>
-
+      <input 
+        type="text" 
+        className="search-bar" 
+        placeholder="Buscar paciente..." 
+      />
       <table className="clientes-table">
         <thead>
           <tr>
