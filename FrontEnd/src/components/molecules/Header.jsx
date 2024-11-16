@@ -24,9 +24,14 @@ export default function Header() {
     <header>
 
         <nav>
-            <img src="/src/img/logo.jpeg" alt="" height={100} width={100} onClick={goBack}/>
+            <img src="/src/img/logo.jpeg" alt="" height={100} width={100} onClick={goToHomePage}/>
+            <section id = 'section3'>
+              <button onClick={goBack}>Atras</button>
+            </section>
             <section id='section1'>
+              <br></br>
               <p>La Solución Integral para la Gestión de tu Clínica</p>
+              <br></br>
             </section>
             <section id='section2'>
                 <SearchBar />
