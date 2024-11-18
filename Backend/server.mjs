@@ -13,7 +13,7 @@ const connection = mysql.createConnection({
   host: 'localhost',
   user: 'medagenda',
   password: 'MedAgenda123%',
-  port: '3307',
+  port: '3306',
   database: 'MedAgendaDB'
 });
 
