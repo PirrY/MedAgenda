@@ -31,18 +31,19 @@
   gap: 16px;
   align-items: center;
   border: 1px solid #ccc;
-  max-width: 600px;
   margin: 0 auto;
   margin-bottom: 10px;
   border-radius: 10px;
   background-color: white;
   padding-top: 25px;
+  width: 60%;
 }
 
 .form-button{
   margin-top: 10px;
   border-radius: 4px;
   margin-bottom: 20px;
+  width: 95%
 }
 
 .input_text{
