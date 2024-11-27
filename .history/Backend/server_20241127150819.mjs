@@ -5,7 +5,7 @@ import pacientesRoutes from './routes/pacientesRoutes.js';
 import doctoresRoutes from './routes/doctoresRoutes.js';
 import citasRoutes from './routes/citasRoutes.js';
 import recetasRoutes from './routes/recetasRoutes.js';
-import authRoutes from './routes/authRoutes.js';
+
 const app = express();
 const port = 5000;
 

@@ -1,9 +1,9 @@
-import mysql from 'mysql2/promise';
+import mysql from 'mysql2';
 
-const connection = await mysql.createConnection({
+const connection = mysql.createConnection({
   host: 'localhost',
-  user: 'root',
-  password: '2486',
+  user: 'medagenda',
+  password: 'MedAgenda123%',
   port: '3306',
   database: 'MedAgendaDB',
 });

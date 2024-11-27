@@ -1,4 +1,4 @@
-import mysql from 'mysql2/promise';
+import mysql from 'mysql2';
 
 const connection = await mysql.createConnection({
   host: 'localhost',

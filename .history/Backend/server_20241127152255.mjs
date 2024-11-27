@@ -17,7 +17,7 @@ app.use('/api/pacientes', pacientesRoutes);
 app.use('/api/doctores', doctoresRoutes);
 app.use('/api/citas', citasRoutes);
 app.use('/api/recetas', recetasRoutes);
-app.use('/api/auth', authRoutes);
+app.post('/api/auth', authRoutes);
 
 // Middleware de manejo de errores
 app.use((err, req, res, next) => {
