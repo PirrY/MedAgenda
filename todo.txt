@@ -1,0 +1,12 @@
+https://www.w3.org/TR/design-principles/
+Meterle mas colorcitos y que quede bonito.
+Recrear la header para /home y /ahome para que cumpla con los requisitos que necesita.
+Cambiar el footer,
+Pedirle a Chatgpt que nos rellene la informacion necesaria en paginas como legal, soporte, quienes somos, etc. (Mero relleno)
+Crear redes sociales a lo pendejo.
+Utilizar mockcangaroo??? para llenar la base de datos con informacion medianamente realista [Mockaroo], investigar como hacer que funcione en Fabricate y popular del todo la DB.
+Meterle al readme lo que pide el profesor para el mpv. 
+Arreglar las User stories.
+Según el diseño funcional, como se debe de poner el acceso al /ahome para que no sea solo desde link.
+configurar dns local para la presentacion con el profe (Que busquemos medagenda.com y nos redireccione)
+Separar el github en 2 repositorios (Por la putisima cara, el profesor quiere así).
