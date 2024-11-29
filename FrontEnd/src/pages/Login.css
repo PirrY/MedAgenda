@@ -4,14 +4,8 @@
   text-align: center;
   margin-top: 50px;
   background-color: #99BED8;
-  min-height: 80vh;
-  margin-top: 0;
-  padding: 0;
-}
-
-.user-type-buttons button {
-  margin: 0 10px;
-  padding: 10px 20px;
+  min-height: 100vh; /* Ensures the page takes the full height */
+  padding: 20px 0; /* Adds spacing for a cleaner layout */
 }
 
 .login-form {
@@ -19,34 +13,56 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: #f3f3f3; /* Light background for the form */
+  padding: 20px;
+  border-radius: 10px; /* Rounded corners for the form */
+  width: 50%;
+  margin: 0 auto; /* Centers the form */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.login-form label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+  text-align: left;
+  width: 100%; /* Aligns label to the input field */
 }
 
 .login-form input {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   padding: 10px;
-  width: 50%;
+  width: 100%; /* Matches input size to form width */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
 }
 
 .login-form button {
   padding: 10px 20px;
-}
-
-.text-h1{
-  margin-top: 50px;
-  margin-bottom: 40px;
+  background-color: #007acc;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 20px;
 }
 
 button:hover {
   background-color: #005fa3;
 }
 
-button {
-    padding: 10px 40px;
-    background-color: #007acc;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    cursor: pointer;
-    margin-top: 20px;
+.text-h1 {
+  margin-top: 30px;
+  margin-bottom: 40px;
+  color: #003f63; /* Harmonizes with the background */
+  font-size: 2rem;
+}
+
+.error-message {
+  margin-top: 15px;
+  color: red;
+  font-weight: bold;
 }

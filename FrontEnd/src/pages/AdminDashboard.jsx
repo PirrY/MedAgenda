@@ -1,9 +1,19 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './AdminDashboard.css';
 import Header from '../components/molecules/Header'; 
 
 function ADashboard() {
+  const navigate = useNavigate();
+
+  // Check if the user is authenticated when the component is mounted
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/Login');  // Redirect to login page if not authenticated
+    }
+  }, [navigate]);
+
   return (
     <div>
       {/* Implementación del Header */}
