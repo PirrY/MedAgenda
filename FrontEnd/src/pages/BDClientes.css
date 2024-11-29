@@ -2,6 +2,9 @@
   padding: 20px;
   height: 100%;
   background-color: #99BED8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .clientes-title {
@@ -19,10 +22,10 @@
 .search-bar {
   margin-bottom: 20px;
   padding: 10px;
-  width: 100%;
+  width: 30%;
   border: 1px solid #ccc;
   border-radius: 4px;
-  
+  align-items: center;
 }
 
 .clientes-form {
@@ -40,10 +43,13 @@
 }
 
 .form-button{
-  margin-top: 10px;
-  border-radius: 4px;
+  padding: 10px 20px;
+  background-color: #007acc;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
   margin-bottom: 20px;
-  width: 95%
 }
 
 .input_text{

@@ -42,7 +42,7 @@ export const loginUser = async (req, res) => {
   }
 
   try {
-    const [users] = await connection.query('SELECT * FROM pacientes WHERE correo_paciente = ?', [email]);
+    const [users] = await connection.query('SELECT * FROM doctores WHERE dr_correo = ?', [email]);
     if (users.length === 0) {
       return res.status(401).json({ error: 'Usuario no existe.' });
     }
@@ -53,7 +53,7 @@ export const loginUser = async (req, res) => {
       return res.status(401).json({ error: 'Email o contraseña inválido.' });
     }
 
-    const token = jwt.sign({ user_id: user.id_paciente }, llave, { expiresIn: '1h' });
+    const token = jwt.sign({ user_id: user.dr_id }, llave, { expiresIn: '1h' });
     res.status(200).json({ mensaje: 'Inicio de sesión exitoso.', token });
   } catch (error) {
     console.error('Error en el inicio de sesión:', error);

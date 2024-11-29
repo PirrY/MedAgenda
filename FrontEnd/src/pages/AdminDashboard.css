@@ -45,3 +45,11 @@
     background-color: #005fa3;
   }
   
+  .loggoutButton{
+    padding: 10px 20px;
+    background-color: #007acc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }

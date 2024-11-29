@@ -28,6 +28,9 @@ header {
                 border-radius: 10px;
                 background-color: #0A2934;
                 color: #ECF8F8;
+                border: 0;
+                width: 80px;
+                height: 50px;
             }
         }
         img{

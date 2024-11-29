@@ -39,7 +39,6 @@ const BDPersonal = () => {
       <Header />
       <div className="personal-container">
         <h1 className="personal-title">Doctores</h1>
-        
         <table className="personal-table">
           <thead>
             <tr>
@@ -50,15 +49,14 @@ const BDPersonal = () => {
           </thead>
           <tbody>
             {doctors.map((doctor, index) => {
-              // Ensure the key is always unique, fallback to a combination of doctor details
-              const key = doctor.id_doctor || `${doctor.nombre || 'unknown'}_${doctor.apellido || 'unknown'}_${index}`;
-              return (
-                <tr key={key}>
-                  <td>{doctor.nombre} {doctor.apellido}</td>
-                  <td>{doctor.especialidad}</td>
-                  <td>{doctor.telefono}</td>
-                </tr>
-              );
+            const key = doctor.dr_id || `${doctor.dr_nombre1 || 'unknown'}_${doctor.dr_apellido1 || 'unknown'}_${index}`;
+            return (
+              <tr key={key}>
+              <td>{doctor.dr_nombre1} {doctor.dr_apellido1}</td>
+              <td>{doctor.dr_especialidad}</td>
+              <td>{doctor.dr_telefono}</td>
+              </tr>
+            );
             })}
           </tbody>
         </table>

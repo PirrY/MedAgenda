@@ -20,6 +20,9 @@ const BDClientes = () => {
     correo_paciente: '',
     direccion_paciente: ''
   });
+  
+  // Nuevo estado para la búsqueda
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -122,6 +125,13 @@ const BDClientes = () => {
     }
   };
 
+  // Filtrar pacientes por nombre o cédula
+  const filteredPatients = pacientes.filter((paciente) => {
+    const fullName = `${paciente.nombre1_paciente} ${paciente.nombre2_paciente} ${paciente.apellido1_paciente} ${paciente.apellido2_paciente}`.toLowerCase();
+    const cedula = paciente.cedula_paciente.toLowerCase();
+    return fullName.includes(searchTerm.toLowerCase()) || cedula.includes(searchTerm.toLowerCase());
+  });
+
   return (
     <div>
       <Header />
@@ -201,10 +211,13 @@ const BDClientes = () => {
           <button type="submit" className='form-button'>Añadir Paciente</button>
         </form>
 
+        {/* Input para la búsqueda */}
         <input 
           type="text" 
           className="search-bar" 
           placeholder="Buscar paciente..." 
+          value={searchTerm} 
+          onChange={(e) => setSearchTerm(e.target.value)} 
         />
         
         <table className="clientes-table">
@@ -216,7 +229,7 @@ const BDClientes = () => {
             </tr>
           </thead>
           <tbody>
-            {pacientes.map((paciente) => (
+            {filteredPatients.map((paciente) => (
               <tr key={paciente.id_paciente} onClick={() => handlePatientClick(paciente.id_paciente)}>
                 <td>{paciente.nombre1_paciente} {paciente.nombre2_paciente}</td>
                 <td>{paciente.cedula_paciente}</td>

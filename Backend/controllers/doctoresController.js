@@ -1,13 +1,20 @@
 import connection from '../config/db.js';
 
-export const getAllDoctores = (req, res) => {
-  connection.query('SELECT * FROM doctores', (error, results) => {
-    if (error) return res.status(500).json({ error });
+// Obtener todos los doctores
+export const getAllDoctores = async (req, res) => {
+  try {
+    const [results] = await connection.query('SELECT * FROM doctores');
+    console.log('Doctors fetched:', results);
+
     res.json(results);
-  });
+  } catch (error) {
+    console.error('Error fetching doctors:', error);
+    res.status(500).json({ error: 'Error fetching doctors' });
+  }
 };
 
-export const addDoctor = (req, res) => {
+// Agregar un nuevo doctor
+export const addDoctor = async (req, res) => {
   const {
     dr_nombre1,
     dr_nombre2,
@@ -21,15 +28,21 @@ export const addDoctor = (req, res) => {
 
   const sql =
     'INSERT INTO doctores (dr_nombre1, dr_nombre2, dr_apellido1, dr_apellido2, dr_especialidad, dr_telefono, dr_correo, dr_consultorio) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-  connection.query(
-    sql,
-    [dr_nombre1, dr_nombre2, dr_apellido1, dr_apellido2, dr_especialidad, dr_telefono, dr_correo, dr_consultorio],
-    (err, result) => {
-      if (err) {
-        console.error('Error adding doctor:', err);
-        return res.status(500).json({ error: 'Database error' });
-      }
-      res.status(201).json({ message: 'Doctor added successfully', id: result.insertId });
-    }
-  );
+
+  try {
+    const [result] = await connection.query(sql, [
+      dr_nombre1,
+      dr_nombre2,
+      dr_apellido1,
+      dr_apellido2,
+      dr_especialidad,
+      dr_telefono,
+      dr_correo,
+      dr_consultorio,
+    ]);
+    res.status(201).json({ message: 'Doctor added successfully', id: result.insertId });
+  } catch (err) {
+    console.error('Error adding doctor:', err);
+    res.status(500).json({ error: 'Database error' });
+  }
 };

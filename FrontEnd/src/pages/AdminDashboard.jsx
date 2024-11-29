@@ -14,6 +14,16 @@ function ADashboard() {
     }
   }, [navigate]);
 
+  const loggout = () => {
+
+    const token = localStorage.getItem('token');
+
+    if(token){
+      localStorage.removeItem('token');
+    }
+    navigate('/');
+  };
+
   return (
     <div>
       {/* Implementación del Header */}
@@ -45,6 +55,7 @@ function ADashboard() {
             </div>
           </div>
           </center>
+          <button className='loggoutButton' onClick={loggout}>Cerrar sesión</button>
         </div>
       </div>
     </div>
