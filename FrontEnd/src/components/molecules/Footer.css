@@ -1,4 +1,12 @@
 .Footer{
-    background-color: #007ACC;
+    background-color: #2B4162;
     align-items: left;
 }
+.b-example-divider {
+  width: 100%;              /* Ocupa todo el ancho */
+  height: 0.5rem;           /* Ajusta la altura para hacerlo más bajito */
+  background-color: rgba(0, 0, 0, 0.05); /* Color más claro y menos opaco */
+  border: none;             /* Sin bordes */
+  margin: 0;                /* Sin márgenes extra */
+}
+
