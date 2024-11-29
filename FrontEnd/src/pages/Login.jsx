@@ -37,8 +37,8 @@ export function Login() {
 
   return (
     <div>
+      <Header />
       <div className="login-page">
-        <Header />
         <h1 className="text-h1">Iniciar Sesión</h1>
         <form className="login-form" onSubmit={handleSubmit}>
           <label>Nombre de usuario:</label>

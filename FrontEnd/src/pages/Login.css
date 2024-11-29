@@ -2,9 +2,8 @@
 
 .login-page {
   text-align: center;
-  margin-top: 50px;
   background-color: #99BED8;
-  min-height: 100vh; /* Ensures the page takes the full height */
+  min-height: 60vh; /* Ensures the page takes the full height */
   padding: 20px 0; /* Adds spacing for a cleaner layout */
 }
 
