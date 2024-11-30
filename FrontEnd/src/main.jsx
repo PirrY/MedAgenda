@@ -3,7 +3,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Import Routes and Route
 
-import { Home, Login, ADashboard, MostrarClientes, ShowCalendar, MostrarPersonal, MedicalServices, NovedadesYMedios, MedicalDirectory } from './pages';
+import { Home, Login, ADashboard, MostrarClientes, ShowCalendar, MostrarPersonal, MedicalServices, NovedadesYMedios, MedicalDirectory, ProteccionDatos, RecopilacionInfo, UsoInfo} from './pages';
 import PrivateRoute from './components/PrivateRoute'; // Import the PrivateRoute component
 
 function App() {
@@ -15,6 +15,9 @@ function App() {
         <Route path="medicalServices" element={<MedicalServices/>}/>
         <Route path="Novedades" element={<NovedadesYMedios/>}/>
         <Route path="medicalDirectory" element={<MedicalDirectory/>}/>
+        <Route path="proteccionDatos" element={<ProteccionDatos/>}/>
+        <Route path="recopilacionInfo" element={<RecopilacionInfo/>}/>
+        <Route path="usoInfo" element={<UsoInfo/>}/>
         <Route 
           path="/AHome" 
           element={

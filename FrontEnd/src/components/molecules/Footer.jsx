@@ -45,13 +45,13 @@ export default function Footer() {
               <h5>Políticas de privacidad y uso</h5>
               <ul className="nav flex-column">
                 <li className="nav-item mb-2">
-                  <a href="#" className="nav-link p-0 text-body-secondary">Recopilación de información</a>
+                  <a href="/RecopilacionInfo" className="nav-link p-0 text-body-secondary">Recopilación de información</a>
                 </li>
                 <li className="nav-item mb-2">
-                  <a href="#" className="nav-link p-0 text-body-secondary">Protección de datos</a>
+                  <a href="/ProteccionDatos" className="nav-link p-0 text-body-secondary">Protección de datos</a>
                 </li>
                 <li className="nav-item mb-2">
-                  <a href="#" className="nav-link p-0 text-body-secondary">Uso de la información</a>
+                  <a href="/UsoInfo" className="nav-link p-0 text-body-secondary">Uso de la información</a>
                 </li>
               </ul>
             </div>

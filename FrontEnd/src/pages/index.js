@@ -10,3 +10,6 @@ export { MedicalDirectory } from './MedicalDirectory';
 export { MedicalServices } from './MedicalServices';
 export { NovedadesYMedios } from './Novedades';
 export {PatientRegistry} from './PatientRegistry';
+export {ProteccionDatos} from './ProteccionDatos';
+export {RecopilacionInfo} from './RecopilacionInfo';
+export {UsoInfo} from './UsoInfo';

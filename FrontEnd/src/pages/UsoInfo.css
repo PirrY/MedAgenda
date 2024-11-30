@@ -1,0 +1,24 @@
+.UsoInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Cambiado de justify a center */
+    padding: 40px;
+    font-family: Arial, sans-serif;
+    background-color: #99BED8;
+}
+
+.info {
+    text-align: justify;
+    font-size: 1em;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 20px 0;
+}
+
+.tittle {
+    font-size: 3em;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+    font-weight: bold;
+}
