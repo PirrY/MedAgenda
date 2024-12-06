@@ -3,6 +3,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './Footer.css';
 
 export default function Footer() {
+  const goToMedicalDirectoryPage = () => {
+    navigate('/medicalDirectory');
+  };
+
+
+
   return (
     <div className="Footer">
       <div className="container">
@@ -35,7 +41,7 @@ export default function Footer() {
                   <a href="/MedicalServices" className="nav-link p-0 text-body-secondary">Servicios médicos</a>
                 </li>
                 <li className="nav-item mb-2">
-                  <a href="#" className="nav-link p-0 text-body-secondary">Directorio médico</a>
+                  <a href="/medicalDirectory" className="nav-link p-0 text-body-secondary">Directorio médico</a>
                 </li>
               </ul>
             </div>

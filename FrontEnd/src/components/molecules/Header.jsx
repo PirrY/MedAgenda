@@ -11,6 +11,12 @@ export default function Header() {
   };  
 
   const goToLoginPage = () => {
+    const token = localStorage.getItem('token');
+    if(token){
+      navigate('/AHome');
+      return;
+    }
+
     navigate('/Login');
   };
   const goToRegisterPage = () => {
