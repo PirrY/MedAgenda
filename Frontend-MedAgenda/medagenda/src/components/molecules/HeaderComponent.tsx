@@ -1,5 +1,6 @@
 'use client'
 import { Dialog, DialogPanel, Popover, PopoverButton, PopoverPanel, PopoverGroup } from '@headlessui/react'
+import { Activity } from "lucide-react";
 import { 
   ChevronDownIcon,
   CalendarIcon,
@@ -8,8 +9,6 @@ import {
   CogIcon,
   ClockIcon,
   HeartIcon,
-  PlayCircleIcon,
-  PhoneIcon
 } from '@heroicons/react/24/outline'
 
 // Servicios médicos para el dropdown
@@ -61,14 +60,14 @@ const navigation = [
 export default function HeaderComponent() {
 
   return (
-    <header className="bg-[#5C95FF]">
+    <header className="bg-[#4682B4] border-b-4 border-[#566794]">
       <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
         <div className="flex lg:flex-1">
           <a href="#" className="-m-1.5 p-1.5">
             <span className="sr-only">MedAgenda</span>
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center shadow-lg">
-                <HeartIcon className="w-6 h-6 text-white" />
+              <div className="w-10 h-10 bg-gradient-to-br from-[#259487] to-indigo-700 rounded-xl flex items-center justify-center shadow-lg">
+                <Activity className="w-6 h-6 text-white" />
               </div>
               <span className="text-xl font-bold text-white">MedAgenda</span>
             </div>
