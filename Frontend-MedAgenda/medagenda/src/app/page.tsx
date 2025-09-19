@@ -1,7 +1,7 @@
 import { Children } from "react";
 import FooterComponent from "../components/organisms/footercomponent";
 import HeaderComponent from "../components/molecules/HeaderComponent";
-import ServicesCards from "../../components/molecules/cards";
+import ServicesCards from "../components/molecules/cards";
 
 export default function Home() {
   return (
