@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import authRoutes from "./routes/auth.routes.js";
-import productRoutes from "./routes/product.routes.js";
 
 dotenv.config();
 const app = express();
@@ -12,7 +11,6 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
-app.use("/api/products", productRoutes);
 
 console.log("🔌 Intentando conectar a MongoDB Atlas...");
 

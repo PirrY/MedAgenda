@@ -1,6 +1,6 @@
 import { Children } from "react";
-import FooterComponent from "../../components/atoms/molecules/organisms/footercomponent";
-import HeaderComponent from "../../components/atoms/molecules/organisms/headercomponent";
+import FooterComponent from "../components/organisms/footercomponent";
+import HeaderComponent from "../components/molecules/header";
 
 export default function Home() {
   return (
