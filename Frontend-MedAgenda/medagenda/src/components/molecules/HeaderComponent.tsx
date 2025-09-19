@@ -1,4 +1,5 @@
 'use client'
+import { useState } from 'react'
 import { Dialog, DialogPanel, Popover, PopoverButton, PopoverPanel, PopoverGroup } from '@headlessui/react'
 import { 
   ChevronDownIcon,
@@ -11,6 +12,7 @@ import {
   PlayCircleIcon,
   PhoneIcon
 } from '@heroicons/react/24/outline'
+import AuthModal from '../organisms/AuthModal'
 
 // Servicios médicos para el dropdown
 const medicalServices = [
@@ -59,6 +61,10 @@ const navigation = [
 ]
 
 export default function HeaderComponent() {
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
+
+  const openAuthModal = () => setIsAuthModalOpen(true)
+  const closeAuthModal = () => setIsAuthModalOpen(false)
 
   return (
     <header className="bg-[#5C95FF]">
@@ -120,15 +126,19 @@ export default function HeaderComponent() {
         </PopoverGroup>
 
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a 
-            href="#" 
+          <button 
+            onClick={openAuthModal}
             className="text-sm/6 font-semibold text-white hover:text-blue-300 transition-colors duration-200"
           >
             Iniciar sesión <span aria-hidden="true">&rarr;</span>
-          </a>
+          </button>
         </div>
       </nav>
 
+      <AuthModal 
+        isOpen={isAuthModalOpen} 
+        onClose={closeAuthModal} 
+      />
     </header>
   )
 }
