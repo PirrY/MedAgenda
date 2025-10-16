@@ -1,6 +1,6 @@
 import { Field, UseFormRegister, FieldValues, Path } from "react-hook-form"
-import { LoginDTO } from "@/interfaces/login"
-import { RegisterDTO } from "@/interfaces/register"
+import { LoginDTO } from "../../interfaces/login"
+import { RegisterDTO } from "../../interfaces/register"
 
 interface ValuesSelect {
   value: string;

@@ -2,9 +2,9 @@
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { RegisterDTO } from "@/interfaces/register";
-import { RegisterScheme } from "@/schema/register";
-import { registerService } from "@/libs/authService";
+import { RegisterDTO } from "../../interfaces/register";
+import { RegisterScheme } from "../../schema/register";
+import { registerService } from "../../libs/authService";
 import InputComponents from "../atoms/Input";
 import Button from "../atoms/Button";
 

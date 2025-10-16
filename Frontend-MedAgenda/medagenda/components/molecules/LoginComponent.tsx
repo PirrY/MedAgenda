@@ -2,9 +2,9 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import InputComponents from "../atoms/Input";
-import { LoginDTO } from "@/interfaces/login";
-import { loginScheme } from "@/schema/login";
-import { loginService } from "@/libs/authService";
+import { LoginDTO } from "../../interfaces/login";
+import { loginScheme } from "../../schema/login";
+import { loginService } from "../../libs/authService";
 import Cookies from "js-cookie";
 import Button from "../atoms/Button";
 

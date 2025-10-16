@@ -1,7 +1,7 @@
-import { RegisterDTO } from "@/interfaces/register"
+import { RegisterDTO } from "../interfaces/register"
 import { apiFetch } from "./singletonFetch"
 
-import { LoginDTO } from "@/interfaces/login"
+import { LoginDTO } from "../interfaces/login"
 
 export const loginService = (body: LoginDTO) => {
   return apiFetch('/auth/login', 'POST', body)
