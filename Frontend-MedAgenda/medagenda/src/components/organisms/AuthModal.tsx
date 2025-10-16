@@ -24,7 +24,7 @@ export default function AuthModal({
           ✕
         </button>
 
-        <h2 className="mb-6 text-2xl font-bold text-center text-[#4682B4]">
+        <h2 className="mb-6 mt-4 text-2xl font-bold text-center text-[#4682B4]">
           Bienvenido a <span className="text-[#259487]">MedAgenda</span>
         </h2>
 

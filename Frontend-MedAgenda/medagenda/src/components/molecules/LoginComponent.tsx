@@ -61,13 +61,8 @@ export default function LoginComponent() {
         ¿Olvidaste tu contraseña?
       </a>
 
-      <Button variant="primary">Ingresar</Button>
+      <Button variant="primary" className="mb-4">Ingresar</Button>
 
-      <Button variant="secondary">Ingresar con código único</Button>
-
-      <div className="flex items-center justify-center my-2">
-        <span className="text-gray-400 text-sm">O</span>
-      </div>
     </form>
   );
 }

@@ -90,11 +90,8 @@ export default function RegisterComponent() {
       {error && <p className="text-red-500 text-sm">{error}</p>}
       {success && <p className="text-green-500 text-sm">{success}</p>}
 
-      <Button variant="primary">Registrarme</Button>
+      <Button variant="primary" className="mb-4">Registrarme</Button>
 
-      <div className="flex items-center justify-center my-2">
-        <span className="text-gray-400 text-sm">O</span>
-      </div>
     </form>
   );
 }
