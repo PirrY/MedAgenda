@@ -9,7 +9,7 @@ export default function Home() {
       <main className="flex-grow flex items-center justify-center">
         <h1 className="text-center text-2xl font-bold">
         </h1>
-        <ServicesCards></ServicesCards>
+        <ServicesCards />
       </main>
 
       <FooterComponent />

@@ -1,37 +1,10 @@
 "use client";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import InputComponents from "../atoms/Input";
-import { LoginDTO } from "../../interfaces/login";
-import { loginScheme } from "../../schema/login";
-import { loginService } from "../../libs/authService";
-import Cookies from "js-cookie";
 import Button from "../atoms/Button";
+import useLoginComponent from "../../hooks/useLoginComponent";
 
 export default function LoginComponent() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginDTO>({
-    resolver: zodResolver(loginScheme),
-  });
-
-  const onSubmit: SubmitHandler<LoginDTO> = (data) => {
-    loginService(data)
-      .then((info) =>
-        Cookies.set("token", info.token, {
-          expires: 7,
-        })
-      )
-      .catch(() => {
-        console.error("Error en solicitud");
-      });
-  };
-
-  const onErrors = () => {
-    alert("Información incompleta");
-  };
+  const{register, handleSubmit, onSubmit, onErrors, errors} = useLoginComponent();
 
   return (
     <form
