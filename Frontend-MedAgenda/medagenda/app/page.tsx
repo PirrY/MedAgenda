@@ -12,7 +12,6 @@ export default function Home() {
         <ServicesCards />
       </main>
 
-      <FooterComponent />
     </div>
   );
 }

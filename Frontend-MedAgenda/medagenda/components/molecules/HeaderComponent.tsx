@@ -24,7 +24,7 @@ const medicalServices = [
   {
     name: 'Especialidades',
     description: 'Conecta con médicos especialistas',
-    href: '#especialidades',
+    href: '/Specialties',
     icon: UserGroupIcon,
   },
   {
@@ -54,9 +54,9 @@ const medicalServices = [
 ]
 
 const navigation = [
-  { name: 'Doctores', href: '#doctores' },
+  { name: 'Doctores', href: '/Doctors' },
   { name: 'Seguros', href: '#seguros' },
-  { name: 'Nosotros', href: '#nosotros' },
+  { name: 'Nosotros', href: '/us' },
 ]
 
 export default function HeaderComponent() {
@@ -69,7 +69,7 @@ export default function HeaderComponent() {
     <header className="bg-[#4682B4] border-b-4 border-[#566794]">
       <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
         <div className="flex lg:flex-1">
-          <a href="#" className="-m-1.5 p-1.5">
+          <a href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">MedAgenda</span>
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-br from-[#259487] to-indigo-700 rounded-xl flex items-center justify-center shadow-lg">

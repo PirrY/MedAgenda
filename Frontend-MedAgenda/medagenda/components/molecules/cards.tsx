@@ -38,14 +38,14 @@ export default function ServicesCards() {
                     <div className="relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
                         {/* Frente */}
                         <div className="absolute inset-0 flex items-center justify-center 
-                            border-2 border-[#259487] bg-white text-gray-700
+                            border-4 border-[#259487] bg-white text-gray-700
                             text-xl font-bold rounded-2xl shadow-lg 
                             [backface-visibility:hidden]">
                             {service.title}
                         </div>
                         {/* Reverso */}
                         <div className="absolute inset-0 flex items-center justify-center 
-                            border-2 border-[#566794] bg-white text-gray-800 
+                            border-5 border-[#566794] bg-white text-gray-800 
                             text-center text-sm p-4 rounded-2xl shadow-lg 
                             [transform:rotateY(180deg)] [backface-visibility:hidden]">
                             {service.description}
