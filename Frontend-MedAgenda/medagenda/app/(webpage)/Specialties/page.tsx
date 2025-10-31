@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Heading from "../../../components/atoms/Heading";
+import SearchBar from "../../../components/atoms/SearchBar";
+import SpecialtyGrid from "../../../components/organisms/SpecialtyGrid";
 
 const specialties = [
     { name: "Cardiología" },
@@ -37,31 +39,15 @@ export default function Page() {
         <main className="min-h-screen bg-gray-50 flex flex-col items-center px-6 py-16">
             <Heading text="Especialidades" highlight="Médicas" />
 
-            {/* Campo de búsqueda */}
             <div className="mt-4 mb-10 w-full max-w-md">
-                <input
-                    type="text"
-                    placeholder="Buscar especialidad..."
+                <SearchBar
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="w-full px-5 py-3 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-[#2e7bb4] text-gray-700"
+                    placeholder="Buscar especialidad..."
                 />
             </div>
 
-            {/* Tarjetas de especialidades */}
-            <div className="bg-white rounded-3xl shadow p-10 w-full max-w-5xl">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    {filteredSpecialties.map((s, i) => (
-                        <button
-                            key={i}
-                            onClick={() => handleSelectSpecialty(s.name)}
-                            className="bg-[#94bfe3] text-gray-800 font-semibold text-center py-4 rounded-xl hover:bg-[#8bccc4] transition-colors duration-200 shadow-sm w-full"
-                        >
-                            {s.name}
-                        </button>
-                    ))}
-                </div>
-            </div>
+            <SpecialtyGrid specialties={filteredSpecialties} onSelect={handleSelectSpecialty} />
         </main>
     );
 }

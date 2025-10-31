@@ -2,6 +2,7 @@
 import { useSearchParams } from "next/navigation";
 import React from "react";
 import Heading from "../../../components/atoms/Heading";
+import DoctorGrid from "../../../components/organisms/DoctorGrid";
 
 const doctors = [
     { name: "Dr. Juan Pérez", specialty: "Cardiología" },
@@ -40,24 +41,7 @@ export default function Page() {
                 text="Doctores"
                 highlight={selectedSpecialty ? `de ${selectedSpecialty}` : ""}
             />
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-5xl mt-10">
-                {filteredDoctors.map((d, i) => (
-                    <div
-                        key={i}
-                        className="bg-gradient-to-r from-[#2e7bb4] to-[#8bccc4] p-[2px] rounded-2xl"
-                    >
-                        <div className="bg-white rounded-2xl p-6 text-center shadow hover:shadow-lg transition-all duration-300">
-                            <h3 className="text-gray-800 font-semibold text-lg">
-                                {d.name}
-                            </h3>
-                            <p className="text-gray-500 text-sm mt-1">
-                                {d.specialty}
-                            </p>
-                        </div>
-                    </div>
-                ))}
-            </div>
+            <DoctorGrid doctors={filteredDoctors} />
         </main>
     );
 }
