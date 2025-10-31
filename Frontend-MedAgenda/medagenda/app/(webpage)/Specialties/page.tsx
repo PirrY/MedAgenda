@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import Heading from "../../../components/atoms/Heading";
 
 const specialties = [
@@ -16,16 +17,21 @@ const specialties = [
     { name: "Otorrinolaringología" },
     { name: "Oncología" },
     { name: "Reumatología" },
-    { name: "Cardiología" },
-    { name: "Dermatilogía" }
+    { name: "Gastroenterología" },
+    { name: "Nefrología" }
 ];
 
 export default function Page() {
     const [search, setSearch] = useState("");
+    const router = useRouter();
 
     const filteredSpecialties = specialties.filter((s) =>
         s.name.toLowerCase().includes(search.toLowerCase())
     );
+
+    const handleSelectSpecialty = (specialty: string) => {
+        router.push(`/Doctors?specialty=${encodeURIComponent(specialty)}`);
+    };
 
     return (
         <main className="min-h-screen bg-gray-50 flex flex-col items-center px-6 py-16">
@@ -46,12 +52,13 @@ export default function Page() {
             <div className="bg-white rounded-3xl shadow p-10 w-full max-w-5xl">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                     {filteredSpecialties.map((s, i) => (
-                        <div
+                        <button
                             key={i}
-                            className="bg-[#94bfe3] text-gray-800 font-semibold text-center py-4 rounded-xl hover:bg-[#8bccc4] transition-colors duration-200 shadow-sm"
+                            onClick={() => handleSelectSpecialty(s.name)}
+                            className="bg-[#94bfe3] text-gray-800 font-semibold text-center py-4 rounded-xl hover:bg-[#8bccc4] transition-colors duration-200 shadow-sm w-full"
                         >
                             {s.name}
-                        </div>
+                        </button>
                     ))}
                 </div>
             </div>
