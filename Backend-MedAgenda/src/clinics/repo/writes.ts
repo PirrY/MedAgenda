@@ -1,5 +1,5 @@
 import { Db } from "src/db/types/types";
-import { AddMemberToClinicDto, AddSpecialtiesToClinic, CreateClinicDto } from "../dto/clinics.dto";
+import { AddMemberToClinicDto, AddSpecialtiesToClinicDto, CreateClinicDto } from "../dto/clinics.dto";
 
 
 export async function insertClinic(db: Db, dto: CreateClinicDto, user_id: number): Promise<void> {
@@ -22,7 +22,7 @@ export async function insertMembership(db: Db, dto: AddMemberToClinicDto): Promi
     );
 }
 
-export async function insertClinicSpecialties(db: Db, dto: AddSpecialtiesToClinic): Promise<void> {
+export async function insertClinicSpecialties(db: Db, dto: AddSpecialtiesToClinicDto): Promise<void> {
     for(const id of dto.specialty_ids) {
         await db.execute(
             'INSERT INTO clinic_specialties(clinic_id, specialty_id) VALUES (?, ?)',
