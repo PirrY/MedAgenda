@@ -8,5 +8,5 @@ export const loginService = (body: LoginDTO) => {
 }
 
 export const registerService = (body: RegisterDTO) => {
-    return apiFetch('/auth/register', 'POST', body)
+    return apiFetch('/users/register', 'POST', body)
 }

@@ -7,7 +7,8 @@ CREATE TABLE users(
     second_name VARCHAR(20),
     first_last_name VARCHAR(20) NOT NULL,
     second_last_name VARCHAR(20) NOT NULL,
-    legal_id VARCHAR(10) NOT NULL UNIQUE, -- Cedula 
+    legal_id VARCHAR(10) NOT NULL UNIQUE, -- Cedula
+    password_hash VARCHAR(255) NOT NULL,
     user_phone_number VARCHAR(13) NOT NULL,
     user_email_address VARCHAR(255) NOT NULL UNIQUE
 );

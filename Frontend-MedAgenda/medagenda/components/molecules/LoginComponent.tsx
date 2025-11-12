@@ -3,8 +3,11 @@ import InputComponents from "../atoms/Input";
 import Button from "../atoms/Button";
 import useLoginComponent from "../../hooks/useLoginComponent";
 
-export default function LoginComponent() {
-  const{register, handleSubmit, onSubmit, onErrors, errors} = useLoginComponent();
+type Props = { onSuccess?: () => void };
+
+export default function LoginComponent({ onSuccess }: Props) {
+  const { register, handleSubmit, onSubmit, onErrors, errors, isSubmitting } =
+    useLoginComponent({ onSuccess });
 
   return (
     <form
@@ -18,6 +21,9 @@ export default function LoginComponent() {
         nameRegister="email"
         register={register}
       />
+      {errors?.email && (
+        <p className="text-xs text-red-500">{errors.email.message as string}</p>
+      )}
 
       <InputComponents
         label="Contraseña"
@@ -26,6 +32,9 @@ export default function LoginComponent() {
         nameRegister="password"
         register={register}
       />
+      {errors?.password && (
+        <p className="text-xs text-red-500">{errors.password.message as string}</p>
+      )}
 
       <a
         href="#"
@@ -34,8 +43,9 @@ export default function LoginComponent() {
         ¿Olvidaste tu contraseña?
       </a>
 
-      <Button variant="primary" className="mb-4">Ingresar</Button>
-
+      <Button variant="primary" className="mb-4" type="submit" disabled={isSubmitting}>
+        {isSubmitting ? "Ingresando..." : "Ingresar"}
+      </Button>
     </form>
   );
 }

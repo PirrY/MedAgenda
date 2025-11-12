@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Dialog, DialogPanel, Popover, PopoverButton, PopoverPanel, PopoverGroup } from '@headlessui/react'
 import { Activity } from "lucide-react";
 import { 
@@ -10,47 +10,19 @@ import {
   CogIcon,
   ClockIcon,
   HeartIcon,
+  UserCircleIcon,
 } from '@heroicons/react/24/outline'
+import Cookies from 'js-cookie'
 import AuthModal from '../organisms/AuthModal'
 
 // Servicios médicos para el dropdown
 const medicalServices = [
-  {
-    name: 'Consulta General',
-    description: 'Atención médica primaria y diagnósticos',
-    href: '#consulta-general',
-    icon: HeartIcon,
-  },
-  {
-    name: 'Especialidades',
-    description: 'Conecta con médicos especialistas',
-    href: '/Specialties',
-    icon: UserGroupIcon,
-  },
-  {
-    name: 'Telemedicina',
-    description: 'Consultas médicas virtuales 24/7',
-    href: '#telemedicina',
-    icon: ClockIcon,
-  },
-  {
-    name: 'Historial Médico',
-    description: 'Acceso seguro a tu información médica',
-    href: '#historial',
-    icon: ShieldCheckIcon,
-  },
-  {
-    name: 'Citas Online',
-    description: 'Agenda y gestiona tus citas fácilmente',
-    href: '#citas',
-    icon: CalendarIcon,
-  },
-  {
-    name: 'Integración Clínicas',
-    description: 'Conecta con hospitales y clínicas',
-    href: '#integracion',
-    icon: CogIcon,
-  },
+  { name: 'Consulta General', description: 'Atención médica primaria y diagnósticos', href: '#consulta-general', icon: HeartIcon },
+  { name: 'Especialidades', description: 'Conecta con médicos especialistas', href: '/Specialties', icon: UserGroupIcon },
+  { name: 'Telemedicina', description: 'Consultas médicas virtuales 24/7', href: '#telemedicina', icon: ClockIcon },
+  { name: 'Historial Médico', description: 'Acceso seguro a tu información médica', href: '#historial', icon: ShieldCheckIcon },
+  { name: 'Citas Online', description: 'Agenda y gestiona tus citas fácilmente', href: '#citas', icon: CalendarIcon },
+  { name: 'Integración Clínicas', description: 'Conecta con hospitales y clínicas', href: '#integracion', icon: CogIcon },
 ]
 
 const navigation = [
@@ -61,9 +33,21 @@ const navigation = [
 
 export default function HeaderComponent() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
+  const [hasToken, setHasToken] = useState(false)
 
   const openAuthModal = () => setIsAuthModalOpen(true)
   const closeAuthModal = () => setIsAuthModalOpen(false)
+
+  // Leer cookie 'token' al montar
+  useEffect(() => {
+    setHasToken(Boolean(Cookies.get('token')))
+  }, [])
+
+  // Callback al éxito: marcar sesión iniciada y cerrar modal
+  const handleAuthSuccess = () => {
+    setHasToken(true)
+    closeAuthModal()
+  }
 
   return (
     <header className="bg-[#4682B4] border-b-4 border-[#566794]">
@@ -125,18 +109,30 @@ export default function HeaderComponent() {
         </PopoverGroup>
 
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <button 
-            onClick={openAuthModal}
-            className="text-sm/6 font-semibold text-white hover:text-blue-300 transition-colors duration-200"
-          >
-            Iniciar sesión <span aria-hidden="true">&rarr;</span>
-          </button>
+          {!hasToken ? (
+            <button 
+              onClick={openAuthModal}
+              className="text-sm/6 font-semibold text-white hover:text-blue-300 transition-colors duration-200"
+            >
+              Iniciar sesión <span aria-hidden="true">&rarr;</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="p-1 rounded-full hover:bg-white/10 transition-colors duration-200"
+              aria-label="Perfil"
+              onClick={() => {/* placeholder: acción futura */}}
+            >
+              <UserCircleIcon className="h-7 w-7 text-white" />
+            </button>
+          )}
         </div>
       </nav>
 
       <AuthModal 
         isOpen={isAuthModalOpen} 
         onClose={closeAuthModal} 
+        onSuccess={handleAuthSuccess}
       />
     </header>
   )
