@@ -14,6 +14,6 @@ export class UsersService {
         dto.password = await AuthHelpers.hashPassword(dto.password);
         if(dto.second_name === undefined) dto.second_name = null;
         await UserWrites.insertUser(this.db, dto);
-    }
+    } 
 
 }

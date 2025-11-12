@@ -22,9 +22,9 @@ export async function getCountries(db: Db): Promise<Country[]> {
 }
 
 export async function getStateByCountryId(db: Db, country_id: number): Promise<State[]> {
-    return await db.query<State>('SELECT * FROM states');
+    return await db.query<State>('SELECT * FROM states WHERE country_id = ?', [country_id]);
 }
 
 export async function getCitiesByStateId(db: Db, state_id: number): Promise<City[]> {
-    return await db.query<City>('SELECT * FROM cities');
+    return await db.query<City>('SELECT * FROM cities WHERE state_id = ?', [state_id]);
 }
