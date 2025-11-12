@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, ParseIntPipe, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ClinicsService } from './clinics.service';
 import { Roles } from 'src/auth/role_guard/roles.enum';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard';
@@ -32,8 +32,8 @@ export class ClinicsController {
 
     @Public()
     @Get('getAllClinicsInCity')
-    async getAllClinicsInCity(@Body() dto: GetClinicsInCityDto): Promise<Clinic[]> {
-        return await this.clinicService.getAllClinicsInCity(dto);
+    async getAllClinicsInCity(@Query('city_id', ParseIntPipe) city_id: number): Promise<Clinic[]> {
+        return await this.clinicService.getAllClinicsInCity(city_id);
     }
 
     @Public()

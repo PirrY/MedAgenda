@@ -24,8 +24,8 @@ export class ClinicsService {
         return await ClinicReads.getClinicsWithSpecialty(this.db, dto.specialty_id);
     }
 
-    async getAllClinicsInCity(dto: GetClinicsInCityDto): Promise<ClinicReads.Clinic[]> {
-        return await ClinicReads.getClinicsInCity(this.db, dto.city_id);
+    async getAllClinicsInCity(city_id: number): Promise<ClinicReads.Clinic[]> {
+        return await ClinicReads.getClinicsInCity(this.db, city_id);
     } 
 
     async getAllClinicsInState(dto: GetClinicsInStateDto): Promise<ClinicReads.Clinic[]> {

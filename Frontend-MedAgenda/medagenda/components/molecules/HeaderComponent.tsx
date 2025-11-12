@@ -54,7 +54,7 @@ const medicalServices = [
 ]
 
 const navigation = [
-  { name: 'Doctores', href: '/Doctors' },
+  { name: 'Clínicas', href: '/Clinics' },
   { name: 'Seguros', href: '#seguros' },
   { name: 'Nosotros', href: '/us' },
 ]

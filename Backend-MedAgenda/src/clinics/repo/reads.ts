@@ -4,6 +4,7 @@ import { Db } from "src/db/types/types";
 export type Clinic = {
     clinic_id: number,
     clinic_name: string,
+    is_open: boolean,
     clinic_phone_number: string,
     clinic_city_id: number,
     clinic_address: string,
@@ -29,18 +30,18 @@ export async function getRoleByIds(db: Db, clinic_id: number, user_id: number): 
 }
 
 export async function getClinics(db: Db): Promise<Clinic[]> {
-    return await db.query<Clinic>('SELECT clinic_id, clinic_name, clinic_phone_number, clinic_city_id, clinic_address, clinic_description FROM clinics');
+    return await db.query<Clinic>('SELECT clinic_id, clinic_name, is_open, clinic_phone_number, clinic_city_id, clinic_address, clinic_description FROM clinics');
 }
 
 export async function getClinicsWithSpecialty(db: Db, specialty_id: number): Promise<Clinic[]> {
-    return await db.query<Clinic>('SELECT clinic_id, clinic_name, clinic_phone_number, clinic_city_id, clinic_address, clinic_description FROM clinics c JOIN clinic_specialties cs ON c.clinic_id = cs.clinic_id WHERE cs.specialty_id = ?', [specialty_id])
+    return await db.query<Clinic>('SELECT clinic_id, clinic_name, is_open, clinic_phone_number, clinic_city_id, clinic_address, clinic_description FROM clinics c JOIN clinic_specialties cs ON c.clinic_id = cs.clinic_id WHERE cs.specialty_id = ?', [specialty_id])
 }
 
 export async function getClinicsInCity(db: Db, city_id: number): Promise<Clinic[]> {
-    return await db.query<Clinic>('SELECT clinic_id, clinic_name, clinic_phone_number, clinic_city_id, clinic_address, clinic_description FROM clinics c WHERE clinic_city_id = ?', [city_id]);
+    return await db.query<Clinic>('SELECT clinic_id, clinic_name, is_open, clinic_phone_number, clinic_city_id, clinic_address, clinic_description FROM clinics c WHERE clinic_city_id = ?', [city_id]);
 }
 
 export async function getClinicsInState(db: Db, state_id: number): Promise<Clinic[]> {
-    return await db.query<Clinic>('SELECT clinic_id, clinic_name, clinic_phone_number, clinic_city_id, clinic_address, clinic_description FROM clinics c JOIN cities ct ON c.clinic_city_id = ct.city_id JOIN states st ON st.state_id = ct.state_id WHERE ct.state_id = ?', [state_id]);
+    return await db.query<Clinic>('SELECT clinic_id, clinic_name, is_open, clinic_phone_number, clinic_city_id, clinic_address, clinic_description FROM clinics c JOIN cities ct ON c.clinic_city_id = ct.city_id JOIN states st ON st.state_id = ct.state_id WHERE ct.state_id = ?', [state_id]);
 }
 
