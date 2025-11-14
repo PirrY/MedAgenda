@@ -1,3 +1,4 @@
+import { Transform, Type } from "class-transformer";
 import { IsArray, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsPhoneNumber, IsString, MaxLength } from "class-validator";
 import { Roles } from "src/auth/role_guard/roles.enum";
 
@@ -62,8 +63,8 @@ export class AddSpecialtiesToClinicDto {
 
 export class GetClinicsWithSpecialtyDto {
     @IsNotEmpty()
-    @IsNumber()
-    specialty_id: number;
+    @IsArray()
+    specialty_ids: number[];
 }
 
 export class GetClinicsInCityDto {
@@ -76,6 +77,40 @@ export class GetClinicsInStateDto {
     @IsNotEmpty()
     @IsNumber()
     state_id: number;
+}
+
+export class GetClinicsInCountryDto {
+    @IsNotEmpty()
+    @IsNumber()
+    country_id: number;
+}
+
+export class GetClinicsWithSpecialtyInCityDto {
+  @IsNotEmpty()
+  @IsArray()
+  @Transform(({ value }) =>
+    Array.isArray(value) ? value.map(Number) : [Number(value)]
+  )
+  specialty_ids: number[];
+
+  @IsNotEmpty()
+  @Type(() => Number)
+  @IsNumber()
+  city_id: number;
+}
+
+export class GetClinicsWithSpecialtyInCountryDto {
+  @IsNotEmpty()
+  @IsArray()
+  @Transform(({ value }) =>
+    Array.isArray(value) ? value.map(Number) : [Number(value)]
+  )
+  specialty_ids: number[];
+
+  @IsNotEmpty()
+  @Type(() => Number)
+  @IsNumber()
+  country_id: number;
 }
 
 

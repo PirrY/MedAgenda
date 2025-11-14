@@ -1,36 +1,80 @@
 "use client";
 
-import React, { useState } from "react";
-import Heading from "../../../components/atoms/Heading";                // ajusta ruta
-import { useCountries } from "../../../hooks/useCountries";          // nuevo
-import { useStates } from "../../../hooks/useStates";                  // ya lo tienes
-import { useCities } from "../../../hooks/useCities";                  // nuevo
-import { useClinicsByCity } from "../../../hooks/useClinicsComponent"; // tu hook
+import React, { useMemo, useState } from "react";
+import Heading from "../../../components/atoms/Heading";
+import { useCountries } from "../../../hooks/useCountries";
+import { useStates } from "../../../hooks/useStates";
+import { useCities } from "../../../hooks/useCities";
+import { useSpecialties } from "../../../hooks/useSpecialties";
+import { useClinicsSearch, ClinicSearchFilters } from "../../../hooks/useClinicsSearch";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 export default function Page() {
   const [countryId, setCountryId] = useState<number | null>(null);
   const [stateId, setStateId] = useState<number | null>(null);
   const [cityId, setCityId] = useState<number | null>(null);
-  const [submittedCityId, setSubmittedCityId] = useState<number | null>(null);
+  const [selectedSpecialtyIds, setSelectedSpecialtyIds] = useState<number[]>([]);
+  const [specialtyOpen, setSpecialtyOpen] = useState(false);
+  const [submittedFilters, setSubmittedFilters] = useState<ClinicSearchFilters | undefined>(undefined);
 
   const { countries, loading: loadingCountries, error: errorCountries } = useCountries();
   const { states, loading: loadingStates, error: errorStates } = useStates(countryId ?? undefined);
   const { cities, loading: loadingCities, error: errorCities } = useCities(stateId);
-  const { clinics, loading: loadingClinics, error: errorClinics } = useClinicsByCity(submittedCityId ?? undefined);
+  const { specialties, loading: loadingSpecialties, error: errorSpecialties } = useSpecialties();
+
+  const { clinics, loading: loadingClinics, error: errorClinics } = useClinicsSearch(submittedFilters);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (cityId) setSubmittedCityId(cityId);
+    if (!countryId) return;
+    setSubmittedFilters({
+      countryId,
+      stateId: stateId ?? undefined,
+      cityId: cityId ?? undefined,
+      specialtyIds: selectedSpecialtyIds.length ? selectedSpecialtyIds : undefined,
+    });
+    setSpecialtyOpen(false);
   };
 
-  const hasErrors = errorCountries || errorStates || errorCities || errorClinics;
+  const onCountryChange = (val: number | null) => {
+    setCountryId(val);
+    setStateId(null);
+    setCityId(null);
+    setSubmittedFilters(undefined);
+  };
+  const onStateChange = (val: number | null) => {
+    setStateId(val);
+    setCityId(null);
+    setSubmittedFilters(undefined);
+  };
+
+  const selectedCount = selectedSpecialtyIds.length;
+  const selectedLabel = useMemo(() => {
+    if (loadingSpecialties) return "Cargando especialidades...";
+    if (selectedCount === 0) return "Cualquiera";
+    if (selectedCount === 1) {
+      const s = specialties.find(x => x.specialty_id === selectedSpecialtyIds[0]);
+      return s ? s.specialty_name : "1 seleccionada";
+    }
+    return `${selectedCount} seleccionadas`;
+  }, [loadingSpecialties, selectedCount, specialties, selectedSpecialtyIds]);
+
+  const toggleSpecialty = (id: number) => {
+    setSelectedSpecialtyIds(prev =>
+      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+    );
+  };
+
+  const clearSpecialties = () => setSelectedSpecialtyIds([]);
+
+  const hasErrors = errorCountries || errorStates || errorCities || errorClinics || errorSpecialties;
 
   return (
     <main className="min-h-screen bg-gray-50 px-6 py-16 flex flex-col items-center">
       <Heading text="Clínicas" highlight="" />
 
       <form onSubmit={handleSearch} className="mt-8 w-full max-w-5xl flex justify-center">
-        <div className="flex w-full items-stretch bg-white rounded-full shadow-lg overflow-hidden border border-gray-200">
+        <div className="relative flex w-full items-stretch bg-white rounded-full shadow-lg overflow-visible border border-gray-200">
           <div className="flex-1 flex items-center px-4 py-3 gap-3 border-r border-gray-200">
             <div className="flex flex-col w-full">
               <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">País</span>
@@ -38,11 +82,8 @@ export default function Page() {
                 className="mt-0.5 w-full bg-transparent outline-none text-sm text-gray-900"
                 value={countryId ?? ""}
                 onChange={(e) => {
-                  const val = e.target.value ? Number(e.target.value) : null;
-                  setCountryId(val);
-                  setStateId(null);
-                  setCityId(null);
-                  setSubmittedCityId(null);
+                  const v = e.target.value ? Number(e.target.value) : null;
+                  onCountryChange(v);
                 }}
               >
                 <option value="">{loadingCountries ? "Cargando países..." : "Selecciona un país"}</option>
@@ -60,10 +101,8 @@ export default function Page() {
                 className="mt-0.5 w-full bg-transparent outline-none text-sm text-gray-900 disabled:text-gray-400"
                 value={stateId ?? ""}
                 onChange={(e) => {
-                  const val = e.target.value ? Number(e.target.value) : null;
-                  setStateId(val);
-                  setCityId(null);
-                  setSubmittedCityId(null);
+                  const v = e.target.value ? Number(e.target.value) : null;
+                  onStateChange(v);
                 }}
                 disabled={!countryId || loadingStates}
               >
@@ -79,14 +118,14 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="flex-1 flex items-center px-4 py-3 gap-3">
+          <div className="flex-1 flex items-center px-4 py-3 gap-3 border-r border-gray-200">
             <div className="flex flex-col w-full">
               <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Ciudad</span>
               <select
                 className="mt-0.5 w-full bg-transparent outline-none text-sm text-gray-900 disabled:text-gray-400"
                 value={cityId ?? ""}
                 onChange={(e) => setCityId(e.target.value ? Number(e.target.value) : null)}
-                disabled={!stateId || loadingCities}
+                disabled={!countryId || !stateId || loadingCities}
               >
                 <option value="">
                   {!stateId ? "Selecciona un estado primero"
@@ -100,9 +139,68 @@ export default function Page() {
             </div>
           </div>
 
+          <div className="flex-1 flex items-center px-4 py-3 gap-3 relative">
+            <div className="flex flex-col w-full">
+              <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Especialidades</span>
+              <button
+                type="button"
+                className="mt-0.5 w-full bg-white text-sm text-gray-900 outline-none border border-gray-200 rounded-md px-3 py-1.5 flex items-center justify-between hover:bg-gray-50"
+                onClick={() => setSpecialtyOpen(o => !o)}
+                disabled={loadingSpecialties}
+              >
+                <span className="truncate">{selectedLabel}</span>
+                <ChevronDownIcon className={`h-4 w-4 text-gray-500 transition-transform ${specialtyOpen ? "rotate-180" : ""}`} />
+              </button>
+
+              {specialtyOpen && (
+                <div className="absolute top-full left-0 mt-2 z-30 w-80 max-h-72 overflow-auto rounded-xl border border-gray-200 bg-white shadow-lg p-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs text-gray-500">Selecciona especialidades</span>
+                    {selectedSpecialtyIds.length > 0 && (
+                      <button
+                        type="button"
+                        className="text-xs text-[#4682B4] hover:underline"
+                        onClick={clearSpecialties}
+                      >
+                        Limpiar
+                      </button>
+                    )}
+                  </div>
+
+                  <ul className="space-y-2">
+                    {specialties.map(sp => (
+                      <li key={sp.specialty_id} className="flex items-center gap-2">
+                        <input
+                          id={`sp-${sp.specialty_id}`}
+                          type="checkbox"
+                          checked={selectedSpecialtyIds.includes(sp.specialty_id)}
+                          onChange={() => toggleSpecialty(sp.specialty_id)}
+                          className="accent-[#4682B4]"
+                        />
+                        <label htmlFor={`sp-${sp.specialty_id}`} className="text-sm text-gray-800">
+                          {sp.specialty_name}
+                        </label>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="mt-3 text-right">
+                    <button
+                      type="button"
+                      className="text-sm font-semibold text-white bg-[#4682B4] hover:bg-[#3b6a93] px-3 py-1.5 rounded-md"
+                      onClick={() => setSpecialtyOpen(false)}
+                    >
+                      Listo
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
           <button
             type="submit"
-            disabled={!cityId}
+            disabled={!countryId}
             className="flex items-center justify-center px-6 sm:px-7 bg-gradient-to-br from-[#259487] to-indigo-700 text-white text-sm font-semibold disabled:opacity-60 disabled:cursor-not-allowed hover:bg-orange-600 transition-colors"
           >
             <span className="hidden sm:inline mr-1">Buscar</span>
@@ -113,23 +211,23 @@ export default function Page() {
       <section className="mt-10 w-full max-w-5xl">
         {hasErrors && (
           <p className="mb-4 text-sm text-red-500">
-            {errorCountries || errorStates || errorCities || errorClinics}
+            {errorCountries || errorStates || errorCities || errorClinics || errorSpecialties}
           </p>
         )}
 
-        {!submittedCityId && (
+        {!submittedFilters && (
           <p className="text-sm text-gray-500">
-            Selecciona país, estado y ciudad y pulsa <span className="font-semibold">Buscar</span>.
+            Selecciona al menos el país (los demás campos son opcionales) y pulsa <span className="font-semibold">Buscar</span>.
           </p>
         )}
 
-        {submittedCityId && loadingClinics && (
+        {submittedFilters && loadingClinics && (
           <p className="text-sm text-gray-500">Cargando clínicas...</p>
         )}
 
-        {submittedCityId && !loadingClinics && !errorClinics && (
+        {submittedFilters && !loadingClinics && !errorClinics && (
           clinics.length === 0 ? (
-            <p className="text-sm text-gray-500">No se encontraron clínicas para esta ciudad.</p>
+            <p className="text-sm text-gray-500">No se encontraron clínicas para los filtros seleccionados.</p>
           ) : (
             <div className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {clinics.map((clinic) => (

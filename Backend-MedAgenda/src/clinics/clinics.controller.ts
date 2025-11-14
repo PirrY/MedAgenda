@@ -1,8 +1,8 @@
-import { Body, Controller, Get, ParseIntPipe, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, ParseArrayPipe, ParseIntPipe, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ClinicsService } from './clinics.service';
 import { Roles } from 'src/auth/role_guard/roles.enum';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard';
-import { AddMemberToClinicDto, AddSpecialtiesToClinicDto, CreateClinicDto, GetClinicsInCityDto, GetClinicsInStateDto, GetClinicsWithSpecialtyDto } from './dto/clinics.dto';
+import { AddMemberToClinicDto, AddSpecialtiesToClinicDto, CreateClinicDto } from './dto/clinics.dto';
 import { roles } from 'src/auth/role_guard/roles.decorator';
 import { Clinic, Specialty } from './repo';
 import { Public } from 'src/auth/jwt/public.decorator';
@@ -10,53 +10,89 @@ import { Public } from 'src/auth/jwt/public.decorator';
 @UseGuards(JwtAuthGuard)
 @Controller('clinics')
 export class ClinicsController {
-    constructor(private readonly clinicService: ClinicsService){}
-    
-    @Public()
-    @Get('getAllSpecialties')
-    async getAllSpecialties(): Promise<Specialty[]> {
-        return await this.clinicService.getAllSpecialties();
-    }
+  constructor(private readonly clinicService: ClinicsService){}
 
-    @Public()
-    @Get('getAllClinics')
-    async getAllClinics(): Promise<Clinic[]> {
-        return await this.clinicService.getAllClinics();
-    }
+  @Public()
+  @Get('getAllSpecialties')
+  async getAllSpecialties(): Promise<Specialty[]> {
+    return this.clinicService.getAllSpecialties();
+  }
 
-    @Public()
-    @Get('getAllClinicsWithSpecialty')
-    async getAllClinicsWithSpecialty(@Body() dto: GetClinicsWithSpecialtyDto): Promise<Clinic[]> {
-        return await this.clinicService.getAllClinicsWithSpecialties(dto);
-    }
+  @Public()
+  @Get('getAllClinics')
+  async getAllClinics(): Promise<Clinic[]> {
+    return this.clinicService.getAllClinics();
+  }
 
-    @Public()
-    @Get('getAllClinicsInCity')
-    async getAllClinicsInCity(@Query('city_id', ParseIntPipe) city_id: number): Promise<Clinic[]> {
-        return await this.clinicService.getAllClinicsInCity(city_id);
-    }
+  @Public()
+  @Get('getAllClinicsWithSpecialty')
+  async getAllClinicsWithSpecialty(
+    @Query('specialty_ids', new ParseArrayPipe({ items: Number, separator: ',' })) specialty_ids: number[],
+  ): Promise<Clinic[]> {
+    return this.clinicService.getAllClinicsWithSpecialties({ specialty_ids });
+  }
 
-    @Public()
-    @Get('getAllClinicsInState')
-    async getAllClinicsInState(@Body() dto: GetClinicsInStateDto): Promise<Clinic[]> {
-        return await this.clinicService.getAllClinicsInState(dto);
-    }
+  @Public()
+  @Get('getAllClinicsInCity')
+  async getAllClinicsInCity(
+    @Query('city_id', ParseIntPipe) city_id: number
+  ): Promise<Clinic[]> {
+    return this.clinicService.getAllClinicsInCity(city_id);
+  }
 
-    @Post('createClinic')
-    async createClinic(@Body() dto: CreateClinicDto, @Req() req): Promise<void> {
-        return await this.clinicService.createClinic(dto, req.user.id);
-    }
+  @Public()
+  @Get('getAllClinicsWithSpecialtiesInCity')
+  async getAllClinicsWithSpecialtiesInCity(
+    // Acepta specialty_ids como array (repetido en query) o CSV "1,2,3"
+    @Query('specialty_ids') specialty_ids_raw: string[] | string,
+    @Query('city_id', ParseIntPipe) city_id: number,
+  ): Promise<Clinic[]> {
+    const list = Array.isArray(specialty_ids_raw) ? specialty_ids_raw : (specialty_ids_raw ?? '').split(',');
+    const specialty_ids = list.map(n => Number(n)).filter(n => Number.isFinite(n));
+    return this.clinicService.getAllClinicsWithSpecialtiesInCity({ specialty_ids, city_id });
+  }
 
-    @roles(Roles.Owner, Roles.Admin)
-    @Post('addMemberToClinic')
-    async addMemberToClinic(@Body() dto: AddMemberToClinicDto, @Req() req): Promise<void> {
-        return await this.clinicService.addMemberToClinic(dto, req.user.id);
-    }
+  @Public()
+  @Get('getAllClinicsWithSpecialtiesInCountry')
+  async getAllClinicsWithSpecialtiesInCountry(
+    @Query('specialty_ids') specialty_ids_raw: string[] | string,
+    @Query('country_id', ParseIntPipe) country_id: number,
+  ): Promise<Clinic[]> {
+    const list = Array.isArray(specialty_ids_raw) ? specialty_ids_raw : (specialty_ids_raw ?? '').split(',');
+    const specialty_ids = list.map(n => Number(n)).filter(n => Number.isFinite(n));
+    return this.clinicService.getAllClinicsWithSpecialtiesInCountry({ specialty_ids, country_id });
+  }
 
-    @roles(Roles.Owner, Roles.Admin)
-    @Post('addSpecialtiesToClinic')
-    async addSpecialtiesToClinic(@Body() dto: AddSpecialtiesToClinicDto): Promise<void> {
-        return await this.clinicService.addSpecialtiesToClinic(dto);
-    }
+  @Public()
+  @Get('getAllClinicsInState')
+  async getAllClinicsInState(
+    @Query('state_id', ParseIntPipe) state_id: number
+  ): Promise<Clinic[]> {
+    return this.clinicService.getAllClinicsInState(state_id);
+  }
 
+  @Public()
+  @Get('getAllClinicsInCountry')
+  async getAllClinicsInCountry(
+    @Query('country_id', ParseIntPipe) country_id: number
+  ): Promise<Clinic[]> {
+    return this.clinicService.getAllClinicsInCountry(country_id);
+  }
+
+  @Post('createClinic')
+  async createClinic(@Body() dto: CreateClinicDto, @Req() req): Promise<void> {
+    return this.clinicService.createClinic(dto, req.user.id);
+  }
+
+  @roles(Roles.Owner, Roles.Admin)
+  @Post('addMemberToClinic')
+  async addMemberToClinic(@Body() dto: AddMemberToClinicDto, @Req() req): Promise<void> {
+    return this.clinicService.addMemberToClinic(dto, req.user.id);
+  }
+
+  @roles(Roles.Owner, Roles.Admin)
+  @Post('addSpecialtiesToClinic')
+  async addSpecialtiesToClinic(@Body() dto: AddSpecialtiesToClinicDto): Promise<void> {
+    return this.clinicService.addSpecialtiesToClinic(dto);
+  }
 }

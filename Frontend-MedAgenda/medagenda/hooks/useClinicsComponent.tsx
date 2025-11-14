@@ -20,7 +20,7 @@ export function useClinicsByCity(cityId?: number) {
 
     const fetchClinics = async () => {
       try {
-        const data = await getClinicsByCity(cityId); // pega a /clinics/getAllClinicsInCity?city_id=...
+        const data = await getClinicsByCity(cityId); 
         if (!isMounted) return;
         setClinics(data);
       } catch (err: any) {

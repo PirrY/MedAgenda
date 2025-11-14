@@ -2,7 +2,7 @@ import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/c
 import * as ClinicReads from './repo/reads';
 import { DatabaseService } from 'src/db/database.service';
 import { Roles } from 'src/auth/role_guard/roles.enum';
-import { AddMemberToClinicDto, AddSpecialtiesToClinicDto, CreateClinicDto, GetClinicsInCityDto, GetClinicsInStateDto, GetClinicsWithSpecialtyDto } from './dto/clinics.dto';
+import { AddMemberToClinicDto, AddSpecialtiesToClinicDto, CreateClinicDto, GetClinicsInCityDto, GetClinicsInCountryDto, GetClinicsInStateDto, GetClinicsWithSpecialtyDto, GetClinicsWithSpecialtyInCityDto, GetClinicsWithSpecialtyInCountryDto } from './dto/clinics.dto';
 import * as ClinicWrites from './repo/writes'
 
 
@@ -21,16 +21,28 @@ export class ClinicsService {
     }
 
     async getAllClinicsWithSpecialties(dto: GetClinicsWithSpecialtyDto): Promise<ClinicReads.Clinic[]> {
-        return await ClinicReads.getClinicsWithSpecialty(this.db, dto.specialty_id);
+        return await ClinicReads.getClinicsWithSpecialties(this.db, dto.specialty_ids);
+    }
+
+    async getAllClinicsWithSpecialtiesInCity(dto: GetClinicsWithSpecialtyInCityDto): Promise<ClinicReads.Clinic[]> {
+        return await ClinicReads.getClinicsWithSpecialtyInCity(this.db, dto.specialty_ids, dto.city_id);
+    }
+
+    async getAllClinicsWithSpecialtiesInCountry(dto: GetClinicsWithSpecialtyInCountryDto): Promise<ClinicReads.Clinic[]> {
+        return await ClinicReads.getClinicsWithSpecialtyInCountry(this.db, dto.specialty_ids, dto.country_id);
     }
 
     async getAllClinicsInCity(city_id: number): Promise<ClinicReads.Clinic[]> {
         return await ClinicReads.getClinicsInCity(this.db, city_id);
     } 
 
-    async getAllClinicsInState(dto: GetClinicsInStateDto): Promise<ClinicReads.Clinic[]> {
-        return await ClinicReads.getClinicsInState(this.db, dto.state_id);
+    async getAllClinicsInState(state_id: number): Promise<ClinicReads.Clinic[]> {
+        return await ClinicReads.getClinicsInState(this.db, state_id);
     } 
+
+    async getAllClinicsInCountry(country_id: number): Promise<ClinicReads.Clinic[]> {
+        return await ClinicReads.getClinicsInCountry(this.db, country_id);
+    }
 
     async createClinic(dto: CreateClinicDto, requester_id: number): Promise<void> {
         await ClinicWrites.insertClinic(this.db, dto, requester_id);
@@ -47,6 +59,7 @@ export class ClinicsService {
         await ClinicWrites.insertClinicSpecialties(this.db, dto);
     }
 
+    //Helpers
     rankRole(role: Roles): number {
         switch(role) {
             case Roles.Owner:
