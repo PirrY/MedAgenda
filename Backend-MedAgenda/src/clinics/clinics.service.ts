@@ -2,8 +2,9 @@ import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/c
 import * as ClinicReads from './repo/reads';
 import { DatabaseService } from 'src/db/database.service';
 import { Roles } from 'src/auth/role_guard/roles.enum';
-import { AddMemberToClinicDto, AddSpecialtiesToClinicDto, CreateClinicDto, GetClinicsInCityDto, GetClinicsInCountryDto, GetClinicsInStateDto, GetClinicsWithSpecialtyDto, GetClinicsWithSpecialtyInCityDto, GetClinicsWithSpecialtyInCountryDto } from './dto/clinics.dto';
+import { AddMemberToClinicDto, AddSpecialtiesToClinicDto, CreateClinicDto, GetClinicDto, GetClinicsInCityDto, GetClinicsInCountryDto, GetClinicsInStateDto, GetClinicsWithSpecialtyDto, GetClinicsWithSpecialtyInCityDto, GetClinicsWithSpecialtyInCountryDto } from './dto/clinics.dto';
 import * as ClinicWrites from './repo/writes'
+import { PublicDoctor } from 'src/doctors/repo';
 
 
 
@@ -42,6 +43,37 @@ export class ClinicsService {
 
     async getAllClinicsInCountry(country_id: number): Promise<ClinicReads.Clinic[]> {
         return await ClinicReads.getClinicsInCountry(this.db, country_id);
+    }
+
+    async getAllClinicDoctors(dto: GetClinicDto): Promise<PublicDoctor[]> {
+        const rows = await ClinicReads.getClinicDoctors(this.db, dto.clinic_id);
+
+        const doctorsMap = new Map<number, PublicDoctor>();
+
+        for (const row of rows) {
+            if (!doctorsMap.has(row.user_id)) {
+            doctorsMap.set(row.user_id, {
+                first_name: row.first_name,
+                second_name: row.second_name,
+                first_last_name: row.first_last_name,
+                second_last_name: row.second_last_name,
+                specialties: []
+            });
+            }
+
+            doctorsMap.get(row.user_id)!.specialties.push({
+            specialty_id: row.specialty_id,
+            specialty_name: row.specialty_name,
+            specialty_description: row.specialty_description
+            });
+        }
+
+        return Array.from(doctorsMap.values());
+    }
+
+    async getClinicDetails(dto: GetClinicDto): Promise<ClinicReads.Clinic> {
+        const q = await ClinicReads.getClinicDetails(this.db, dto.clinic_id);
+        return q[0];
     }
 
     async createClinic(dto: CreateClinicDto, requester_id: number): Promise<void> {

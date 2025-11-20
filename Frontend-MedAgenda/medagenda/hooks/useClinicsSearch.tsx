@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Clinic } from "../interfaces/clinics";
+import { Clinic } from "../interfaces/clinic";
 import { getClinicsByCity, getClinicsByCountry, getClinicsByState, getClinicsWithSpecialtiesInCity, getClinicsWithSpecialtiesInCountry } from "../libs/clinicsService";
 
 export type ClinicSearchFilters = {

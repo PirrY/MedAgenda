@@ -113,4 +113,11 @@ export class GetClinicsWithSpecialtyInCountryDto {
   country_id: number;
 }
 
+export class GetClinicDto {
+  @Type(() => Number)
+  @IsNotEmpty()
+  @IsNumber()
+  clinic_id: number;
+}
+
 

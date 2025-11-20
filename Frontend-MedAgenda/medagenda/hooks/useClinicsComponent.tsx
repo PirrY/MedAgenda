@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getClinicsByCity } from "../libs/clinicsService";
-import { Clinic } from "../interfaces/clinics";
+import { Clinic } from "../interfaces/clinic";
 
 export function useClinicsByCity(cityId?: number) {
   const [clinics, setClinics] = useState<Clinic[]>([]);

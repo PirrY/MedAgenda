@@ -1,5 +1,6 @@
 import { ClinicSearchFilters } from "../hooks/useClinicsSearch";
-import { Clinic } from "../interfaces/clinics";
+import { Clinic } from "../interfaces/clinic";
+import { Doctor } from "../interfaces/doctor";
 import { apiFetch } from "./singletonFetch";
 
 
@@ -45,5 +46,12 @@ export const getClinicsWithSpecialtiesInCity = (
   return apiFetch(`/clinics/getAllClinicsWithSpecialtiesInCity?${params.toString()}`, 'GET');
 };
 
+export const getClinicDetails = (clinic_id: number): Promise<Clinic> => {
+  return apiFetch(`/clinics/getClinicDetails?clinic_id=${clinic_id}`, 'GET');
+}
+
+export const getClinicDoctors = (clinic_id: number): Promise<Doctor[]> => {
+  return apiFetch(`/clinics/getClinicDoctors?clinic_id=${clinic_id}`,'GET');
+}
 
 

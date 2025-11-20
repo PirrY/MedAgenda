@@ -2,10 +2,11 @@ import { Body, Controller, Get, ParseArrayPipe, ParseIntPipe, Post, Query, Req, 
 import { ClinicsService } from './clinics.service';
 import { Roles } from 'src/auth/role_guard/roles.enum';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard';
-import { AddMemberToClinicDto, AddSpecialtiesToClinicDto, CreateClinicDto } from './dto/clinics.dto';
+import { AddMemberToClinicDto, AddSpecialtiesToClinicDto, CreateClinicDto, GetClinicDto } from './dto/clinics.dto';
 import { roles } from 'src/auth/role_guard/roles.decorator';
 import { Clinic, Specialty } from './repo';
 import { Public } from 'src/auth/jwt/public.decorator';
+import { PublicDoctor } from 'src/doctors/repo';
 
 @UseGuards(JwtAuthGuard)
 @Controller('clinics')
@@ -43,7 +44,6 @@ export class ClinicsController {
   @Public()
   @Get('getAllClinicsWithSpecialtiesInCity')
   async getAllClinicsWithSpecialtiesInCity(
-    // Acepta specialty_ids como array (repetido en query) o CSV "1,2,3"
     @Query('specialty_ids') specialty_ids_raw: string[] | string,
     @Query('city_id', ParseIntPipe) city_id: number,
   ): Promise<Clinic[]> {
@@ -77,6 +77,18 @@ export class ClinicsController {
     @Query('country_id', ParseIntPipe) country_id: number
   ): Promise<Clinic[]> {
     return this.clinicService.getAllClinicsInCountry(country_id);
+  }
+
+  @Public()
+  @Get('getClinicDetails')
+  async getClinicDetails(@Query() dto: GetClinicDto): Promise<Clinic> {
+    return await this.clinicService.getClinicDetails(dto);
+  }
+
+  @Public()
+  @Get('getClinicDoctors')
+  async getClinicDoctors(@Query() dto: GetClinicDto): Promise<PublicDoctor[]> {
+    return await this.clinicService.getAllClinicDoctors(dto);
   }
 
   @Post('createClinic')

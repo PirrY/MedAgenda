@@ -1,5 +1,6 @@
 import { Roles } from "src/auth/role_guard/roles.enum";
 import { Db } from "src/db/types/types";
+import { DoctorRow} from "src/doctors/repo";
 
 export type Clinic = {
     clinic_id: number,
@@ -9,6 +10,7 @@ export type Clinic = {
     clinic_city_id: number,
     clinic_address: string,
     clinic_description?: string,
+    clinic_specialties?: Specialty[],
 }
 
 export type Specialty = {
@@ -58,6 +60,14 @@ export async function getClinicsInState(db: Db, state_id: number): Promise<Clini
 }
 
 export async function getClinicsInCountry(db: Db, country_id: number): Promise<Clinic[]> {
-    return await db.query<Clinic>('SELECT clinic_id, clinic_name, is_open, clinic_phone_number, clinic_city_id, clinic_address, clinic_description FROM clinics c JOIN cities ct on c.clinic_city_id = ct.city_id JOIN states st ON st.state_id WHERE st.country_id = ?', [country_id]);
+    return await db.query<Clinic>('SELECT DISTINCT clinic_id, clinic_name, is_open, clinic_phone_number, clinic_city_id, clinic_address, clinic_description FROM clinics c JOIN cities ct on c.clinic_city_id = ct.city_id JOIN states st ON st.state_id = ct.state_id WHERE st.country_id = ?', [country_id]);
+}
+
+export async function getClinicDetails(db: Db, clinic_id: number): Promise<Clinic[]> {
+    return await db.query<Clinic>('SELECT clinic_id, clinic_name, is_open, clinic_phone_number, clinic_city_id, clinic_address, clinic_description FROM clinics WHERE clinic_id = ?', [clinic_id]);
+}
+
+export async function getClinicDoctors(db: Db, clinic_id: number): Promise<DoctorRow[]> {
+    return await db.query<DoctorRow>(`SELECT u.user_id, u.first_name, u.second_name, u.first_last_name, u.second_last_name, sp.specialty_id, sp.specialty_name, sp.specialty_description FROM users u JOIN clinic_members cm ON u.user_id = cm.user_id JOIN doctor_specialties ds ON ds.doctor_id = u.user_id JOIN specialties sp ON sp.specialty_id = ds.specialty_id WHERE cm.clinic_id = ? AND cm.role_within_clinic = 'Doctor'`, [clinic_id]);
 }
 
