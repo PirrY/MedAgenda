@@ -29,27 +29,32 @@ export default function ServicesCards() {
     ];
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-8">
+        <div className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-16 px-6 py-10">
             {services.map((service, i) => (
-                <div
-                    key={i}
-                    className="group w-72 h-48 [perspective:1000px] mx-auto"
-                >
-                    <div className="relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
-                        {/* Frente */}
-                        <div className="absolute inset-0 flex items-center justify-center 
-                            border-4 border-[#259487] bg-white text-gray-700
-                            text-xl font-bold rounded-2xl shadow-lg 
+                <div key={i} className="group w-full h-64 [perspective:1000px]">
+
+                    <div className="relative w-full h-full transition-transform duration-700 
+                        [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
+
+                        <div className="absolute text-center inset-0 bg-white shadow-md rounded-3xl p-8 
+                            flex flex-col gap-4 border-4 border-[#259487] 
                             [backface-visibility:hidden]">
-                            {service.title}
+
+                            <div className="w-14 h-14 bg-[#E4F0FF] rounded-xl flex items-center justify-center">
+                                <span className="text-[#2B74C7] text-3xl">🩺</span>
+                            </div>
+
+                            <h3 className="text-[#2B74C7] font-bold text-lg uppercase tracking-wide">
+                                {service.title}
+                            </h3>
                         </div>
-                        {/* Reverso */}
-                        <div className="absolute inset-0 flex items-center justify-center 
-                            border-5 border-[#566794] bg-white text-gray-800 
-                            text-center text-sm p-4 rounded-2xl shadow-lg 
+
+                        <div className="absolute inset-0 bg-white shadow-md rounded-3xl p-6 
+                            border-4 border-[#566794] text-gray-700 text-sm text-center flex items-center justify-center
                             [transform:rotateY(180deg)] [backface-visibility:hidden]">
                             {service.description}
                         </div>
+
                     </div>
                 </div>
             ))}
