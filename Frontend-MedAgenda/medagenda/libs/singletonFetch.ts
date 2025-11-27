@@ -1,3 +1,5 @@
+import Cookies from "js-cookie";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 type methods = 'GET' | 'POST' | 'PUT' | 'DELETE';
@@ -7,9 +9,13 @@ export const apiFetch = async (endpoint: string, method: methods, body?: any) =>
     throw new Error('API_URL is not defined. Please set NEXT_PUBLIC_API_URL in your environment variables.');
   }
 
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  const token = typeof window !== "undefined" ? Cookies.get("token") : null;
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+
   const headerOptions: RequestInit = {
     method,
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: (method === 'POST' || method === 'PUT') ? JSON.stringify(body) : undefined,
   };
 

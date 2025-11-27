@@ -93,3 +93,6 @@ CREATE TABLE absences(
     end_date_time DATETIME NOT NULL,
     FOREIGN KEY (doctor_id) REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+
+

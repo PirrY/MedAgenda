@@ -1,6 +1,4 @@
-import { Db } from "src/db/types/types";
-
-export type Appointment = {
+export interface Appointment {
     appointment_id: number,
     clinic_id: number,
     clinic_name: string,
@@ -12,5 +10,3 @@ export type Appointment = {
     end_date_time: string,
     appointment_description?: string,
 }
-
-

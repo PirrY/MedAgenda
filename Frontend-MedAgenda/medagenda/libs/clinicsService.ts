@@ -10,7 +10,7 @@ import { apiFetch } from "./singletonFetch";
 
 export const getClinicsByCountry = (countryId: number): Promise<Clinic[]> => {
   return apiFetch(`/clinics/getAllClinicsInCountry?country_id=${countryId}`, 'GET');
-}
+};
 
 export const getClinicsByCity = (cityId: number): Promise<Clinic[]> => {
   return apiFetch(`/clinics/getAllClinicsInCity?city_id=${cityId}`, 'GET');
@@ -18,7 +18,7 @@ export const getClinicsByCity = (cityId: number): Promise<Clinic[]> => {
 
 export const getClinicsByState = (stateId: number): Promise<Clinic[]> => {
   return apiFetch(`/clinics/getAllClinicsInState?state_id=${stateId}`,'GET');
-}
+};
 
 export const getClinicsWithSpecialtiesInCountry = (
   specialty_ids: number[],
@@ -48,10 +48,10 @@ export const getClinicsWithSpecialtiesInCity = (
 
 export const getClinicDetails = (clinic_id: number): Promise<Clinic> => {
   return apiFetch(`/clinics/getClinicDetails?clinic_id=${clinic_id}`, 'GET');
-}
+};
 
 export const getClinicDoctors = (clinic_id: number): Promise<Doctor[]> => {
   return apiFetch(`/clinics/getClinicDoctors?clinic_id=${clinic_id}`,'GET');
-}
+};
 
 

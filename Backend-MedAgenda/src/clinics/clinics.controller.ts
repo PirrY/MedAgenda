@@ -91,10 +91,13 @@ export class ClinicsController {
     return await this.clinicService.getAllClinicDoctors(dto);
   }
 
+  @Public()
   @Post('createClinic')
   async createClinic(@Body() dto: CreateClinicDto, @Req() req): Promise<void> {
     return this.clinicService.createClinic(dto, req.user.id);
   }
+
+  
 
   @roles(Roles.Owner, Roles.Admin)
   @Post('addMemberToClinic')

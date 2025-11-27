@@ -71,3 +71,7 @@ export async function getClinicDoctors(db: Db, clinic_id: number): Promise<Docto
     return await db.query<DoctorRow>(`SELECT u.user_id, u.first_name, u.second_name, u.first_last_name, u.second_last_name, sp.specialty_id, sp.specialty_name, sp.specialty_description FROM users u JOIN clinic_members cm ON u.user_id = cm.user_id JOIN doctor_specialties ds ON ds.doctor_id = u.user_id JOIN specialties sp ON sp.specialty_id = ds.specialty_id WHERE cm.clinic_id = ? AND cm.role_within_clinic = 'Doctor'`, [clinic_id]);
 }
 
+export async function isUserAdminAnywhere(db: Db, user_id: number): Promise<boolean> {
+    const q = await db.query(`SELECT 1 FROM clinic_members WHERE user_id = ? AND role_within_clinic = 'Admin'`, [user_id]);
+    return q.length > 0;
+}

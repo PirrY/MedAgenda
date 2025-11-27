@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import * as ClinicReads from './repo/reads';
 import { DatabaseService } from 'src/db/database.service';
 import { Roles } from 'src/auth/role_guard/roles.enum';
@@ -90,6 +90,12 @@ export class ClinicsService {
     async addSpecialtiesToClinic(dto: AddSpecialtiesToClinicDto): Promise<void> {
         await ClinicWrites.insertClinicSpecialties(this.db, dto);
     }
+
+    async isUserAdminAnywhere(user_id: number): Promise<boolean> {
+        if(!user_id) throw new BadRequestException('Missing critical parameter user_id');
+        return await ClinicReads.isUserAdminAnywhere(this.db, user_id);
+    }
+    
 
     //Helpers
     rankRole(role: Roles): number {
