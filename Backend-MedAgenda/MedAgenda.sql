@@ -18,6 +18,12 @@ CREATE TABLE clinics(
     clinic_name VARCHAR(25) NOT NULL,
     is_open BOOLEAN DEFAULT TRUE,
     clinic_phone_number VARCHAR(13) NOT NULL,
+    clinic_opening_time VARCHAR(5), -- { En formato 24 horas
+    clinic_break_time VARCHAR(5),
+    clinic_close_time VARCHAR(5), -- }
+    clinic_break_duration VARCHAR(3), -- { Duración en minutos
+    clinic_average_appointment_time VARCHAR(3), -- }
+
     clinic_city_id INT NOT NULL,
     clinic_address VARCHAR(30) NOT NULL,
     clinic_description TEXT,

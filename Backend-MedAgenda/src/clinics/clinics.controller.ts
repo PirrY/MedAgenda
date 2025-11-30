@@ -5,7 +5,7 @@ import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard';
 import { Roles } from 'src/auth/role_guard/roles.enum';
 import { roles } from 'src/auth/role_guard/roles.decorator';
 import { PublicDoctor } from 'src/doctors/repo';
-import { Clinic, Specialty } from './repo';
+import { Clinic, ClinicScheduleRules, Specialty } from './repo';
 import { AddMemberToClinicDto, AddSpecialtiesToClinicDto, CreateClinicDto, GetClinicDto } from './dto/clinics.dto';
 import { ClinicsService } from './clinics.service';
 import { ClinicEntity, PublicDoctorEntity, SpecialtyEntity } from 'src/swagger/entities';
@@ -149,8 +149,6 @@ export class ClinicsController {
     return this.clinicService.createClinic(dto, req.user.id);
   }
 
-  
-
   @roles(Roles.Owner, Roles.Admin)
   @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Add a member to a clinic with a specific role.' })
@@ -170,4 +168,14 @@ export class ClinicsController {
   async addSpecialtiesToClinic(@Body() dto: AddSpecialtiesToClinicDto): Promise<void> {
     return this.clinicService.addSpecialtiesToClinic(dto);
   }
+
+  @Public()
+  @ApiOperation({ summary:  `Gets a clinic's schedule rules (opening time, close time, etc...)` })
+  @ApiBody({ type: GetClinicDto })
+  @ApiOkResponse({ description: `Specified clinic's schedule rules`})
+  @Get('getClinicScheduleRules')
+  async getClinicScheduleRules(@Query() dto: GetClinicDto): Promise<ClinicScheduleRules> {
+    return await this.clinicService.getClinicScheduleRules(dto);
+  }
+
 }

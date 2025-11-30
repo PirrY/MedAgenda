@@ -91,6 +91,10 @@ export class ClinicsService {
         await ClinicWrites.insertClinicSpecialties(this.db, dto);
     }
 
+    async getClinicScheduleRules(dto: GetClinicDto): Promise<ClinicReads.ClinicScheduleRules> {
+        return await ClinicReads.getClinicSchedulingRules(this.db, dto.clinic_id)[0];
+    }
+
     async isUserAdminAnywhere(user_id: number): Promise<boolean> {
         if(!user_id) throw new BadRequestException('Missing critical parameter user_id');
         return await ClinicReads.isUserAdminAnywhere(this.db, user_id);

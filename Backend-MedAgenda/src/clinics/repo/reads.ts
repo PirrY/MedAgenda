@@ -19,6 +19,14 @@ export type Specialty = {
     specialty_description?: string
 }
 
+export type ClinicScheduleRules = {
+    clinic_opening_time: string,
+    clinic_close_time: string,
+    clinic_break_duration: string,
+    clinic_break_time: string,
+    clinic_average_appointment_time: string,
+}
+
 export async function getAllSpecialties(db: Db): Promise<Specialty[]> {
     return await db.query<Specialty>('SELECT * FROM specialties');
 }
@@ -69,6 +77,10 @@ export async function getClinicDetails(db: Db, clinic_id: number): Promise<Clini
 
 export async function getClinicDoctors(db: Db, clinic_id: number): Promise<DoctorRow[]> {
     return await db.query<DoctorRow>(`SELECT u.user_id, u.first_name, u.second_name, u.first_last_name, u.second_last_name, sp.specialty_id, sp.specialty_name, sp.specialty_description FROM users u JOIN clinic_members cm ON u.user_id = cm.user_id JOIN doctor_specialties ds ON ds.doctor_id = u.user_id JOIN specialties sp ON sp.specialty_id = ds.specialty_id WHERE cm.clinic_id = ? AND cm.role_within_clinic = 'Doctor'`, [clinic_id]);
+}
+
+export async function getClinicSchedulingRules(db: Db, clinic_id: number): Promise<ClinicScheduleRules[]> {
+    return await db.query<ClinicScheduleRules>('SELECT clinic_opening_time, clinic_break_time, clinic_close_time, clinic_break_duration, clinic_average_appointment_time FROM clinics WHERE clinic_id = ? LIMIT 1', [clinic_id]);
 }
 
 export async function isUserAdminAnywhere(db: Db, user_id: number): Promise<boolean> {
