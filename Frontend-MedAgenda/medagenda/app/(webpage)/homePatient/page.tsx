@@ -1,10 +1,13 @@
 "use client";
 import React from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { FaCalendarCheck, FaFileMedical, FaStethoscope } from "react-icons/fa";
 import Heading from "../../../components/atoms/Heading";
 
 export default function PHome() {
+    const router = useRouter();
+
     return (
         <div className="flex flex-col min-h-screen">
             <main className="flex-grow flex flex-col items-center px-6 py-16">
@@ -27,7 +30,10 @@ export default function PHome() {
                     <div className="flex flex-col w-full md:w-2/3 gap-8">
 
                         {/* Próximas citas */}
-                        <div className="bg-gradient-to-r from-[#2e7bb4] to-[#8bccc4] p-[2px] rounded-2xl">
+                        <div
+                            className="bg-gradient-to-r from-[#2e7bb4] to-[#8bccc4] p-[2px] rounded-2xl cursor-pointer"
+                            onClick={() => router.push("/nextAppointments")}
+                        >
                             <div className="bg-white rounded-2xl p-6 flex items-center gap-4 shadow hover:shadow-lg transition-all duration-300">
                                 <FaCalendarCheck className="text-[#2e7bb4] text-4xl" />
                                 <div>
