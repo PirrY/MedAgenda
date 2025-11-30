@@ -3,6 +3,7 @@ import { Specialty } from "src/clinics/repo"
 import { Db } from "src/db/types/types";
 
 export type PublicDoctor = {
+    doctor_id: number, 
     first_name: string,
     second_name?: string,
     first_last_name: string,

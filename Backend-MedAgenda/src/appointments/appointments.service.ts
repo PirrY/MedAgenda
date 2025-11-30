@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/db/database.service';
 import { CreateAppointmentDto } from './dto/appointments.dto';
 import * as AppointmentWrites from './repo/writes';
@@ -8,29 +8,29 @@ export class AppointmentsService {
     constructor(private readonly db: DatabaseService){}
 
     async createAppointment(dto: CreateAppointmentDto, requester_id: number): Promise<void> {
-        if(!await this.isDoctorAvailable(dto.doctor_id, dto.start_date_time, dto.end_date_time)) throw new ConflictException('This doctor is not available at the specified time range.');
-        if(!await this.isClinicAvailable(dto.clinic_id, dto.start_date_time, dto.end_date_time)) throw new ConflictException('This clinic is not available at the specified time range.');
+        if(!requester_id) throw new BadRequestException('Missing critrical param requester_id.');
+        if(!dto.start_date_time || !dto.end_date_time) throw new BadRequestException('Missing appointment date/time range.');
+        if(dto.start_date_time >= dto.end_date_time) throw new BadRequestException('start_date_time must be earlier than end_date_time.');
+        if(!await this.isDoctorAvailable(dto.doctor_id, dto.clinic_id, dto.start_date_time, dto.end_date_time)) throw new ConflictException('This doctor is not available at the specified time range.');
+        if(!await this.isClinicAvailable(dto.clinic_id, dto.start_date_time)) throw new ConflictException('This clinic is not available at the specified time range.');
         await AppointmentWrites.insertAppointment(this.db, dto, requester_id);
     }
 
     //Helpers below
-    async isDoctorAvailable(dr_id: number, start: Date, end: Date): Promise<boolean> {
+    async isDoctorAvailable(dr_id: number, clinic_id: number, start: Date, end: Date): Promise<boolean> {
         const sqlstart = start.toISOString().slice(0,19).replace('T',' ');
         const sqlfinish = end.toISOString().slice(0,19).replace('T',' ');
-        var q = await this.db.query('SELECT 1 FROM appointments WHERE doctor_id = ? AND start_date_time <= ? AND end_date_time >= ?',[dr_id, sqlstart, sqlfinish]);
+        const q = await this.db.query('SELECT 1 FROM appointments WHERE doctor_id = ? AND start_date_time < ? AND end_date_time > ?',[dr_id, sqlfinish, sqlstart]);
         if(q.length > 0) return false;
-        q = await this.db.query('SELECT 1 FROM absences WHERE doctor_id = ? AND start_date_time <= ?  AND end_date_time >= ?',[dr_id, sqlstart, sqlfinish]);
-        if(q.length > 0) return false;
-        return true;
+        const absences = await this.db.query('SELECT 1 FROM absences WHERE doctor_id = ? AND clinic_id = ? AND start_date_time < ? AND end_date_time > ?',[dr_id, clinic_id, sqlfinish, sqlstart]);
+        return absences.length === 0;
     }
 
-    async isClinicAvailable(clinic_id: number, start: Date, end: Date): Promise<boolean> {
-        const sqlstart = start.toISOString().slice(0,19).replace('T',' ');
-        const sqlfinish = end.toISOString().slice(0,19).replace('T',' ');
-        const q = await this.db.query('SELECT 1 FROM clinics WHERE clinic_id = ? AND is_open = FALSE');
+    async isClinicAvailable(clinic_id: number, start: Date): Promise<boolean> {
+        const q = await this.db.query('SELECT 1 FROM clinics WHERE clinic_id = ? AND is_open = FALSE', [clinic_id]);
         if(q.length > 0) return false;
-        const start_day = start.getDay();
-        if(start_day === 6 || start_day == 7) return false;
+        const start_day = start.getUTCDay();
+        if(start_day === 0 || start_day === 6) return false;
         return true;  
     }
 

@@ -1,3 +1,4 @@
+import { AppointmentSlot } from "src/appointments/repo/reads";
 import { Roles } from "src/auth/role_guard/roles.enum";
 import { Db } from "src/db/types/types";
 import { DoctorRow} from "src/doctors/repo";
@@ -81,6 +82,18 @@ export async function getClinicDoctors(db: Db, clinic_id: number): Promise<Docto
 
 export async function getClinicSchedulingRules(db: Db, clinic_id: number): Promise<ClinicScheduleRules[]> {
     return await db.query<ClinicScheduleRules>('SELECT clinic_opening_time, clinic_break_time, clinic_close_time, clinic_break_duration, clinic_average_appointment_time FROM clinics WHERE clinic_id = ? LIMIT 1', [clinic_id]);
+}
+
+export async function getClinicDoctorAppointmentsForDay(db: Db, clinic_id: number, doctor_id: number, appointment_date: string): Promise<AppointmentSlot[]> {
+    return await db.query<AppointmentSlot>(
+        `
+        SELECT a.appointment_id, a.start_date_time, a.end_date_time
+        FROM appointments a
+        WHERE a.clinic_id = ? AND a.doctor_id = ? AND DATE(a.start_date_time) = DATE(?)
+        ORDER BY a.start_date_time ASC
+        `,
+        [clinic_id, doctor_id, appointment_date]
+    );
 }
 
 export async function isUserAdminAnywhere(db: Db, user_id: number): Promise<boolean> {

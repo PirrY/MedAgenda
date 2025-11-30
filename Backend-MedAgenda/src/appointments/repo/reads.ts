@@ -13,4 +13,10 @@ export type Appointment = {
     appointment_description?: string,
 }
 
+export type AppointmentSlot = {
+    appointment_id: number,
+    start_date_time: string,
+    end_date_time: string,
+}
+
 

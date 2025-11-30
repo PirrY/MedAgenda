@@ -52,6 +52,9 @@ export class ClinicEntity {
 }
 
 export class PublicDoctorEntity {
+  @ApiProperty({ description: 'Unique doctor identifier.', example: 42 })
+  doctor_id: number;
+
   @ApiProperty({ description: 'First name of the doctor.', example: 'Ana' })
   first_name: string;
 
@@ -122,6 +125,23 @@ export class AppointmentEntity {
     nullable: true,
   })
   appointment_description?: string;
+}
+
+export class AppointmentSlotEntity {
+  @ApiProperty({ description: 'Unique appointment identifier.', example: 101 })
+  appointment_id: number;
+
+  @ApiProperty({
+    description: 'Appointment start time in ISO format.',
+    example: '2025-01-20T09:00:00Z',
+  })
+  start_date_time: string;
+
+  @ApiProperty({
+    description: 'Appointment end time in ISO format.',
+    example: '2025-01-20T09:30:00Z',
+  })
+  end_date_time: string;
 }
 
 export class PatientHistoryEntity {

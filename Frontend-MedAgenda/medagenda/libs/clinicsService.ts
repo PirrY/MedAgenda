@@ -1,5 +1,7 @@
 import { ClinicSearchFilters } from "../hooks/useClinicsSearch";
+import { AppointmentSlot } from "../interfaces/appointment";
 import { Clinic } from "../interfaces/clinic";
+import { ClinicSchedule } from "../interfaces/clinicSchedule";
 import { Doctor } from "../interfaces/doctor";
 import { apiFetch } from "./singletonFetch";
 
@@ -52,6 +54,14 @@ export const getClinicDetails = (clinic_id: number): Promise<Clinic> => {
 
 export const getClinicDoctors = (clinic_id: number): Promise<Doctor[]> => {
   return apiFetch(`/clinics/getClinicDoctors?clinic_id=${clinic_id}`,'GET');
+};
+
+export const getClinicScheduleRules = (clinic_id: number): Promise<ClinicSchedule> => {
+  return apiFetch(`/clinics/getClinicScheduleRules?clinic_id=${clinic_id}`,'GET');
+};
+
+export const getClinicDoctorAppointmentsForDay = (clinic_id: number, doctor_id: number, appointment_date: string): Promise<AppointmentSlot[]> => {
+  return apiFetch(`/clinics/getClinicDoctorAppointmentsForDay?clinic_id=${clinic_id}&doctor_id=${doctor_id}&appointment_date=${appointment_date}`, 'GET');
 };
 
 

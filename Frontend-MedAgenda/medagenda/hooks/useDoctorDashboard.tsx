@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Appointment } from "../interfaces/appointment";
+import { DoctorAppointmentView } from "../interfaces/appointment";
 import { PatientHistory } from "../interfaces/doctor";
 import { getDoctorAppointments, getDoctorPatientHistories } from "../libs/doctorService";
 
@@ -60,7 +60,7 @@ const formatDateTime = (value: string) => {
   }).format(date);
 };
 
-const formatAppointmentPatient = (appointment: Appointment) =>
+const formatAppointmentPatient = (appointment: DoctorAppointmentView) =>
   [appointment.first_name, appointment.second_name, appointment.first_last_name, appointment.second_last_name]
     .filter(Boolean)
     .join(" ")
@@ -73,7 +73,7 @@ const formatHistoryPatient = (history: PatientHistory) =>
     .trim();
 
 export function useDoctorDashboard() {
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [appointments, setAppointments] = useState<DoctorAppointmentView[]>([]);
   const [patientHistories, setPatientHistories] = useState<PatientHistory[]>([]);
   const [timeRange, setTimeRange] = useState<TimeRange>(() => buildDefaultRange());
   const [patientQuery, setPatientQuery] = useState("");
@@ -149,7 +149,7 @@ export function useDoctorDashboard() {
         if (!startDate) return null;
         return { ...appt, startDate, endDate };
       })
-      .filter((appt): appt is Appointment & { startDate: Date; endDate: Date | null } => {
+      .filter((appt): appt is DoctorAppointmentView & { startDate: Date; endDate: Date | null } => {
         if (!appt) return false;
         if (appt.startDate < now) return false;
         if (rangeDates.from && appt.startDate < rangeDates.from) return false;

@@ -1,14 +1,15 @@
 import { Body, Controller, Get, ParseArrayPipe, ParseIntPipe, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { AppointmentSlot } from 'src/appointments/repo/reads';
 import { Public } from 'src/auth/jwt/public.decorator';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard';
 import { Roles } from 'src/auth/role_guard/roles.enum';
 import { roles } from 'src/auth/role_guard/roles.decorator';
 import { PublicDoctor } from 'src/doctors/repo';
 import { Clinic, ClinicScheduleRules, Specialty } from './repo';
-import { AddMemberToClinicDto, AddSpecialtiesToClinicDto, CreateClinicDto, GetClinicDto } from './dto/clinics.dto';
+import { AddMemberToClinicDto, AddSpecialtiesToClinicDto, CreateClinicDto, GetClinicDoctorAppointmentsDto, GetClinicDto } from './dto/clinics.dto';
 import { ClinicsService } from './clinics.service';
-import { ClinicEntity, PublicDoctorEntity, SpecialtyEntity } from 'src/swagger/entities';
+import { AppointmentSlotEntity, ClinicEntity, PublicDoctorEntity, SpecialtyEntity } from 'src/swagger/entities';
 
 @UseGuards(JwtAuthGuard)
 @ApiTags('Clinics')
@@ -138,6 +139,14 @@ export class ClinicsController {
   @Get('getClinicDoctors')
   async getClinicDoctors(@Query() dto: GetClinicDto): Promise<PublicDoctor[]> {
     return await this.clinicService.getAllClinicDoctors(dto);
+  }
+
+  @ApiBearerAuth('bearer')
+  @ApiOperation({ summary: 'List booked appointment slots for a doctor in a clinic on a specific day.' })
+  @ApiOkResponse({ description: 'Booked slots retrieved successfully.', type: AppointmentSlotEntity, isArray: true })
+  @Get('getClinicDoctorAppointmentsForDay')
+  async getClinicDoctorAppointmentsForDay(@Query() dto: GetClinicDoctorAppointmentsDto): Promise<AppointmentSlot[]> {
+    return await this.clinicService.getClinicDoctorAppointmentsForDay(dto);
   }
 
   @Public()

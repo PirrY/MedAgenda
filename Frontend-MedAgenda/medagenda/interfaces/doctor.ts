@@ -1,6 +1,7 @@
 import { SpecialtyDTO } from "./specialty";
 
 export interface Doctor {
+    doctor_id: number,
     first_name: string,
     second_name?: string,
     first_last_name: string,

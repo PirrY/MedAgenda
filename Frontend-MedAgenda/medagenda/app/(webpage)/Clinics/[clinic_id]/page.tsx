@@ -1,13 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useState } from "react";
 import { useClinicDetail } from "../../../../hooks/useClinicDetail";
 
 export default function ClinicDetailPage() {
   const params = useParams();
   const clinicId = Number(params.clinic_id);
-  const [isBookingOpen, setIsBookingOpen] = useState(false);
   const { clinic, doctors, clinicSpecialties, loadingClinic, loadingDoctors, errorClinic, errorDoctors, refetch } = useClinicDetail(clinicId);
 
   return (
@@ -43,12 +42,12 @@ export default function ClinicDetailPage() {
                   <span className={`inline-flex rounded-full px-3 py-1 text-xs ${clinic.is_open ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
                     {clinic.is_open ? "Abierta" : "Cerrada"}
                   </span>
-                  <button
-                    onClick={() => setIsBookingOpen(true)}
+                  <Link
+                    href="#doctor-list"
                     className="rounded-full bg-gradient-to-br from-[#259487] to-indigo-700 text-white text-sm font-semibold px-4 py-2 hover:opacity-95"
                   >
-                    Agendar cita
-                  </button>
+                    Ver horarios
+                  </Link>
                 </div>
               </div>
 
@@ -65,7 +64,7 @@ export default function ClinicDetailPage() {
           </section>
         )}
 
-        <section className="mt-8">
+        <section id="doctor-list" className="mt-8">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-lg font-semibold text-gray-900">Doctores</h2>
             {loadingDoctors && <span className="text-sm text-gray-500">Cargando...</span>}
@@ -79,7 +78,7 @@ export default function ClinicDetailPage() {
             {doctors.map((d) => {
               const fullName = [d.first_name, d.second_name, d.first_last_name, d.second_last_name].filter(Boolean).join(" ");
               return (
-                <article key={`${fullName}`} className="rounded-xl border bg-white p-4 shadow-sm">
+                <article key={d.doctor_id ?? fullName} className="rounded-xl border bg-white p-4 shadow-sm">
                   <div className="flex items-center gap-3">
                     <div className="h-12 w-12 rounded-full bg-gradient-to-br from-[#259487] to-indigo-700" />
                     <div>
@@ -97,26 +96,24 @@ export default function ClinicDetailPage() {
                   ) : (
                     <p className="mt-3 text-sm text-gray-500">Sin especialidades registradas.</p>
                   )}
+                  <div className="mt-4">
+                    {Number.isFinite(d.doctor_id) ? (
+                      <Link
+                        href={`/Clinics/${clinicId}/schedule/${d.doctor_id}`}
+                        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-br from-[#259487] to-indigo-700 px-4 py-2 text-sm font-semibold text-white shadow hover:opacity-95"
+                      >
+                        Agendar con este doctor
+                      </Link>
+                    ) : (
+                      <p className="text-sm text-gray-500">Sin identificador de doctor disponible.</p>
+                    )}
+                  </div>
                 </article>
               );
             })}
           </div>
         </section>
       </div>
-
-      {isBookingOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
-            <h3 className="text-lg font-semibold text-gray-900">Agendar cita</h3>
-            <p className="mt-1 text-sm text-gray-600">Contenido del modal pendiente.</p>
-            <div className="mt-4 text-right">
-              <button onClick={() => setIsBookingOpen(false)} className="px-4 py-2 rounded-md border text-sm">
-                Cerrar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </main>
   );
 }

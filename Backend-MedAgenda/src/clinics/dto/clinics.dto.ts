@@ -1,5 +1,5 @@
 import { Transform, Type } from "class-transformer";
-import { IsArray, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsPhoneNumber, IsString, MaxLength } from "class-validator";
+import { IsArray, IsDate, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsPhoneNumber, IsString, MaxLength } from "class-validator";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Roles } from "src/auth/role_guard/roles.enum";
 
@@ -209,6 +209,39 @@ export class GetClinicDto {
   @IsNotEmpty()
   @IsNumber()
   clinic_id: number;
+}
+
+export class GetClinicDoctorAppointmentsDto {
+  @ApiProperty({
+    description: 'Clinic identifier where the doctor works.',
+    example: 12,
+    type: Number,
+  })
+  @Type(() => Number)
+  @IsNotEmpty()
+  @IsNumber()
+  clinic_id: number;
+
+  @ApiProperty({
+    description: 'Doctor identifier to filter appointments.',
+    example: 8,
+    type: Number,
+  })
+  @Type(() => Number)
+  @IsNotEmpty()
+  @IsNumber()
+  doctor_id: number;
+
+  @ApiProperty({
+    description: 'Target day for which to list appointments (date portion is used).',
+    example: '2025-01-20',
+    type: String,
+    format: 'date',
+  })
+  @Type(() => Date)
+  @IsNotEmpty()
+  @IsDate()
+  appointment_date: Date;
 }
 
 

@@ -1,8 +1,9 @@
 import { BadRequestException, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { AppointmentSlot } from 'src/appointments/repo/reads';
 import * as ClinicReads from './repo/reads';
 import { DatabaseService } from 'src/db/database.service';
 import { Roles } from 'src/auth/role_guard/roles.enum';
-import { AddMemberToClinicDto, AddSpecialtiesToClinicDto, CreateClinicDto, GetClinicDto, GetClinicsInCityDto, GetClinicsInCountryDto, GetClinicsInStateDto, GetClinicsWithSpecialtyDto, GetClinicsWithSpecialtyInCityDto, GetClinicsWithSpecialtyInCountryDto } from './dto/clinics.dto';
+import { AddMemberToClinicDto, AddSpecialtiesToClinicDto, CreateClinicDto, GetClinicDoctorAppointmentsDto, GetClinicDto, GetClinicsInCityDto, GetClinicsInCountryDto, GetClinicsInStateDto, GetClinicsWithSpecialtyDto, GetClinicsWithSpecialtyInCityDto, GetClinicsWithSpecialtyInCountryDto } from './dto/clinics.dto';
 import * as ClinicWrites from './repo/writes'
 import { PublicDoctor } from 'src/doctors/repo';
 
@@ -53,6 +54,7 @@ export class ClinicsService {
         for (const row of rows) {
             if (!doctorsMap.has(row.user_id)) {
             doctorsMap.set(row.user_id, {
+                doctor_id: row.user_id,
                 first_name: row.first_name,
                 second_name: row.second_name,
                 first_last_name: row.first_last_name,
@@ -93,6 +95,12 @@ export class ClinicsService {
 
     async getClinicScheduleRules(dto: GetClinicDto): Promise<ClinicReads.ClinicScheduleRules> {
         return await ClinicReads.getClinicSchedulingRules(this.db, dto.clinic_id)[0];
+    }
+
+    async getClinicDoctorAppointmentsForDay(dto: GetClinicDoctorAppointmentsDto): Promise<AppointmentSlot[]> {
+        if(Number.isNaN(dto.appointment_date.getTime())) throw new BadRequestException('Invalid appointment_date');
+        const dateOnly = dto.appointment_date.toISOString().slice(0, 10);
+        return await ClinicReads.getClinicDoctorAppointmentsForDay(this.db, dto.clinic_id, dto.doctor_id, dateOnly);
     }
 
     async isUserAdminAnywhere(user_id: number): Promise<boolean> {

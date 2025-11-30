@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import { IsDate, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
@@ -24,6 +25,7 @@ export class CreateAppointmentDto {
         type: String,
         format: 'date-time',
     })
+    @Type(() => Date)
     @IsNotEmpty()
     @IsDate()
     start_date_time: Date;
@@ -34,6 +36,7 @@ export class CreateAppointmentDto {
         type: String,
         format: 'date-time',
     })
+    @Type(() => Date)
     @IsNotEmpty()
     @IsDate()
     end_date_time: Date;

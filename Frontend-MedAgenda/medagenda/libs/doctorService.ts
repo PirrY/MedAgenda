@@ -1,4 +1,4 @@
-import { Appointment } from "../interfaces/appointment";
+import { DoctorAppointmentView } from "../interfaces/appointment";
 import { PatientHistory } from "../interfaces/doctor";
 import { apiFetch } from "./singletonFetch";
 
@@ -6,7 +6,7 @@ export const isUserDoctor = (): Promise<boolean> => {
     return apiFetch('/doctors/isUserDoctorAnywhere', 'GET');
 };
 
-export const getDoctorAppointments = (): Promise<Appointment[]> => {
+export const getDoctorAppointments = (): Promise<DoctorAppointmentView[]> => {
     return apiFetch('/doctors/getDoctorAppointments', 'GET');
 };
 
