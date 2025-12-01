@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { Dialog, DialogPanel, Popover, PopoverButton, PopoverPanel, PopoverGroup } from '@headlessui/react'
 import { Activity } from "lucide-react";
-import { 
+import {
   ChevronDownIcon,
   CalendarIcon,
   UserGroupIcon,
@@ -11,8 +11,11 @@ import {
   ClockIcon,
   HeartIcon,
   UserCircleIcon,
+  BellIcon,
+  ArrowRightOnRectangleIcon,
 } from '@heroicons/react/24/outline'
 import Cookies from 'js-cookie'
+import { useRouter } from 'next/navigation'
 import AuthModal from '../organisms/AuthModal'
 
 // Servicios médicos para el dropdown
@@ -34,6 +37,7 @@ const navigation = [
 export default function HeaderComponent() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
   const [hasToken, setHasToken] = useState(false)
+  const router = useRouter()
 
   const openAuthModal = () => setIsAuthModalOpen(true)
   const closeAuthModal = () => setIsAuthModalOpen(false)
@@ -47,6 +51,15 @@ export default function HeaderComponent() {
   const handleAuthSuccess = () => {
     setHasToken(true)
     closeAuthModal()
+  }
+
+  // Función para cerrar sesión
+  const handleLogout = () => {
+    Cookies.remove('token')
+    Cookies.remove('isDoctor')
+    Cookies.remove('isAdmin')
+    setHasToken(false)
+    router.push('/')
   }
 
   return (
@@ -110,21 +123,70 @@ export default function HeaderComponent() {
 
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           {!hasToken ? (
-            <button 
+            <button
               onClick={openAuthModal}
               className="text-sm/6 font-semibold text-white hover:text-blue-300 transition-colors duration-200"
             >
               Iniciar sesión <span aria-hidden="true">&rarr;</span>
             </button>
           ) : (
-            <button
-              type="button"
-              className="p-1 rounded-full hover:bg-white/10 transition-colors duration-200"
-              aria-label="Perfil"
-              onClick={() => {/* placeholder: acción futura */}}
-            >
-              <UserCircleIcon className="h-7 w-7 text-white" />
-            </button>
+            <Popover className="relative">
+              <PopoverButton className="p-1 rounded-full hover:bg-white/10 transition-colors duration-200 focus:outline-none">
+                <UserCircleIcon className="h-7 w-7 text-white" />
+              </PopoverButton>
+
+              <PopoverPanel
+                transition
+                className="absolute right-0 top-full z-10 mt-3 w-64 overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-gray-200 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
+              >
+                <div className="p-2">
+                  {/* Mi Perfil */}
+                  <button
+                    onClick={() => {/* TODO: Navegar a perfil */}}
+                    className="w-full flex items-center gap-x-3 rounded-lg p-3 text-sm text-left hover:bg-gray-50 transition-colors duration-200"
+                  >
+                    <div className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-gray-100">
+                      <UserCircleIcon className="h-6 w-6 text-gray-600" />
+                    </div>
+                    <div className="flex-auto">
+                      <p className="font-semibold text-gray-900">Mi Perfil</p>
+                      <p className="text-xs text-gray-500">Ver y editar información</p>
+                    </div>
+                  </button>
+
+                  {/* Notificaciones */}
+                  <button
+                    onClick={() => {/* TODO: Navegar a notificaciones */}}
+                    className="w-full flex items-center gap-x-3 rounded-lg p-3 text-sm text-left hover:bg-gray-50 transition-colors duration-200"
+                  >
+                    <div className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-gray-100">
+                      <BellIcon className="h-6 w-6 text-gray-600" />
+                    </div>
+                    <div className="flex-auto">
+                      <p className="font-semibold text-gray-900">Notificaciones</p>
+                      <p className="text-xs text-gray-500">Alertas y recordatorios</p>
+                    </div>
+                  </button>
+
+                  {/* Divider */}
+                  <div className="my-2 h-px bg-gray-200"></div>
+
+                  {/* Cerrar Sesión */}
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-x-3 rounded-lg p-3 text-sm text-left hover:bg-red-50 transition-colors duration-200"
+                  >
+                    <div className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-red-100">
+                      <ArrowRightOnRectangleIcon className="h-6 w-6 text-red-600" />
+                    </div>
+                    <div className="flex-auto">
+                      <p className="font-semibold text-red-600">Cerrar Sesión</p>
+                      <p className="text-xs text-gray-500">Salir de tu cuenta</p>
+                    </div>
+                  </button>
+                </div>
+              </PopoverPanel>
+            </Popover>
           )}
         </div>
       </nav>
