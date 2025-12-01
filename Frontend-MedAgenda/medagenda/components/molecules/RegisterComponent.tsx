@@ -3,7 +3,11 @@ import InputComponents from "../atoms/Input";
 import useRegisterComponent from "../../hooks/useRegisterComponent";
 import Button from "../atoms/Button";
 
-export default function RegisterComponent() {
+type Props = {
+  onSuccess?: () => void;
+};
+
+export default function RegisterComponent({ onSuccess }: Props) {
   const {
     register,
     handleSubmit,
@@ -13,7 +17,7 @@ export default function RegisterComponent() {
     success,
     errors,
     isSubmitting,
-  } = useRegisterComponent();
+  } = useRegisterComponent({ onSuccess });
 
   const feedback = error || success;
 

@@ -68,7 +68,7 @@ export default function AuthModal({
           {tab === "login" ? (
             <LoginComponent onSuccess={onSuccess} />
           ) : (
-            <RegisterComponent />
+            <RegisterComponent onSuccess={onSuccess} />
           )}
 
           <div className="mt-4 text-center text-sm text-gray-600">

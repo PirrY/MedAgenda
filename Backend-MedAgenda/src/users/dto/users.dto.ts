@@ -36,14 +36,14 @@ export class CreateUserDto {
     second_last_name: string;
 
     @ApiProperty({
-        description: 'Legal identification number (10 characters).',
+        description: 'Legal identification number (5-15 characters).',
         example: '1234567890',
-        minLength: 10,
-        maxLength: 10,
+        minLength: 5,
+        maxLength: 15,
     })
     @IsNotEmpty()
     @IsString()
-    @Length(10,10)
+    @Length(5,15)
     legal_id: string;
 
     @ApiProperty({
