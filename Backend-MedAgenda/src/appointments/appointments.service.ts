@@ -2,6 +2,7 @@ import { BadRequestException, ConflictException, Injectable } from '@nestjs/comm
 import { DatabaseService } from 'src/db/database.service';
 import { CreateAppointmentDto } from './dto/appointments.dto';
 import * as AppointmentWrites from './repo/writes';
+import * as AppointmentReads from './repo/reads';
 
 @Injectable()
 export class AppointmentsService {
@@ -14,6 +15,10 @@ export class AppointmentsService {
         if(!await this.isDoctorAvailable(dto.doctor_id, dto.clinic_id, dto.start_date_time, dto.end_date_time)) throw new ConflictException('This doctor is not available at the specified time range.');
         if(!await this.isClinicAvailable(dto.clinic_id, dto.start_date_time)) throw new ConflictException('This clinic is not available at the specified time range.');
         await AppointmentWrites.insertAppointment(this.db, dto, requester_id);
+    }
+
+    async getPatientAppointments(patientId: number): Promise<AppointmentReads.Appointment[]> {
+        return await AppointmentReads.getAppointmentsByPatientId(this.db, patientId);
     }
 
     //Helpers below

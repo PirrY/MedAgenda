@@ -27,12 +27,28 @@ export default function useLoginComponent(opts?: UseLoginOpts) {
     setIsSubmitting(true);
     try {
       const info: any = await loginService(data);
+      console.log("Respuesta COMPLETA del login:", JSON.stringify(info, null, 2));
+
       const token = info?.token as string | undefined;
       if (!token) throw new Error("Respuesta inválida del servidor");
       Cookies.set("token", token, { expires: 7 });
 
+      // Decodificar el token para ver si tiene la info del rol
+      try {
+        const tokenParts = token.split('.');
+        if (tokenParts.length === 3) {
+          const payload = JSON.parse(atob(tokenParts[1]));
+          console.log("Payload del JWT:", payload);
+        }
+      } catch (e) {
+        console.error("Error decodificando token:", e);
+      }
+
       const isDoctor = Boolean(info?.isDoctor);
       const isAdmin = Boolean(info?.isAdmin);
+
+      console.log("isDoctor:", isDoctor, "info.isDoctor:", info?.isDoctor);
+      console.log("isAdmin:", isAdmin, "info.isAdmin:", info?.isAdmin);
 
       if (isDoctor) Cookies.set("isDoctor", "true", { expires: 7 });
       else Cookies.remove("isDoctor");
@@ -40,7 +56,8 @@ export default function useLoginComponent(opts?: UseLoginOpts) {
       if (isAdmin) Cookies.set("isAdmin", "true", { expires: 7 });
       else Cookies.remove("isAdmin");
 
-      const destination = isAdmin ? "/homeAdmin" : isDoctor ? "/homeDoctor" : "/";
+      const destination = isAdmin ? "/homeAdmin" : isDoctor ? "/homeDoctor" : "/homePatient";
+      console.log("Redirigiendo a:", destination);
       router.push(destination);
       opts?.onSuccess?.(); // cierra el modal desde el padre
     } catch (e) {

@@ -52,7 +52,23 @@ export async function getDoctorPatientHistory(db: Db, doctor_id: number): Promis
     `, [doctor_id]);
 }
 
-export async function isUserDoctorAnywhere(db: Db, doctor_id: number): Promise<boolean> {
-  const q = await db.query(`SELECT 1 FROM clinic_members WHERE user_id = ? AND role_within_clinic = 'Doctor'`, [doctor_id]);
-  return q.length > 0;
+export async function isUserDoctorAnywhere(db: Db, userId: number): Promise<boolean> {
+  // Un usuario es doctor si tiene rol 'Doctor' o 'Admin' en clinic_members, o si tiene especialidades registradas
+  try {
+    const clinicMember = await db.query(
+      'SELECT 1 FROM clinic_members WHERE user_id = ? AND role_within_clinic IN (?, ?) LIMIT 1',
+      [userId, 'Doctor', 'Admin']
+    );
+    if (clinicMember.length > 0) return true;
+
+    const doctorSpecialty = await db.query(
+      'SELECT 1 FROM doctor_specialties WHERE doctor_id = ? LIMIT 1',
+      [userId]
+    );
+    return doctorSpecialty.length > 0;
+  } catch (error) {
+    console.error('Error in isUserDoctorAnywhere:', error);
+    console.error('userId:', userId);
+    throw error;
+  }
 }

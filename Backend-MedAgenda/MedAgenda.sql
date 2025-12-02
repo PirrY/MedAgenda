@@ -3,14 +3,24 @@ USE MedAgenda;
 
 CREATE TABLE users(
 	user_id INT AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(20) NOT NULL,
-    second_name VARCHAR(20),
-    first_last_name VARCHAR(20) NOT NULL,
-    second_last_name VARCHAR(20) NOT NULL,
-    legal_id VARCHAR(10) NOT NULL UNIQUE, -- Cedula
+    first_name VARCHAR(50) NOT NULL,
+    second_name VARCHAR(50),
+    first_last_name VARCHAR(50) NOT NULL,
+    second_last_name VARCHAR(50) NOT NULL,
+    legal_id VARCHAR(15) NOT NULL UNIQUE, -- Cedula
     password_hash VARCHAR(255) NOT NULL,
-    user_phone_number VARCHAR(13) NOT NULL,
-    user_email_address VARCHAR(255) NOT NULL UNIQUE
+    user_phone_number VARCHAR(20) NOT NULL,
+    user_email_address VARCHAR(255) NOT NULL UNIQUE,
+    birth_date DATE,
+    gender ENUM('M', 'F', 'O'),
+    address VARCHAR(255),
+    city VARCHAR(100),
+    state VARCHAR(100),
+    country VARCHAR(100),
+    emergency_contact_name VARCHAR(100),
+    emergency_contact_phone VARCHAR(20),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE clinics(

@@ -142,7 +142,7 @@ export default function HeaderComponent() {
                 <div className="p-2">
                   {/* Mi Perfil */}
                   <button
-                    onClick={() => {/* TODO: Navegar a perfil */}}
+                    onClick={() => router.push('/profile')}
                     className="w-full flex items-center gap-x-3 rounded-lg p-3 text-sm text-left hover:bg-gray-50 transition-colors duration-200"
                   >
                     <div className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-gray-100">

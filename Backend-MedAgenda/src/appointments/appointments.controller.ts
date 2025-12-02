@@ -1,5 +1,5 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiConflictResponse, ApiCreatedResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiConflictResponse, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard';
 import { AppointmentsService } from './appointments.service';
 import { CreateAppointmentDto } from './dto/appointments.dto';
@@ -21,6 +21,13 @@ export class AppointmentsController {
     async scheduleAppointment(@Body() dto: CreateAppointmentDto, @Req() req): Promise<void> {
         return await this.appointmentService.createAppointment(dto, req.user.id);
     }
-    
+
+    @Get('patient')
+    @ApiOperation({ summary: 'Get all appointments for the authenticated patient.' })
+    @ApiOkResponse({ description: 'Appointments retrieved successfully.' })
+    @ApiUnauthorizedResponse({ description: 'Invalid or missing authentication token.' })
+    async getPatientAppointments(@Req() req): Promise<any> {
+        return await this.appointmentService.getPatientAppointments(req.user.id);
+    }
 
 }

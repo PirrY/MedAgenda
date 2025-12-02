@@ -6,7 +6,7 @@
 # ============================================
 
 # URL base de la API (ajusta según tu configuración)
-API_URL="http://localhost:3000/api"
+API_URL="http://localhost:3001/users"
 
 echo "Creando usuarios administrativos..."
 echo "======================================"
@@ -23,7 +23,13 @@ curl -X POST "${API_URL}/register" \
     "legal_id": "1035678901",
     "password": "12345678",
     "user_phone_number": "+573001234567",
-    "user_email_address": "carlos.martinez@cardiosalud.com"
+    "user_email_address": "carlos.martinez@cardiosalud.com",
+    "birth_date": "1975-03-15",
+    "gender": "M",
+    "address": "Calle 10 #43-12, El Poblado",
+    "city": "Medellín",
+    "state": "Antioquia",
+    "country": "Colombia"
   }'
 echo -e "\n"
 
@@ -39,7 +45,13 @@ curl -X POST "${API_URL}/register" \
     "legal_id": "1025789012",
     "password": "12345678",
     "user_phone_number": "+573109876543",
-    "user_email_address": "maria.lopez@neurocentro.com"
+    "user_email_address": "maria.lopez@neurocentro.com",
+    "birth_date": "1978-08-22",
+    "gender": "F",
+    "address": "Carrera 15 #93-40, Chicó",
+    "city": "Bogotá",
+    "state": "Cundinamarca",
+    "country": "Colombia"
   }'
 echo -e "\n"
 
@@ -55,7 +67,13 @@ curl -X POST "${API_URL}/register" \
     "legal_id": "1045890123",
     "password": "12345678",
     "user_phone_number": "+573201122334",
-    "user_email_address": "ana.torres@pediatricoarcoiris.com"
+    "user_email_address": "ana.torres@pediatricoarcoiris.com",
+    "birth_date": "1982-11-10",
+    "gender": "F",
+    "address": "Avenida 6N #23-45, Granada",
+    "city": "Cali",
+    "state": "Valle del Cauca",
+    "country": "Colombia"
   }'
 echo -e "\n"
 
@@ -71,7 +89,13 @@ curl -X POST "${API_URL}/register" \
     "legal_id": "1055901234",
     "password": "12345678",
     "user_phone_number": "+573155544332",
-    "user_email_address": "sofia.herrera@mujervital.com"
+    "user_email_address": "sofia.herrera@mujervital.com",
+    "birth_date": "1980-05-18",
+    "gender": "F",
+    "address": "Calle 98 #52-165, Riomar",
+    "city": "Barranquilla",
+    "state": "Atlántico",
+    "country": "Colombia"
   }'
 echo -e "\n"
 
@@ -87,7 +111,13 @@ curl -X POST "${API_URL}/register" \
     "legal_id": "1015012345",
     "password": "12345678",
     "user_phone_number": "+573187776655",
-    "user_email_address": "jorge.suarez@dermaclinic.com"
+    "user_email_address": "jorge.suarez@dermaclinic.com",
+    "birth_date": "1976-09-05",
+    "gender": "M",
+    "address": "Carrera 27 #42-27, Cabecera",
+    "city": "Bucaramanga",
+    "state": "Santander",
+    "country": "Colombia"
   }'
 echo -e "\n"
 
@@ -103,7 +133,13 @@ curl -X POST "${API_URL}/register" \
     "legal_id": "1065123456",
     "password": "12345678",
     "user_phone_number": "+573144455566",
-    "user_email_address": "ricardo.morales@oncologico.com"
+    "user_email_address": "ricardo.morales@oncologico.com",
+    "birth_date": "1972-12-30",
+    "gender": "M",
+    "address": "Avenida Pedro de Heredia",
+    "city": "Cartagena",
+    "state": "Bolívar",
+    "country": "Colombia"
   }'
 echo -e "\n"
 
@@ -119,7 +155,13 @@ curl -X POST "${API_URL}/register" \
     "legal_id": "1075234567",
     "password": "12345678",
     "user_phone_number": "+573122233344",
-    "user_email_address": "laura.vargas@equilibriomental.com"
+    "user_email_address": "laura.vargas@equilibriomental.com",
+    "birth_date": "1984-04-12",
+    "gender": "F",
+    "address": "Calle 65 #23-45, Milán",
+    "city": "Manizales",
+    "state": "Caldas",
+    "country": "Colombia"
   }'
 echo -e "\n"
 
@@ -135,7 +177,13 @@ curl -X POST "${API_URL}/register" \
     "legal_id": "1085345678",
     "password": "12345678",
     "user_phone_number": "+573166677788",
-    "user_email_address": "fernando.ruiz@visionclara.com"
+    "user_email_address": "fernando.ruiz@visionclara.com",
+    "birth_date": "1979-07-25",
+    "gender": "M",
+    "address": "Avenida 0 #11-56, Centro",
+    "city": "Cúcuta",
+    "state": "Norte de Santander",
+    "country": "Colombia"
   }'
 echo -e "\n"
 
@@ -151,7 +199,13 @@ curl -X POST "${API_URL}/register" \
     "legal_id": "V12345678",
     "password": "12345678",
     "user_phone_number": "+582129998877",
-    "user_email_address": "gabriel.mendez@saludauditiva.com"
+    "user_email_address": "gabriel.mendez@saludauditiva.com",
+    "birth_date": "1981-02-14",
+    "gender": "M",
+    "address": "Av. Francisco de Miranda",
+    "city": "Caracas",
+    "state": "Distrito Capital",
+    "country": "Venezuela"
   }'
 echo -e "\n"
 
@@ -167,7 +221,13 @@ curl -X POST "${API_URL}/register" \
     "legal_id": "V23456789",
     "password": "12345678",
     "user_phone_number": "+582615554433",
-    "user_email_address": "miguel.ramos@traumaclinic.com"
+    "user_email_address": "miguel.ramos@traumaclinic.com",
+    "birth_date": "1977-06-08",
+    "gender": "M",
+    "address": "Calle 72 con Av. 3E",
+    "city": "Maracaibo",
+    "state": "Zulia",
+    "country": "Venezuela"
   }'
 echo -e "\n"
 

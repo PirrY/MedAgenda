@@ -55,7 +55,7 @@ export default function useRegisterComponent(opts?: UseRegisterOpts) {
       if (isAdmin) Cookies.set("isAdmin", "true", { expires: 7 });
       else Cookies.remove("isAdmin");
 
-      const destination = isAdmin ? "/homeAdmin" : isDoctor ? "/homeDoctor" : "/";
+      const destination = isAdmin ? "/homeAdmin" : isDoctor ? "/homeDoctor" : "/homePatient";
       router.push(destination);
       opts?.onSuccess?.(); // cierra el modal desde el padre
 
