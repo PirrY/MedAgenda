@@ -64,4 +64,12 @@ export const getClinicDoctorAppointmentsForDay = (clinic_id: number, doctor_id: 
   return apiFetch(`/clinics/getClinicDoctorAppointmentsForDay?clinic_id=${clinic_id}&doctor_id=${doctor_id}&appointment_date=${appointment_date}`, 'GET');
 };
 
+export const searchCities = (searchTerm: string): Promise<import('../interfaces/clinic').CitySearchResult[]> => {
+  return apiFetch(`/location/searchCities?search=${encodeURIComponent(searchTerm)}`, 'GET');
+};
+
+export const createClinic = (data: import('../interfaces/clinic').CreateClinicDTO): Promise<Clinic> => {
+  return apiFetch('/clinics/createClinic', 'POST', data);
+};
+
 

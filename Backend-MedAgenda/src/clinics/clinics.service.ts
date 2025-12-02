@@ -3,7 +3,7 @@ import { AppointmentSlot } from 'src/appointments/repo/reads';
 import * as ClinicReads from './repo/reads';
 import { DatabaseService } from 'src/db/database.service';
 import { Roles } from 'src/auth/role_guard/roles.enum';
-import { AddMemberToClinicDto, AddSpecialtiesToClinicDto, CreateClinicDto, GetClinicDoctorAppointmentsDto, GetClinicDto, GetClinicsInCityDto, GetClinicsInCountryDto, GetClinicsInStateDto, GetClinicsWithSpecialtyDto, GetClinicsWithSpecialtyInCityDto, GetClinicsWithSpecialtyInCountryDto } from './dto/clinics.dto';
+import { AddMemberToClinicDto, AddSpecialtiesToClinicDto, CreateClinicDto, CreateSpecialtyDto, GetClinicDoctorAppointmentsDto, GetClinicDto, GetClinicsInCityDto, GetClinicsInCountryDto, GetClinicsInStateDto, GetClinicsWithSpecialtyDto, GetClinicsWithSpecialtyInCityDto, GetClinicsWithSpecialtyInCountryDto } from './dto/clinics.dto';
 import * as ClinicWrites from './repo/writes'
 import { PublicDoctor } from 'src/doctors/repo';
 
@@ -78,8 +78,9 @@ export class ClinicsService {
         return q[0];
     }
 
-    async createClinic(dto: CreateClinicDto, requester_id: number): Promise<void> {
-        await ClinicWrites.insertClinic(this.db, dto, requester_id);
+    async createClinic(dto: CreateClinicDto, requester_id: number): Promise<{ clinic_id: number }> {
+        const clinic_id = await ClinicWrites.insertClinic(this.db, dto, requester_id);
+        return { clinic_id };
     }
 
     async addMemberToClinic(dto: AddMemberToClinicDto, requester_id: number): Promise<void> {
@@ -108,7 +109,16 @@ export class ClinicsService {
         if(!user_id) throw new BadRequestException('Missing critical parameter user_id');
         return await ClinicReads.isUserAdminAnywhere(this.db, user_id);
     }
-    
+
+    async createSpecialty(dto: CreateSpecialtyDto): Promise<ClinicReads.Specialty> {
+        const specialty_id = await ClinicWrites.insertSpecialty(this.db, dto);
+        const specialty = await ClinicReads.getSpecialtyById(this.db, specialty_id);
+        if (!specialty) {
+            throw new BadRequestException('Failed to create specialty');
+        }
+        return specialty;
+    }
+
 
     //Helpers
     rankRole(role: Roles): number {

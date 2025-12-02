@@ -1,15 +1,16 @@
 import { Db } from "src/db/types/types";
-import { AddMemberToClinicDto, AddSpecialtiesToClinicDto, CreateClinicDto } from "../dto/clinics.dto";
+import { AddMemberToClinicDto, AddSpecialtiesToClinicDto, CreateClinicDto, CreateSpecialtyDto } from "../dto/clinics.dto";
 
 
-export async function insertClinic(db: Db, dto: CreateClinicDto, user_id: number): Promise<void> {
+export async function insertClinic(db: Db, dto: CreateClinicDto, user_id: number): Promise<number> {
     var desc;
     if(dto.clinic_description != undefined) desc = dto.clinic_description;
     else desc = null;
-    await db.execute(
+    const result = await db.execute(
         'INSERT INTO clinics(clinic_name, clinic_phone_number, clinic_city_id, clinic_address, clinic_owner, clinic_description) VALUES (?, ?, ?, ?, ?, ?)',
-        [dto.clinic_name,dto.clinic_phone_number,dto.clinic_address,user_id,desc]
+        [dto.clinic_name, dto.clinic_phone_number, dto.clinic_city_id, dto.clinic_address, user_id, desc]
     );
+    return result.insertId;
 }
 
 export async function insertMembership(db: Db, dto: AddMemberToClinicDto): Promise<void> {
@@ -28,4 +29,13 @@ export async function insertClinicSpecialties(db: Db, dto: AddSpecialtiesToClini
             'INSERT INTO clinic_specialties(clinic_id, specialty_id) VALUES (?, ?)',
             [dto.clinic_id, id]);
     }
+}
+
+export async function insertSpecialty(db: Db, dto: CreateSpecialtyDto): Promise<number> {
+    const description = dto.specialty_description ?? null;
+    const result = await db.execute(
+        'INSERT INTO specialties(specialty_name, specialty_description) VALUES (?, ?)',
+        [dto.specialty_name, description]
+    );
+    return result.insertId;
 }

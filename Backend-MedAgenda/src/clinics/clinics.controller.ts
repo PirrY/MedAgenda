@@ -1,4 +1,4 @@
-import { Body, Controller, Get, ParseArrayPipe, ParseIntPipe, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, ParseArrayPipe, ParseIntPipe, Post, Query, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AppointmentSlot } from 'src/appointments/repo/reads';
 import { Public } from 'src/auth/jwt/public.decorator';
@@ -7,10 +7,9 @@ import { Roles } from 'src/auth/role_guard/roles.enum';
 import { roles } from 'src/auth/role_guard/roles.decorator';
 import { PublicDoctor } from 'src/doctors/repo';
 import { Clinic, ClinicScheduleRules, Specialty } from './repo';
-import { AddMemberToClinicDto, AddSpecialtiesToClinicDto, CreateClinicDto, GetClinicDoctorAppointmentsDto, GetClinicDto } from './dto/clinics.dto';
+import { AddMemberToClinicDto, AddSpecialtiesToClinicDto, CreateClinicDto, CreateSpecialtyDto, GetClinicDoctorAppointmentsDto, GetClinicDto } from './dto/clinics.dto';
 import { ClinicsService } from './clinics.service';
 import { AppointmentSlotEntity, ClinicEntity, PublicDoctorEntity, SpecialtyEntity } from 'src/swagger/entities';
-import { rawListeners } from 'process';
 
 @UseGuards(JwtAuthGuard)
 @ApiTags('Clinics')
@@ -150,12 +149,23 @@ export class ClinicsController {
     return await this.clinicService.getClinicDoctorAppointmentsForDay(dto);
   }
 
-  @Public()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Create a new clinic.' })
   @ApiBody({ type: CreateClinicDto })
-  @ApiOkResponse({ description: 'Clinic created successfully.' })
+  @ApiOkResponse({
+    description: 'Clinic created successfully.',
+    schema: {
+      type: 'object',
+      properties: {
+        clinic_id: { type: 'number', description: 'ID of the newly created clinic' }
+      }
+    }
+  })
   @Post('createClinic')
-  async createClinic(@Body() dto: CreateClinicDto, @Req() req): Promise<void> {
+  async createClinic(@Body() dto: CreateClinicDto, @Req() req): Promise<{ clinic_id: number }> {
+    if (!req.user) {
+      throw new UnauthorizedException('Usuario no autenticado');
+    }
     return this.clinicService.createClinic(dto, req.user.id);
   }
 
@@ -177,6 +187,18 @@ export class ClinicsController {
   @Post('addSpecialtiesToClinic')
   async addSpecialtiesToClinic(@Body() dto: AddSpecialtiesToClinicDto): Promise<void> {
     return this.clinicService.addSpecialtiesToClinic(dto);
+  }
+
+  @ApiOperation({ summary: 'Create a new medical specialty.' })
+  @ApiBody({ type: CreateSpecialtyDto })
+  @ApiOkResponse({
+    description: 'Specialty created successfully.',
+    type: SpecialtyEntity
+  })
+  @ApiBearerAuth('bearer')
+  @Post('createSpecialty')
+  async createSpecialty(@Body() dto: CreateSpecialtyDto): Promise<Specialty> {
+    return this.clinicService.createSpecialty(dto);
   }
 
   @Public()

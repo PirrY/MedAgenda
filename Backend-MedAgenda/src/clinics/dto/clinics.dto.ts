@@ -244,4 +244,22 @@ export class GetClinicDoctorAppointmentsDto {
   appointment_date: Date;
 }
 
+export class CreateSpecialtyDto {
+  @ApiProperty({
+    description: 'Name of the medical specialty.',
+    example: 'Cardiología',
+  })
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(50)
+  specialty_name: string;
+
+  @ApiPropertyOptional({
+    description: 'Optional description of the specialty.',
+    example: 'Especialidad médica que se ocupa de las afecciones del corazón',
+  })
+  @IsOptional()
+  @IsString()
+  specialty_description?: string;
+}
 

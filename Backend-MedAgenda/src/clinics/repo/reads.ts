@@ -32,6 +32,11 @@ export async function getAllSpecialties(db: Db): Promise<Specialty[]> {
     return await db.query<Specialty>('SELECT * FROM specialties');
 }
 
+export async function getSpecialtyById(db: Db, specialty_id: number): Promise<Specialty | null> {
+    const result = await db.query<Specialty>('SELECT * FROM specialties WHERE specialty_id = ?', [specialty_id]);
+    return result.length > 0 ? result[0] : null;
+}
+
 export async function getRoleByIds(db: Db, clinic_id: number, user_id: number): Promise<{ role_within_clinic: Roles} | null> {
     const ownerverif = await db.query('SELECT 1 FROM clinics WHERE clinic_id = ? AND clinic_owner = ?', [clinic_id, user_id]);
     if(ownerverif.length > 0) return {role_within_clinic: Roles.Owner};
