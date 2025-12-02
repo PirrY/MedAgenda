@@ -94,7 +94,8 @@ export class ClinicsService {
     }
 
     async getClinicScheduleRules(dto: GetClinicDto): Promise<ClinicReads.ClinicScheduleRules> {
-        return await ClinicReads.getClinicSchedulingRules(this.db, dto.clinic_id)[0];
+        const r = await ClinicReads.getClinicSchedulingRules(this.db, dto.clinic_id);
+        return r[0];
     }
 
     async getClinicDoctorAppointmentsForDay(dto: GetClinicDoctorAppointmentsDto): Promise<AppointmentSlot[]> {

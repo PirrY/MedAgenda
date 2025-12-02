@@ -87,10 +87,14 @@ export async function getClinicSchedulingRules(db: Db, clinic_id: number): Promi
 export async function getClinicDoctorAppointmentsForDay(db: Db, clinic_id: number, doctor_id: number, appointment_date: string): Promise<AppointmentSlot[]> {
     return await db.query<AppointmentSlot>(
         `
-        SELECT a.appointment_id, a.start_date_time, a.end_date_time
+        SELECT 
+            a.appointment_id, 
+            a.scheduled_time_date AS start_date_time, 
+            DATE_ADD(a.scheduled_time_date, INTERVAL c.clinic_average_appointment_time MINUTE) AS end_date_time
         FROM appointments a
-        WHERE a.clinic_id = ? AND a.doctor_id = ? AND DATE(a.start_date_time) = DATE(?)
-        ORDER BY a.start_date_time ASC
+        JOIN clinics c ON a.clinic_id = c.clinic_id
+        WHERE a.clinic_id = ? AND a.doctor_id = ? AND DATE(a.scheduled_time_date) = DATE(?)
+        ORDER BY a.scheduled_time_date ASC
         `,
         [clinic_id, doctor_id, appointment_date]
     );

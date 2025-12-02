@@ -10,6 +10,7 @@ import { Clinic, ClinicScheduleRules, Specialty } from './repo';
 import { AddMemberToClinicDto, AddSpecialtiesToClinicDto, CreateClinicDto, GetClinicDoctorAppointmentsDto, GetClinicDto } from './dto/clinics.dto';
 import { ClinicsService } from './clinics.service';
 import { AppointmentSlotEntity, ClinicEntity, PublicDoctorEntity, SpecialtyEntity } from 'src/swagger/entities';
+import { rawListeners } from 'process';
 
 @UseGuards(JwtAuthGuard)
 @ApiTags('Clinics')

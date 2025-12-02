@@ -10,7 +10,6 @@ export class AppointmentsService {
 
     async createAppointment(dto: CreateAppointmentDto, requester_id: number): Promise<void> {
         if(!requester_id) throw new BadRequestException('Missing critrical param requester_id.');
-        if(!dto.start_date_time || !dto.end_date_time) throw new BadRequestException('Missing appointment date/time range.');
         if(dto.start_date_time >= dto.end_date_time) throw new BadRequestException('start_date_time must be earlier than end_date_time.');
         if(!await this.isDoctorAvailable(dto.doctor_id, dto.clinic_id, dto.start_date_time, dto.end_date_time)) throw new ConflictException('This doctor is not available at the specified time range.');
         if(!await this.isClinicAvailable(dto.clinic_id, dto.start_date_time)) throw new ConflictException('This clinic is not available at the specified time range.');
@@ -25,7 +24,18 @@ export class AppointmentsService {
     async isDoctorAvailable(dr_id: number, clinic_id: number, start: Date, end: Date): Promise<boolean> {
         const sqlstart = start.toISOString().slice(0,19).replace('T',' ');
         const sqlfinish = end.toISOString().slice(0,19).replace('T',' ');
-        const q = await this.db.query('SELECT 1 FROM appointments WHERE doctor_id = ? AND start_date_time < ? AND end_date_time > ?',[dr_id, sqlfinish, sqlstart]);
+        const q = await this.db.query(
+            `
+            SELECT 1
+            FROM appointments a
+            JOIN clinics c ON a.clinic_id = c.clinic_id
+            WHERE a.doctor_id = ?
+              AND a.scheduled_time_date < ?
+              AND DATE_ADD(a.scheduled_time_date, INTERVAL c.clinic_average_appointment_time MINUTE) > ?
+            LIMIT 1
+            `,
+            [dr_id, sqlfinish, sqlstart]
+        );
         if(q.length > 0) return false;
         const absences = await this.db.query('SELECT 1 FROM absences WHERE doctor_id = ? AND clinic_id = ? AND start_date_time < ? AND end_date_time > ?',[dr_id, clinic_id, sqlfinish, sqlstart]);
         return absences.length === 0;

@@ -38,9 +38,17 @@ const formatDateParam = (date: Date) =>
   `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}`;
 
 const parseTimeToMinutes = (value?: string | null): number | null => {
-  if (!value) return null;
-  const clean = value.trim();
+  if (value === undefined || value === null) return null;
+  const clean = String(value).trim();
+
+  // ISO-like time (e.g., 1970-01-01T08:00:00.000Z)
+  if (clean.includes("T") || clean.includes("-")) {
+    const d = new Date(clean);
+    if (!Number.isNaN(d.getTime())) return d.getUTCHours() * 60 + d.getUTCMinutes();
+  }
+
   const parts = clean.split(":").map((p) => Number(p));
+  if (parts.length === 1 && Number.isFinite(parts[0])) return parts[0]; // already minutes
   if (parts.length === 0 || parts.some((p) => Number.isNaN(p))) return null;
   const [hours = 0, minutes = 0, seconds = 0] = parts;
   return hours * 60 + minutes + Math.floor(seconds / 60);
@@ -62,13 +70,9 @@ const formatRuleTime = (value?: string | null) => {
 };
 
 const formatRuleDuration = (value?: string | null) => {
-  if (!value) return "--";
-  const [h = "0", m = "0"] = value.split(":");
-  const hours = Number(h);
-  const minutes = Number(m);
-  if (!Number.isFinite(hours) || !Number.isFinite(minutes)) return value;
-  if (hours === 0) return `${minutes} min`;
-  return `${hours}h ${minutes}m`;
+  const total = parseTimeToMinutes(value);
+  if (total === null) return "--";
+  return `${total} min`;
 };
 
 const formatDisplayDate = (date: Date) =>
@@ -141,6 +145,10 @@ const buildSlots = (
   const breakEnd = breakStart !== null && breakDuration !== null ? breakStart + breakDuration : null;
   const dayStart = dateUtc(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
   const now = new Date();
+  const isSameUtcDay =
+    dayStart.getUTCFullYear() === now.getUTCFullYear() &&
+    dayStart.getUTCMonth() === now.getUTCMonth() &&
+    dayStart.getUTCDate() === now.getUTCDate();
   const normalizedAppointments = normalizeAppointments(appointments, slotMinutes, dayStart);
 
   const slots: SlotView[] = [];
@@ -162,7 +170,7 @@ const buildSlots = (
       note = "Ya reservado";
     }
 
-    if (status === "available" && startDate < now) {
+    if (status === "available" && isSameUtcDay && startDate < now) {
       status = "past";
       note = "Hora pasada";
     }
