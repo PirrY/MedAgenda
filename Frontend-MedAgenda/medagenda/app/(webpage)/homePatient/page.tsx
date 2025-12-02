@@ -80,7 +80,7 @@ export default function PHome() {
                         {/* Agendar nueva cita */}
                         <div
                             className="group bg-gradient-to-r from-[#2e7bb4] to-[#8bccc4] p-[2px] rounded-2xl cursor-pointer transform transition-all duration-300 hover:scale-105"
-                            onClick={() => router.push("/Specialties")}
+                            onClick={() => router.push("/Clinics")}
                         >
                             <div className="bg-white rounded-2xl p-6 h-full flex flex-col items-center text-center shadow hover:shadow-lg transition-all duration-300">
                                 <div className="bg-gradient-to-r from-blue-100 to-cyan-100 p-4 rounded-full mb-4 group-hover:scale-110 transition-transform">

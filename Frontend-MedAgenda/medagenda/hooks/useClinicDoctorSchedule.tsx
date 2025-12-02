@@ -24,18 +24,10 @@ const MONTH_LABELS = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "ju
 const WEEKDAY_SHORT = ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"];
 const WEEKDAY_LABELS = ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"];
 
-const dateUtc = (year: number, month: number, day: number, hours = 0, minutes = 0) =>
-  new Date(Date.UTC(year, month, day, hours, minutes, 0, 0));
-
-const todayUtc = () => {
-  const now = new Date();
-  return { y: now.getUTCFullYear(), m: now.getUTCMonth(), d: now.getUTCDate(), now };
-};
-
 const pad = (num: number) => num.toString().padStart(2, "0");
 
 const formatDateParam = (date: Date) =>
-  `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}`;
+  `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 
 const parseTimeToMinutes = (value?: string | null): number | null => {
   if (value === undefined || value === null) return null;
@@ -79,30 +71,32 @@ const formatDisplayDate = (date: Date) =>
   `${WEEKDAY_LABELS[date.getUTCDay()]}, ${date.getUTCDate()} ${MONTH_LABELS[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
 
 const buildMonths = (): MonthOption[] => {
-  const { y, m } = todayUtc();
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = now.getMonth();
   const months: MonthOption[] = [];
 
   for (let i = 0; i < MONTHS_TO_RENDER; i += 1) {
-    const date = dateUtc(y, m + i, 1);
-    const label = `${MONTH_LABELS[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
-    months.push({ key: `${date.getUTCFullYear()}-${date.getUTCMonth()}`, label, date });
+    const date = new Date(y, m + i, 1);
+    const label = `${MONTH_LABELS[date.getMonth()]} ${date.getFullYear()}`;
+    months.push({ key: `${date.getFullYear()}-${date.getMonth()}`, label, date });
   }
 
   return months;
 };
 
 const buildDaysForMonth = (month: MonthOption): DayOption[] => {
-  const { y: nowY, m: nowM, d: nowD } = todayUtc();
-  const year = month.date.getUTCFullYear();
-  const monthIndex = month.date.getUTCMonth();
-  const lastDay = new Date(Date.UTC(year, monthIndex + 1, 0)).getUTCDate();
+  const now = new Date();
+  const year = month.date.getFullYear();
+  const monthIndex = month.date.getMonth();
+  const lastDay = new Date(year, monthIndex + 1, 0).getDate();
 
-  const startingDay = nowY === year && nowM === monthIndex ? nowD : 1;
+  const startingDay = now.getFullYear() === year && now.getMonth() === monthIndex ? now.getDate() : 1;
   const days: DayOption[] = [];
 
   for (let day = startingDay; day <= lastDay; day += 1) {
-    const date = dateUtc(year, monthIndex, day);
-    const weekLabel = WEEKDAY_SHORT[date.getUTCDay()];
+    const date = new Date(year, monthIndex, day);
+    const weekLabel = WEEKDAY_SHORT[date.getDay()];
     days.push({
       key: formatDateParam(date),
       label: `${day}`,
@@ -143,9 +137,9 @@ const buildSlots = (
   if (opening === null || closing === null || slotMinutes <= 0 || opening >= closing) return [];
 
   const breakEnd = breakStart !== null && breakDuration !== null ? breakStart + breakDuration : null;
-  const dayStart = dateUtc(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+  const dayStart = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0));
   const now = new Date();
-  const isSameUtcDay =
+  const isSameDayUtc =
     dayStart.getUTCFullYear() === now.getUTCFullYear() &&
     dayStart.getUTCMonth() === now.getUTCMonth() &&
     dayStart.getUTCDate() === now.getUTCDate();
@@ -157,20 +151,20 @@ const buildSlots = (
     const startDate = new Date(dayStart.getTime() + startMin * 60000);
     const endDate = new Date(dayStart.getTime() + endMin * 60000);
 
+    const overlapsBreak = breakEnd !== null && breakStart !== null && startMin < breakEnd && endMin > breakStart;
+    const overlapsAppointment = normalizedAppointments.some((appt) => startMin < appt.endMin && endMin > appt.startMin);
+    const isPast = isSameDayUtc && startDate < now;
+
     let status: SlotStatus = "available";
     let note: string | undefined;
 
-    if (breakEnd !== null && breakStart !== null && startMin < breakEnd && endMin > breakStart) {
-      status = "break";
-      note = "Horario no disponible (descanso)";
-    }
-
-    if (status === "available" && normalizedAppointments.some((appt) => startMin < appt.endMin && endMin > appt.startMin)) {
+    if (overlapsAppointment) {
       status = "booked";
       note = "Ya reservado";
-    }
-
-    if (status === "available" && isSameUtcDay && startDate < now) {
+    } else if (overlapsBreak) {
+      status = "break";
+      note = "Horario no disponible (descanso)";
+    } else if (isPast) {
       status = "past";
       note = "Hora pasada";
     }
