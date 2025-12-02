@@ -19,6 +19,8 @@ interface JWTPayload {
 export default function useAuth() {
   const [user, setUser] = useState<JWTPayload | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDoctor, setIsDoctor] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     try {
@@ -26,6 +28,13 @@ export default function useAuth() {
       if (token) {
         const decoded = jwtDecode<JWTPayload>(token);
         setUser(decoded);
+
+        // Leer los roles de las cookies (guardadas en el login)
+        const isDoctorCookie = Cookies.get("isDoctor") === "true";
+        const isAdminCookie = Cookies.get("isAdmin") === "true";
+
+        setIsDoctor(isDoctorCookie);
+        setIsAdmin(isAdminCookie);
       }
     } catch (error) {
       console.error("Error decoding token:", error);
@@ -56,7 +65,7 @@ export default function useAuth() {
     isAuthenticated: !!user,
     getFullName,
     getFirstName,
-    isDoctor: user?.isDoctor || false,
-    isAdmin: user?.isAdmin || false,
+    isDoctor,
+    isAdmin,
   };
 }
