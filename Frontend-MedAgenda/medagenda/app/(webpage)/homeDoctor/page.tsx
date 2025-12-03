@@ -1,7 +1,18 @@
 "use client";
-import React from "react";
+
+import React, { useState } from "react";
 import Image from "next/image";
-import { ArrowPathIcon, BuildingOffice2Icon, CalendarDaysIcon, ClockIcon, MagnifyingGlassIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowPathIcon,
+  BuildingOffice2Icon,
+  CalendarDaysIcon,
+  ClockIcon,
+  MagnifyingGlassIcon,
+  UserCircleIcon,
+  ClipboardDocumentCheckIcon,
+  PlusIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import Heading from "../../../components/atoms/Heading";
 import { useDoctorDashboard } from "../../../hooks/useDoctorDashboard";
 
@@ -20,7 +31,35 @@ export default function DHome() {
     patientQuery,
     setPatientQuery,
     stats,
+    assigningPrescription,
+    prescriptionError,
+    prescriptionSuccess,
+    submitPrescription,
   } = useDoctorDashboard();
+
+  const [activePatient, setActivePatient] = useState<{
+    patientId: number;
+    patientName: string;
+    clinics: { clinicId: number; clinicName: string }[];
+  } | null>(null);
+  const [selectedClinicId, setSelectedClinicId] = useState<number | undefined>();
+  const [prescriptionDescription, setPrescriptionDescription] = useState("");
+
+  const closeModal = () => {
+    setActivePatient(null);
+    setSelectedClinicId(undefined);
+    setPrescriptionDescription("");
+  };
+
+  const handleSubmitPrescription = async () => {
+    if (!activePatient || !selectedClinicId || !prescriptionDescription.trim()) return;
+    const ok = await submitPrescription({
+      patientId: activePatient.patientId,
+      clinicId: selectedClinicId,
+      description: prescriptionDescription.trim(),
+    });
+    if (ok) closeModal();
+  };
 
   return (
     <main className="min-h-screen bg-gray-50 px-6 py-14">
@@ -48,7 +87,9 @@ export default function DHome() {
         {error && (
           <div className="flex items-center justify-between rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-red-700">
             <span>{error}</span>
-            <button onClick={refresh} className="text-sm font-semibold underline">Reintentar</button>
+            <button onClick={refresh} className="text-sm font-semibold underline">
+              Reintentar
+            </button>
           </div>
         )}
 
@@ -58,10 +99,8 @@ export default function DHome() {
               <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wide text-[#2e7bb4]">Rango de tiempo</p>
-                  <h2 className="text-xl font-semibold text-gray-900">Filtra tus próximas citas</h2>
-                  <p className="text-sm text-gray-600">
-                    Selecciona un tramo y agrupamos las citas por clínica.
-                  </p>
+                  <h2 className="text-xl font-semibold text-gray-900">Filtra tus proximas citas</h2>
+                  <p className="text-sm text-gray-600">Selecciona un tramo y agrupamos las citas por clinica.</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <button
@@ -69,14 +108,14 @@ export default function DHome() {
                     onClick={() => applyQuickRange(7)}
                     className="rounded-full border border-[#2e7bb4]/20 bg-[#2e7bb4]/10 px-3 py-1.5 text-xs font-semibold text-[#2e7bb4] hover:bg-[#2e7bb4]/15"
                   >
-                    Próximos 7 días
+                    Proximos 7 dias
                   </button>
                   <button
                     type="button"
                     onClick={() => applyQuickRange(30)}
                     className="rounded-full border border-[#8bccc4]/40 bg-[#8bccc4]/20 px-3 py-1.5 text-xs font-semibold text-[#0f4a6c]"
                   >
-                    Próximos 30 días
+                    Proximos 30 dias
                   </button>
                 </div>
               </div>
@@ -124,7 +163,7 @@ export default function DHome() {
             <div className="relative flex h-full flex-col items-center gap-4 p-6">
               <Image
                 src="/robot-medico.png"
-                alt="Asistente médico"
+                alt="Asistente medico"
                 width={320}
                 height={320}
                 className="object-contain drop-shadow-md"
@@ -136,7 +175,7 @@ export default function DHome() {
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Citas en rango</p>
                       <p className="text-2xl font-semibold text-gray-900">{stats.totalUpcoming}</p>
-                      <p className="text-xs text-gray-600">Futuras y agrupadas por clínica.</p>
+                      <p className="text-xs text-gray-600">Futuras y agrupadas por clinica.</p>
                     </div>
                   </div>
                 </article>
@@ -161,14 +200,14 @@ export default function DHome() {
             <div>
               <h2 className="flex items-center gap-2 text-xl font-semibold text-gray-900">
                 <BuildingOffice2Icon className="h-6 w-6 text-[#2e7bb4]" />
-                Próximas citas por clínica
+                Proximas citas por clinica
               </h2>
-              <p className="text-sm text-gray-600">Trabajamos con fechas TIMESTAMP; agrupamos por clínica.</p>
+              <p className="text-sm text-gray-600">Trabajamos con fechas TIMESTAMP; agrupamos por clinica.</p>
             </div>
           </div>
 
           {rangeError ? (
-            <p className="text-sm text-gray-600">Define un rango válido para ver las próximas citas.</p>
+            <p className="text-sm text-gray-600">Define un rango valido para ver las proximas citas.</p>
           ) : loading && appointmentsByClinic.length === 0 ? (
             <p className="text-sm text-gray-600">Cargando citas...</p>
           ) : appointmentsByClinic.length === 0 ? (
@@ -214,7 +253,7 @@ export default function DHome() {
                             </p>
                           </div>
                           {appt.description && (
-                            <p className="mt-2 text-sm text-gray-600">Descripción: {appt.description}</p>
+                            <p className="mt-2 text-sm text-gray-600">Descripcion: {appt.description}</p>
                           )}
                         </div>
                       </div>
@@ -233,7 +272,7 @@ export default function DHome() {
                 <UserCircleIcon className="h-6 w-6 text-[#2e7bb4]" />
                 Historial de pacientes
               </h2>
-              <p className="text-sm text-gray-600">Agrupamos por paciente; filtra por nombre para encontrar historias rápido.</p>
+              <p className="text-sm text-gray-600">Agrupamos por paciente; filtra por nombre para encontrar historias rapido.</p>
             </div>
             <div className="relative w-full max-w-xs">
               <MagnifyingGlassIcon className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-gray-400" />
@@ -254,27 +293,76 @@ export default function DHome() {
           ) : (
             <div className="grid gap-4 md:grid-cols-2">
               {patientHistoryGroups.map((group) => (
-                <article key={group.patientName} className="rounded-2xl border border-gray-200 bg-white shadow-sm">
-                  <div className="flex items-center gap-3 px-5 py-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#2e7bb4] to-[#8bccc4] text-white shadow">
-                      <UserCircleIcon className="h-5 w-5" />
+                <article key={group.patientId} className="rounded-2xl border border-gray-200 bg-white shadow-sm">
+                  <div className="flex items-center justify-between gap-3 px-5 py-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#2e7bb4] to-[#8bccc4] text-white shadow">
+                        <UserCircleIcon className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-900">{group.patientName}</p>
+                        <div className="mt-1 flex flex-wrap gap-2">
+                          {group.clinics.map((clinic) => (
+                            <span key={`${group.patientId}-${clinic.clinicId}`} className="rounded-full border border-gray-200 bg-gray-50 px-2 py-0.5 text-[11px] text-gray-700">
+                              {clinic.clinicName}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-semibold text-gray-900">{group.patientName}</p>
-                      <p className="text-xs text-gray-500">{group.records.length} cita{group.records.length === 1 ? "" : "s"} registradas</p>
-                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setActivePatient({ patientId: group.patientId, patientName: group.patientName, clinics: group.clinics });
+                        setSelectedClinicId(group.clinics[0]?.clinicId);
+                        setPrescriptionDescription("");
+                      }}
+                      className="inline-flex items-center gap-2 rounded-full border border-[#2e7bb4] px-3 py-1.5 text-xs font-semibold text-[#2e7bb4] hover:bg-[#2e7bb4]/10"
+                    >
+                      <PlusIcon className="h-4 w-4" />
+                      Asignar receta
+                    </button>
                   </div>
 
                   <div className="divide-y divide-gray-100">
-                    {group.records.map((record, idx) => (
-                      <div key={`${group.patientName}-${idx}`} className="flex items-start gap-3 px-5 py-3">
-                        <CalendarDaysIcon className="mt-1 h-4 w-4 text-[#4682B4]" />
-                        <div className="text-sm text-gray-700">
-                          <p className="font-semibold text-gray-900">{record.displayDate}</p>
-                          <p className="text-gray-600">{record.description || "Sin descripción"}</p>
+                    <div className="px-5 py-3">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Citas</p>
+                    </div>
+                    {group.records.length === 0 ? (
+                      <div className="px-5 py-3 text-sm text-gray-600">Sin citas registradas.</div>
+                    ) : (
+                      group.records.map((record, idx) => (
+                        <div key={`${group.patientId}-${idx}`} className="flex items-start gap-3 px-5 py-3">
+                          <CalendarDaysIcon className="mt-1 h-4 w-4 text-[#4682B4]" />
+                          <div className="text-sm text-gray-700">
+                            <p className="font-semibold text-gray-900">{record.displayDate}</p>
+                            <p className="text-gray-600">{record.description || "Sin descripcion"}</p>
+                            <p className="text-xs text-gray-500">{record.clinicName}</p>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))
+                    )}
+
+                    <div className="px-5 py-3">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Prescripciones</p>
+                    </div>
+                    {group.prescriptions.length === 0 ? (
+                      <div className="px-5 py-3 text-sm text-gray-600">Sin prescripciones registradas.</div>
+                    ) : (
+                      group.prescriptions.map((pres, idx) => {
+                        const clinic = group.clinics.find((c) => c.clinicId === pres.clinicId);
+                        return (
+                          <div key={`${group.patientId}-pres-${idx}`} className="flex items-start gap-3 px-5 py-3">
+                            <ClipboardDocumentCheckIcon className="mt-1 h-4 w-4 text-[#259487]" />
+                            <div className="text-sm text-gray-700">
+                              <p className="font-semibold text-gray-900">{pres.displayDate}</p>
+                              <p className="text-gray-600">{pres.description}</p>
+                              <p className="text-xs text-gray-500">{clinic ? clinic.clinicName : `Clinica ${pres.clinicId}`}</p>
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
                   </div>
                 </article>
               ))}
@@ -282,6 +370,84 @@ export default function DHome() {
           )}
         </section>
       </div>
+
+      {activePatient && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Asignar receta</p>
+                <h3 className="text-lg font-semibold text-gray-900">{activePatient.patientName}</h3>
+              </div>
+              <button
+                type="button"
+                onClick={closeModal}
+                className="rounded-full p-1 text-gray-500 hover:bg-gray-100"
+              >
+                <XMarkIcon className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="mt-4 space-y-3">
+              <label className="block text-sm text-gray-700">
+                Clinica
+                <select
+                  className="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#2e7bb4] focus:ring-2 focus:ring-[#2e7bb4]/20"
+                  value={selectedClinicId ?? ""}
+                  onChange={(e) => setSelectedClinicId(e.target.value ? Number(e.target.value) : undefined)}
+                >
+                  <option value="">Selecciona una clinica</option>
+                  {activePatient.clinics.map((c) => (
+                    <option key={c.clinicId} value={c.clinicId}>
+                      {c.clinicName}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="block text-sm text-gray-700">
+                Descripcion
+                <textarea
+                  className="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#2e7bb4] focus:ring-2 focus:ring-[#2e7bb4]/20"
+                  rows={4}
+                  value={prescriptionDescription}
+                  onChange={(e) => setPrescriptionDescription(e.target.value)}
+                  placeholder="Escribe la receta o indicaciones"
+                />
+              </label>
+
+              {prescriptionError && (
+                <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                  {prescriptionError}
+                </div>
+              )}
+              {prescriptionSuccess && (
+                <div className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700">
+                  {prescriptionSuccess}
+                </div>
+              )}
+
+              <div className="flex justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="rounded-full border border-gray-200 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSubmitPrescription}
+                  disabled={assigningPrescription || !selectedClinicId || !prescriptionDescription.trim()}
+                  className="inline-flex items-center gap-2 rounded-full bg-gradient-to-br from-[#259487] to-indigo-700 px-4 py-2 text-sm font-semibold text-white shadow disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {assigningPrescription ? "Asignando..." : "Asignar receta"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

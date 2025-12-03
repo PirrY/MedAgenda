@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { DoctorAppointmentView } from "../interfaces/appointment";
 import { PatientHistory } from "../interfaces/doctor";
-import { getDoctorAppointments, getDoctorPatientHistories } from "../libs/doctorService";
+import { Prescription, PrescriptionsDoctorView } from "../interfaces/prescriptions";
+import { createPrescription, getDoctorAppointments, getDoctorPatientHistories, getPrescriptionsAssignedByDoctor } from "../libs/doctorService";
 
 type TimeRange = { from: string; to: string };
 
@@ -24,11 +25,21 @@ export type ClinicAppointmentsView = {
 };
 
 export type PatientHistoryGroup = {
+  patientId: number;
   patientName: string;
+  clinics: { clinicId: number; clinicName: string }[];
   records: {
     appointmentDate: string;
     displayDate: string;
     description?: string;
+    clinicId: number;
+    clinicName: string;
+  }[];
+  prescriptions: {
+    date: string;
+    displayDate: string;
+    description: string;
+    clinicId: number;
   }[];
 };
 
@@ -75,10 +86,14 @@ const formatHistoryPatient = (history: PatientHistory) =>
 export function useDoctorDashboard() {
   const [appointments, setAppointments] = useState<DoctorAppointmentView[]>([]);
   const [patientHistories, setPatientHistories] = useState<PatientHistory[]>([]);
+  const [prescriptions, setPrescriptions] = useState<PrescriptionsDoctorView[]>([]);
   const [timeRange, setTimeRange] = useState<TimeRange>(() => buildDefaultRange());
   const [patientQuery, setPatientQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [assigningPrescription, setAssigningPrescription] = useState(false);
+  const [prescriptionError, setPrescriptionError] = useState<string | null>(null);
+  const [prescriptionSuccess, setPrescriptionSuccess] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
     setLoading(true);
@@ -88,10 +103,23 @@ export function useDoctorDashboard() {
         getDoctorAppointments(),
         getDoctorPatientHistories(),
       ]);
+
       setAppointments(appointmentsData ?? []);
       setPatientHistories(historiesData ?? []);
+
+      const clinicIdForPrescriptions =
+        appointmentsData?.[0]?.clinic_id ??
+        historiesData?.[0]?.clinic_id ??
+        null;
+
+      if (clinicIdForPrescriptions) {
+        const prescriptionsData = await getPrescriptionsAssignedByDoctor(clinicIdForPrescriptions);
+        setPrescriptions(prescriptionsData ?? []);
+      } else {
+        setPrescriptions([]);
+      }
     } catch (err: any) {
-      setError(err?.message ?? "Error al obtener la información del doctor");
+      setError(err?.message ?? "Error al obtener la informacion del doctor");
     } finally {
       setLoading(false);
     }
@@ -188,28 +216,63 @@ export function useDoctorDashboard() {
 
   const patientHistoryGroups = useMemo<PatientHistoryGroup[]>(() => {
     const normalizedQuery = patientQuery.trim().toLowerCase();
-    const grouped: Record<string, PatientHistoryGroup> = {};
+    const grouped: Record<number, PatientHistoryGroup> = {};
+
+    const ensureGroup = (patientId: number, name: string) => {
+      if (!grouped[patientId]) {
+        grouped[patientId] = {
+          patientId,
+          patientName: name || "Paciente sin nombre",
+          clinics: [],
+          records: [],
+          prescriptions: [],
+        };
+      }
+      return grouped[patientId];
+    };
+
+    const clinicLabel = (clinicName?: string, clinicId?: number) => clinicName || (clinicId ? `Clinica ${clinicId}` : "Clinica");
 
     patientHistories.forEach((history) => {
       const patientName = formatHistoryPatient(history) || "Paciente sin nombre";
-      const key = patientName.toLowerCase();
-
-      if (!grouped[key]) {
-        grouped[key] = { patientName, records: [] };
+      const group = ensureGroup(history.user_id, patientName);
+      if (!group.clinics.some((c) => c.clinicId === history.clinic_id)) {
+        group.clinics.push({ clinicId: history.clinic_id, clinicName: clinicLabel(history.clinic_name, history.clinic_id) });
       }
-
-      grouped[key].records.push({
+      group.records.push({
         appointmentDate: history.appointment_date,
         displayDate: formatDateTime(history.appointment_date),
         description: history.appointment_description,
+        clinicId: history.clinic_id,
+        clinicName: clinicLabel(history.clinic_name, history.clinic_id),
+      });
+    });
+
+    prescriptions.forEach((p) => {
+      const patientName = grouped[p.patient_id]?.patientName || "Paciente sin nombre";
+      const group = ensureGroup(p.patient_id, patientName);
+      if (!group.clinics.some((c) => c.clinicId === p.clinic_id)) {
+        group.clinics.push({ clinicId: p.clinic_id, clinicName: clinicLabel(undefined, p.clinic_id) });
+      }
+      group.prescriptions.push({
+        date: p.date_emitted,
+        displayDate: formatDateTime(p.date_emitted),
+        description: p.prescription_description,
+        clinicId: p.clinic_id,
       });
     });
 
     let groups = Object.values(grouped).map((group) => ({
       ...group,
+      clinics: group.clinics.sort((a, b) => a.clinicName.localeCompare(b.clinicName, "es")),
       records: [...group.records].sort((a, b) => {
         const dateA = parseTimestamp(a.appointmentDate)?.getTime() ?? 0;
         const dateB = parseTimestamp(b.appointmentDate)?.getTime() ?? 0;
+        return dateB - dateA;
+      }),
+      prescriptions: [...group.prescriptions].sort((a, b) => {
+        const dateA = parseTimestamp(a.date)?.getTime() ?? 0;
+        const dateB = parseTimestamp(b.date)?.getTime() ?? 0;
         return dateB - dateA;
       }),
     }));
@@ -219,12 +282,37 @@ export function useDoctorDashboard() {
     }
 
     return groups.sort((a, b) => a.patientName.localeCompare(b.patientName, "es"));
-  }, [patientHistories, patientQuery]);
+  }, [patientHistories, prescriptions, patientQuery]);
 
   const stats = useMemo(() => ({
     totalUpcoming: appointmentsByClinic.reduce((acc, clinic) => acc + clinic.appointments.length, 0),
     totalPatients: patientHistoryGroups.length,
   }), [appointmentsByClinic, patientHistoryGroups]);
+
+  const submitPrescription = useCallback(
+    async (payload: { patientId: number; clinicId: number; description: string }) => {
+      setAssigningPrescription(true);
+      setPrescriptionError(null);
+      setPrescriptionSuccess(null);
+      let ok = false;
+      try {
+        await createPrescription({
+          patient_id: payload.patientId,
+          clinic_id: payload.clinicId,
+          prescription_description: payload.description,
+        } as Prescription);
+        setPrescriptionSuccess("Receta creada con exito.");
+        await refresh();
+        ok = true;
+      } catch (err: any) {
+        setPrescriptionError(err?.message ?? "No se pudo crear la receta.");
+      } finally {
+        setAssigningPrescription(false);
+      }
+      return ok;
+    },
+    [refresh],
+  );
 
   return {
     loading,
@@ -241,5 +329,10 @@ export function useDoctorDashboard() {
     patientQuery,
     setPatientQuery,
     stats,
+    prescriptions,
+    assigningPrescription,
+    prescriptionError,
+    prescriptionSuccess,
+    submitPrescription,
   };
 }
