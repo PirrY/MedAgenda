@@ -5,34 +5,19 @@ import { Activity } from "lucide-react";
 import {
   ChevronDownIcon,
   CalendarIcon,
-  UserGroupIcon,
-  ShieldCheckIcon,
-  CogIcon,
-  ClockIcon,
   HeartIcon,
   UserCircleIcon,
-  BellIcon,
   ArrowRightOnRectangleIcon,
   HomeIcon,
   BuildingOffice2Icon,
+  PlusCircleIcon,
 } from '@heroicons/react/24/outline'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/navigation'
 import AuthModal from '../organisms/AuthModal'
 
-// Servicios médicos para el dropdown
-const medicalServices = [
-  { name: 'Consulta General', description: 'Atención médica primaria y diagnósticos', href: '#consulta-general', icon: HeartIcon },
-  { name: 'Especialidades', description: 'Conecta con médicos especialistas', href: '/Specialties', icon: UserGroupIcon },
-  { name: 'Telemedicina', description: 'Consultas médicas virtuales 24/7', href: '#telemedicina', icon: ClockIcon },
-  { name: 'Historial Médico', description: 'Acceso seguro a tu información médica', href: '#historial', icon: ShieldCheckIcon },
-  { name: 'Citas Online', description: 'Agenda y gestiona tus citas fácilmente', href: '#citas', icon: CalendarIcon },
-  { name: 'Integración Clínicas', description: 'Conecta con hospitales y clínicas', href: '#integracion', icon: CogIcon },
-]
-
 const navigation = [
   { name: 'Clínicas', href: '/Clinics' },
-  { name: 'Seguros', href: '#seguros' },
   { name: 'Nosotros', href: '/us' },
 ]
 
@@ -88,38 +73,6 @@ export default function HeaderComponent() {
         </div>
 
         <PopoverGroup className="hidden lg:flex lg:gap-x-12">
-          <Popover className="relative">
-            <PopoverButton className="flex items-center gap-x-1 text-sm/6 font-semibold text-white hover:text-blue-300 transition-colors duration-200">
-              Servicios
-              <ChevronDownIcon aria-hidden="true" className="size-5 flex-none text-white/70" />
-            </PopoverButton>
-
-            <PopoverPanel 
-              transition
-              className="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-200 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
-            >
-              <div className="p-4">
-                {medicalServices.map((item) => (
-                  <div
-                    key={item.name}
-                    className="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50 transition-colors duration-200"
-                  >
-                    <div className="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-100 group-hover:bg-[#5C95FF]/20 transition-colors duration-200">
-                      <item.icon aria-hidden="true" className="size-6 text-gray-600 group-hover:text-[#5C95FF]" />
-                    </div>
-                    <div className="flex-auto">
-                      <a href={item.href} className="block font-semibold text-gray-900">
-                        {item.name}
-                        <span className="absolute inset-0" />
-                      </a>
-                      <p className="mt-1 text-gray-600">{item.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </PopoverPanel>
-          </Popover>
-
           {navigation.map((item) => (
             <a
               key={item.name}
@@ -129,6 +82,17 @@ export default function HeaderComponent() {
               {item.name}
             </a>
           ))}
+
+          {/* Link para crear clínica - solo para usuarios autenticados */}
+          {hasToken && (
+            <a
+              href="/create-clinic"
+              className="flex items-center gap-x-2 text-sm/6 font-semibold text-white hover:text-blue-300 transition-colors duration-200"
+            >
+              <PlusCircleIcon className="h-5 w-5" />
+              Crear Clínica
+            </a>
+          )}
         </PopoverGroup>
 
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
@@ -199,6 +163,23 @@ export default function HeaderComponent() {
                   {/* Divider */}
                   <div className="my-2 h-px bg-gray-200"></div>
 
+                  {/* Crear Clínica - Para usuarios autenticados */}
+                  <button
+                    onClick={() => router.push('/create-clinic')}
+                    className="w-full flex items-center gap-x-3 rounded-lg p-3 text-sm text-left hover:bg-teal-50 transition-colors duration-200"
+                  >
+                    <div className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-teal-100">
+                      <PlusCircleIcon className="h-6 w-6 text-teal-600" />
+                    </div>
+                    <div className="flex-auto">
+                      <p className="font-semibold text-gray-900">Crear Clínica</p>
+                      <p className="text-xs text-gray-500">Registra tu clínica</p>
+                    </div>
+                  </button>
+
+                  {/* Divider */}
+                  <div className="my-2 h-px bg-gray-200"></div>
+
                   {/* Mi Perfil */}
                   <button
                     onClick={() => router.push('/profile')}
@@ -210,20 +191,6 @@ export default function HeaderComponent() {
                     <div className="flex-auto">
                       <p className="font-semibold text-gray-900">Mi Perfil</p>
                       <p className="text-xs text-gray-500">Ver y editar información</p>
-                    </div>
-                  </button>
-
-                  {/* Notificaciones */}
-                  <button
-                    onClick={() => {/* TODO: Navegar a notificaciones */}}
-                    className="w-full flex items-center gap-x-3 rounded-lg p-3 text-sm text-left hover:bg-gray-50 transition-colors duration-200"
-                  >
-                    <div className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-gray-100">
-                      <BellIcon className="h-6 w-6 text-gray-600" />
-                    </div>
-                    <div className="flex-auto">
-                      <p className="font-semibold text-gray-900">Notificaciones</p>
-                      <p className="text-xs text-gray-500">Alertas y recordatorios</p>
                     </div>
                   </button>
 
