@@ -56,7 +56,20 @@ export default function useLoginComponent(opts?: UseLoginOpts) {
       if (isAdmin) Cookies.set("isAdmin", "true", { expires: 7 });
       else Cookies.remove("isAdmin");
 
-      const destination = isAdmin ? "/homeAdmin" : isDoctor ? "/homeDoctor" : "/homePatient";
+      // Lógica de redirección mejorada:
+      // - Admin (con o sin doctor explícito) -> Dashboard Admin (admin = doctor con privilegios)
+      // - Solo Doctor -> Dashboard Doctor
+      // - Ninguno -> Dashboard Paciente
+      let destination = "/homePatient";
+
+      if (isAdmin) {
+        // Admin siempre va a dashboard de admin (puede acceder a doctor desde el menú)
+        destination = "/homeAdmin";
+      } else if (isDoctor) {
+        // Solo doctor sin privilegios de admin
+        destination = "/homeDoctor";
+      }
+
       console.log("Redirigiendo a:", destination);
       router.push(destination);
       opts?.onSuccess?.(); // cierra el modal desde el padre

@@ -21,11 +21,42 @@ export class AdminService {
     }
 
     /**
-     * Get all users from the admin's clinic
+     * Get all users from the admin's clinic(s)
+     * If clinicId is provided, returns users from that clinic (if user is admin)
+     * If not provided, returns users from all clinics the user administers
      */
-    async getClinicUsers(adminUserId: number): Promise<AdminReads.ClinicUser[]> {
-        const clinicId = await this.verifyAdminAndGetClinicId(adminUserId);
-        return await AdminReads.getClinicUsers(this.db, clinicId);
+    async getClinicUsers(adminUserId: number, clinicId?: number): Promise<AdminReads.ClinicUser[]> {
+        if (clinicId) {
+            // Verify user is admin of the specified clinic
+            const isAdmin = await AdminReads.isUserAdminOfClinic(this.db, adminUserId, clinicId);
+            const adminClinics = await this.getAdminClinics(adminUserId);
+            const isOwner = adminClinics.some(c => c.clinic_id === clinicId && c.role_within_clinic === 'Owner');
+
+            if (!isAdmin && !isOwner) {
+                throw new ForbiddenException('User is not an admin of the specified clinic');
+            }
+            return await AdminReads.getClinicUsers(this.db, clinicId);
+        } else {
+            // Get all clinics where user is admin
+            const adminClinics = await this.getAdminClinics(adminUserId);
+            if (adminClinics.length === 0) {
+                throw new ForbiddenException('User is not an admin of any clinic');
+            }
+
+            // Get users from all clinics
+            const allUsers: AdminReads.ClinicUser[] = [];
+            for (const clinic of adminClinics) {
+                const users = await AdminReads.getClinicUsers(this.db, clinic.clinic_id);
+                allUsers.push(...users);
+            }
+
+            // Remove duplicates by user_id
+            const uniqueUsers = Array.from(
+                new Map(allUsers.map(user => [user.user_id, user])).values()
+            );
+
+            return uniqueUsers;
+        }
     }
 
     /**
@@ -100,5 +131,12 @@ export class AdminService {
      */
     async getAllSpecialties(): Promise<AdminReads.Specialty[]> {
         return await AdminReads.getAllSpecialties(this.db);
+    }
+
+    /**
+     * Get all clinics where the user is an Admin or Owner
+     */
+    async getAdminClinics(userId: number): Promise<AdminReads.AdminClinic[]> {
+        return await AdminReads.getUserAdminClinics(this.db, userId);
     }
 }

@@ -117,9 +117,9 @@ export default function UsersManagementPage() {
 
         try {
             const updateData: UpdateUserRoleDTO = {
-                user_email_address: editingUser.user_email_address,
-                is_doctor: roleForm.is_doctor,
-                is_admin: roleForm.is_admin,
+                email: editingUser.user_email_address,
+                isDoctor: roleForm.is_doctor,
+                isAdmin: roleForm.is_admin,
                 specialty_id: roleForm.is_doctor ? roleForm.specialty_id : undefined,
             };
 

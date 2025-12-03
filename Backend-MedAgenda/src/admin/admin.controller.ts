@@ -11,11 +11,35 @@ import { UpdateUserRoleDto } from './dto/admin.dto';
 export class AdminController {
     constructor(private readonly adminService: AdminService) {}
 
-    @Get('clinic-users')
-    @ApiOperation({ summary: 'Get all users from the admin\'s clinic' })
+    @Get('my-clinics')
+    @ApiOperation({ summary: 'Get all clinics where the user is Admin or Owner' })
     @ApiResponse({
         status: 200,
-        description: 'List of all users in the clinic',
+        description: 'List of clinics where user has admin privileges',
+        schema: {
+            type: 'array',
+            items: {
+                type: 'object',
+                properties: {
+                    clinic_id: { type: 'number' },
+                    clinic_name: { type: 'string' },
+                    role_within_clinic: { type: 'string', enum: ['Admin', 'Owner'] },
+                    role_description: { type: 'string', nullable: true }
+                }
+            }
+        }
+    })
+    @ApiResponse({ status: 401, description: 'Unauthorized' })
+    async getMyClinics(@Req() req) {
+        return await this.adminService.getAdminClinics(req.user.id);
+    }
+
+    @Get('clinic-users')
+    @ApiOperation({ summary: 'Get all users from the admin\'s clinic(s)' })
+    @ApiQuery({ name: 'clinic_id', type: Number, required: false, description: 'Filter by specific clinic ID' })
+    @ApiResponse({
+        status: 200,
+        description: 'List of all users in the clinic(s)',
         schema: {
             type: 'array',
             items: {
@@ -37,9 +61,9 @@ export class AdminController {
         }
     })
     @ApiResponse({ status: 401, description: 'Unauthorized' })
-    @ApiResponse({ status: 403, description: 'User is not an admin' })
-    async getClinicUsers(@Req() req) {
-        return await this.adminService.getClinicUsers(req.user.id);
+    @ApiResponse({ status: 403, description: 'User is not an admin of the specified clinic' })
+    async getClinicUsers(@Req() req, @Query('clinic_id') clinicId?: number) {
+        return await this.adminService.getClinicUsers(req.user.id, clinicId ? Number(clinicId) : undefined);
     }
 
     @Get('search-user')

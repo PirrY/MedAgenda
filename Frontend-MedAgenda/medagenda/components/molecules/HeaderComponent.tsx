@@ -13,6 +13,8 @@ import {
   UserCircleIcon,
   BellIcon,
   ArrowRightOnRectangleIcon,
+  HomeIcon,
+  BuildingOffice2Icon,
 } from '@heroicons/react/24/outline'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/navigation'
@@ -37,19 +39,25 @@ const navigation = [
 export default function HeaderComponent() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
   const [hasToken, setHasToken] = useState(false)
+  const [isDoctor, setIsDoctor] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
   const router = useRouter()
 
   const openAuthModal = () => setIsAuthModalOpen(true)
   const closeAuthModal = () => setIsAuthModalOpen(false)
 
-  // Leer cookie 'token' al montar
+  // Leer cookies al montar
   useEffect(() => {
     setHasToken(Boolean(Cookies.get('token')))
+    setIsDoctor(Cookies.get('isDoctor') === 'true')
+    setIsAdmin(Cookies.get('isAdmin') === 'true')
   }, [])
 
-  // Callback al éxito: marcar sesión iniciada y cerrar modal
+  // Callback al éxito: marcar sesión iniciada, actualizar roles y cerrar modal
   const handleAuthSuccess = () => {
     setHasToken(true)
+    setIsDoctor(Cookies.get('isDoctor') === 'true')
+    setIsAdmin(Cookies.get('isAdmin') === 'true')
     closeAuthModal()
   }
 
@@ -59,6 +67,8 @@ export default function HeaderComponent() {
     Cookies.remove('isDoctor')
     Cookies.remove('isAdmin')
     setHasToken(false)
+    setIsDoctor(false)
+    setIsAdmin(false)
     router.push('/')
   }
 
@@ -140,6 +150,55 @@ export default function HeaderComponent() {
                 className="absolute right-0 top-full z-10 mt-3 w-64 overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-gray-200 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
               >
                 <div className="p-2">
+                  {/* Dashboard Administración - Solo para admins */}
+                  {isAdmin && (
+                    <button
+                      onClick={() => router.push('/homeAdmin')}
+                      className="w-full flex items-center gap-x-3 rounded-lg p-3 text-sm text-left hover:bg-blue-50 transition-colors duration-200"
+                    >
+                      <div className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-blue-100">
+                        <BuildingOffice2Icon className="h-6 w-6 text-blue-600" />
+                      </div>
+                      <div className="flex-auto">
+                        <p className="font-semibold text-gray-900">Dashboard Administración</p>
+                        <p className="text-xs text-gray-500">Gestión de clínica</p>
+                      </div>
+                    </button>
+                  )}
+
+                  {/* Dashboard Doctores - Para doctores o admins (admin = doctor con privilegios) */}
+                  {(isDoctor || isAdmin) && (
+                    <button
+                      onClick={() => router.push('/homeDoctor')}
+                      className="w-full flex items-center gap-x-3 rounded-lg p-3 text-sm text-left hover:bg-green-50 transition-colors duration-200"
+                    >
+                      <div className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-green-100">
+                        <HeartIcon className="h-6 w-6 text-green-600" />
+                      </div>
+                      <div className="flex-auto">
+                        <p className="font-semibold text-gray-900">Dashboard Doctores</p>
+                        <p className="text-xs text-gray-500">Citas y pacientes</p>
+                      </div>
+                    </button>
+                  )}
+
+                  {/* Dashboard Paciente - Para todos */}
+                  <button
+                    onClick={() => router.push('/homePatient')}
+                    className="w-full flex items-center gap-x-3 rounded-lg p-3 text-sm text-left hover:bg-purple-50 transition-colors duration-200"
+                  >
+                    <div className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-purple-100">
+                      <HomeIcon className="h-6 w-6 text-purple-600" />
+                    </div>
+                    <div className="flex-auto">
+                      <p className="font-semibold text-gray-900">Dashboard</p>
+                      <p className="text-xs text-gray-500">Mis citas y servicios</p>
+                    </div>
+                  </button>
+
+                  {/* Divider */}
+                  <div className="my-2 h-px bg-gray-200"></div>
+
                   {/* Mi Perfil */}
                   <button
                     onClick={() => router.push('/profile')}

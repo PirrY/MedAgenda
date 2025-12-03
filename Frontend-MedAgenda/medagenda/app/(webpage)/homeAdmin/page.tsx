@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { FaUsersCog, FaChartBar, FaSearch, FaUser, FaUserMd, FaUserShield, FaEnvelope, FaPhone, FaSave, FaTimes, FaEdit } from "react-icons/fa";
-import { getClinicUsers, searchUserByEmail, updateUserRole, getSpecialties } from "../../../libs/adminService";
-import { ClinicUser, UpdateUserRoleDTO, Specialty } from "../../../interfaces/adminUser";
+import { FaUsersCog, FaChartBar, FaSearch, FaUser, FaUserMd, FaUserShield, FaEnvelope, FaPhone, FaSave, FaTimes, FaEdit, FaBuilding } from "react-icons/fa";
+import { getClinicUsers, searchUserByEmail, updateUserRole, getSpecialties, getUserAdminClinics, addMemberToClinic } from "../../../libs/adminService";
+import { ClinicUser, UpdateUserRoleDTO, Specialty, UserClinic, AddMemberToClinicDTO } from "../../../interfaces/adminUser";
 import useAuth from "../../../hooks/useAuth";
 import { useRouter } from "next/navigation";
 import Heading from "../../../components/atoms/Heading";
@@ -14,9 +14,12 @@ export default function AHome() {
     const [users, setUsers] = useState<ClinicUser[]>([]);
     const [filteredUsers, setFilteredUsers] = useState<ClinicUser[]>([]);
     const [specialties, setSpecialties] = useState<Specialty[]>([]);
+    const [userClinics, setUserClinics] = useState<UserClinic[]>([]);
+    const [selectedClinicId, setSelectedClinicId] = useState<number | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [searchEmail, setSearchEmail] = useState("");
     const [editingUser, setEditingUser] = useState<ClinicUser | null>(null);
+    const [isNewMember, setIsNewMember] = useState(false); // Si el usuario no está en la clínica aún
     const [error, setError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [isSaving, setIsSaving] = useState(false);
@@ -34,37 +37,67 @@ export default function AHome() {
         }
     }, [authLoading, isAuthenticated, isAdmin, router]);
 
+    // Cargar clínicas del usuario admin
+    useEffect(() => {
+        const fetchClinics = async () => {
+            try {
+                console.log("Fetching clínicas del admin...");
+                const clinicsData = await getUserAdminClinics();
+                console.log("Clínicas recibidas:", clinicsData);
+
+                // Filtrar clínicas duplicadas por clinic_id
+                const uniqueClinics = clinicsData.filter((clinic, index, self) =>
+                    index === self.findIndex((c) => c.clinic_id === clinic.clinic_id)
+                );
+
+                console.log("Clínicas únicas:", uniqueClinics);
+                setUserClinics(uniqueClinics);
+
+                // Seleccionar la primera clínica por defecto
+                if (uniqueClinics.length > 0) {
+                    setSelectedClinicId(uniqueClinics[0].clinic_id);
+                }
+            } catch (error: any) {
+                console.error("Error cargando clínicas:", error);
+                setError("No se pudieron cargar las clínicas. Por favor, intenta de nuevo.");
+            }
+        };
+
+        if (isAuthenticated && isAdmin) {
+            fetchClinics();
+        }
+    }, [isAuthenticated, isAdmin]);
+
+    // Cargar usuarios y especialidades cuando cambia la clínica seleccionada
     useEffect(() => {
         const fetchData = async () => {
+            if (!selectedClinicId) return;
+
             try {
-                // Hacer las peticiones por separado para mejor debugging
-                console.log("Fetching usuarios...");
-                const usersData = await getClinicUsers();
+                setIsLoading(true);
+                console.log("Fetching usuarios para clínica:", selectedClinicId);
+                const usersData = await getClinicUsers(selectedClinicId);
                 console.log("Usuarios recibidos:", usersData);
 
                 console.log("Fetching especialidades...");
                 const specialtiesData = await getSpecialties();
                 console.log("Especialidades recibidas:", specialtiesData);
-                console.log("Tipo de especialidades:", typeof specialtiesData);
-                console.log("Es array?:", Array.isArray(specialtiesData));
 
                 setUsers(usersData);
                 setFilteredUsers(usersData);
                 setSpecialties(specialtiesData || []);
             } catch (error: any) {
                 console.error("Error completo:", error);
-                console.error("Error mensaje:", error.message);
-                console.error("Error stack:", error.stack);
                 setError("No se pudo cargar la información. Por favor, intenta de nuevo.");
             } finally {
                 setIsLoading(false);
             }
         };
 
-        if (isAuthenticated && isAdmin) {
+        if (isAuthenticated && isAdmin && selectedClinicId) {
             fetchData();
         }
-    }, [isAuthenticated, isAdmin]);
+    }, [isAuthenticated, isAdmin, selectedClinicId]);
 
     const handleSearch = async () => {
         if (!searchEmail.trim()) {
@@ -75,6 +108,18 @@ export default function AHome() {
         try {
             setError(null);
             const user = await searchUserByEmail(searchEmail);
+
+            // Verificar si el usuario ya está en la clínica actual
+            const isInClinic = users.some(u => u.user_id === user.user_id);
+
+            console.log("Usuario encontrado:", user);
+            console.log("¿Ya está en la clínica?:", isInClinic);
+
+            if (!isInClinic) {
+                // Usuario encontrado pero no está en esta clínica
+                setSuccessMessage(`Usuario encontrado: ${user.first_name} ${user.first_last_name}. Haz clic en "Agregar a Clínica" para añadirlo.`);
+            }
+
             setFilteredUsers([user]);
         } catch (error: any) {
             console.error("Error searching user:", error);
@@ -93,10 +138,13 @@ export default function AHome() {
         setError(null);
     };
 
-    const handleEditUser = (user: ClinicUser) => {
+    const handleEditUser = (user: ClinicUser, isNew: boolean = false) => {
         console.log("Editando usuario:", user);
+        console.log("¿Es nuevo en la clínica?:", isNew);
         console.log("Especialidades disponibles:", specialties);
+
         setEditingUser(user);
+        setIsNewMember(isNew);
         setRoleForm({
             is_doctor: user.is_doctor || false,
             is_admin: user.is_admin || false,
@@ -117,7 +165,7 @@ export default function AHome() {
     };
 
     const handleSaveRole = async () => {
-        if (!editingUser) return;
+        if (!editingUser || !selectedClinicId) return;
 
         if (roleForm.is_doctor && !roleForm.specialty_id) {
             setError("Debes seleccionar una especialidad para el doctor.");
@@ -129,34 +177,89 @@ export default function AHome() {
         setSuccessMessage(null);
 
         try {
-            const updateData: UpdateUserRoleDTO = {
-                user_email_address: editingUser.user_email_address,
-                is_doctor: roleForm.is_doctor,
-                is_admin: roleForm.is_admin,
-                specialty_id: roleForm.is_doctor ? roleForm.specialty_id : undefined,
-            };
+            let updatedUser: ClinicUser;
 
-            const updatedUser = await updateUserRole(updateData);
+            if (isNewMember) {
+                // Usuario NUEVO en la clínica - usar addMemberToClinic
+                const addData: AddMemberToClinicDTO = {
+                    clinic_id: selectedClinicId,
+                    user_id: editingUser.user_id,
+                    role_within_clinic: roleForm.is_admin ? "Admin" : "Doctor",
+                    role_description: roleForm.is_doctor && roleForm.specialty_id
+                        ? `Doctor - ${specialties.find(s => s.specialty_id === roleForm.specialty_id)?.specialty_name}`
+                        : undefined,
+                };
 
-            // Actualizar la lista de usuarios
-            const updatedUsers = users.map(u =>
-                u.user_id === updatedUser.user_id ? updatedUser : u
-            );
-            setUsers(updatedUsers);
+                console.log("📤 Agregando nuevo miembro a la clínica:", addData);
+                const response = await addMemberToClinic(addData);
+                console.log("✅ Respuesta del backend:", response);
 
-            // Actualizar usuarios filtrados si hay búsqueda activa
-            if (searchEmail.trim()) {
-                setFilteredUsers([updatedUser]);
-            } else {
+                // Si el backend no devuelve el usuario completo, usar el editingUser actualizado
+                updatedUser = response || {
+                    ...editingUser,
+                    is_admin: roleForm.is_admin,
+                    is_doctor: roleForm.is_doctor,
+                    specialty_name: roleForm.specialty_id
+                        ? specialties.find(s => s.specialty_id === roleForm.specialty_id)?.specialty_name
+                        : undefined,
+                };
+
+                console.log("✅ Usuario para agregar a la lista:", updatedUser);
+
+                // Agregar a la lista de usuarios
+                const updatedUsers = [...users, updatedUser];
+                setUsers(updatedUsers);
                 setFilteredUsers(updatedUsers);
+
+                setSuccessMessage(`${editingUser.first_name} ${editingUser.first_last_name} agregado exitosamente a la clínica`);
+            } else {
+                // Usuario EXISTENTE - usar updateUserRole
+                const updateData: UpdateUserRoleDTO = {
+                    email: editingUser.user_email_address,
+                    isDoctor: roleForm.is_doctor,
+                    isAdmin: roleForm.is_admin,
+                    specialty_id: roleForm.is_doctor ? roleForm.specialty_id : undefined,
+                };
+
+                console.log("📤 Actualizando rol de usuario existente:", updateData);
+                updatedUser = await updateUserRole(updateData);
+                console.log("✅ Usuario actualizado:", updatedUser);
+
+                // Actualizar la lista de usuarios
+                const updatedUsers = users.map(u =>
+                    u.user_id === updatedUser.user_id ? updatedUser : u
+                );
+                setUsers(updatedUsers);
+
+                // Actualizar usuarios filtrados si hay búsqueda activa
+                if (searchEmail.trim()) {
+                    setFilteredUsers([updatedUser]);
+                } else {
+                    setFilteredUsers(updatedUsers);
+                }
+
+                setSuccessMessage(`Rol actualizado exitosamente para ${updatedUser.first_name} ${updatedUser.first_last_name}`);
             }
 
-            setSuccessMessage(`Rol actualizado exitosamente para ${updatedUser.first_name} ${updatedUser.first_last_name}`);
             setEditingUser(null);
+            setIsNewMember(false);
             setTimeout(() => setSuccessMessage(null), 3000);
         } catch (error: any) {
-            console.error("Error updating user role:", error);
-            setError(error.message || "No se pudo actualizar el rol. Intenta de nuevo.");
+            console.error("❌ Error completo:", error);
+            console.error("❌ Error message:", error.message);
+            console.error("❌ Error stack:", error.stack);
+
+            let errorMessage = isNewMember
+                ? "No se pudo agregar el usuario a la clínica. "
+                : "No se pudo actualizar el rol. ";
+
+            if (error.message) {
+                errorMessage += error.message;
+            } else {
+                errorMessage += "Error desconocido. Revisa la consola para más detalles.";
+            }
+
+            setError(errorMessage);
         } finally {
             setIsSaving(false);
         }
@@ -200,13 +303,59 @@ export default function AHome() {
         );
     }
 
+    const selectedClinic = userClinics.find(c => c.clinic_id === selectedClinicId);
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
                     <Heading text="Panel del" highlight="Administrador" />
+                    {selectedClinic && (
+                        <p className="text-gray-600 mt-2 flex items-center gap-2">
+                            <FaBuilding className="text-[#4682B4]" />
+                            Clínica: <span className="font-semibold text-gray-800">{selectedClinic.clinic_name}</span>
+                        </p>
+                    )}
                 </div>
+
+                {/* Clinic Selector */}
+                {userClinics.length > 0 ? (
+                    <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+                        <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                            <FaBuilding className="text-[#4682B4]" />
+                            {userClinics.length > 1 ? 'Seleccionar Clínica' : 'Clínica Actual'}
+                        </label>
+                        <select
+                            value={selectedClinicId || ""}
+                            onChange={(e) => setSelectedClinicId(Number(e.target.value))}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                            disabled={userClinics.length === 1}
+                        >
+                            {userClinics.map((clinic) => (
+                                <option key={clinic.clinic_id} value={clinic.clinic_id}>
+                                    {clinic.clinic_name} ({clinic.role_within_clinic})
+                                </option>
+                            ))}
+                        </select>
+                        {userClinics.length === 1 && (
+                            <p className="text-xs text-gray-500 mt-2">
+                                Solo administras esta clínica
+                            </p>
+                        )}
+                    </div>
+                ) : (
+                    // No hay clínicas - mostrar mensaje de error
+                    <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-6 py-4 rounded-lg mb-6">
+                        <p className="font-semibold">⚠️ No se encontraron clínicas</p>
+                        <p className="text-sm mt-1">
+                            No tienes acceso a ninguna clínica como administrador. Contacta al soporte si esto es un error.
+                        </p>
+                        <p className="text-xs mt-2 text-gray-600">
+                            Debug: userClinics.length = {userClinics.length}, selectedClinicId = {selectedClinicId}
+                        </p>
+                    </div>
+                )}
 
                 {/* Tabs */}
                 <div className="flex gap-4 mb-8">
@@ -350,13 +499,25 @@ export default function AHome() {
                                                         </span>
                                                     </td>
                                                     <td className="px-6 py-4 text-center">
-                                                        <button
-                                                            onClick={() => handleEditUser(user)}
-                                                            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors duration-200 text-sm font-semibold"
-                                                        >
-                                                            <FaEdit />
-                                                            Editar
-                                                        </button>
+                                                        {users.some(u => u.user_id === user.user_id) ? (
+                                                            // Usuario ya está en la clínica - mostrar botón Editar
+                                                            <button
+                                                                onClick={() => handleEditUser(user, false)}
+                                                                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors duration-200 text-sm font-semibold"
+                                                            >
+                                                                <FaEdit />
+                                                                Editar Rol
+                                                            </button>
+                                                        ) : (
+                                                            // Usuario no está en la clínica - mostrar botón Agregar
+                                                            <button
+                                                                onClick={() => handleEditUser(user, true)}
+                                                                className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors duration-200 text-sm font-semibold"
+                                                            >
+                                                                <FaUserMd />
+                                                                Agregar a Clínica
+                                                            </button>
+                                                        )}
                                                     </td>
                                                 </tr>
                                             ))
@@ -388,17 +549,22 @@ export default function AHome() {
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                     <div className="bg-white rounded-2xl p-8 max-w-2xl w-full shadow-2xl max-h-[90vh] overflow-y-auto">
                         <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
-                            <FaUsersCog className="text-blue-600" />
-                            Editar Rol de Usuario
+                            <FaUsersCog className={isNewMember ? "text-green-600" : "text-blue-600"} />
+                            {isNewMember ? "Agregar Usuario a la Clínica" : "Editar Rol de Usuario"}
                         </h3>
 
                         {/* User Info */}
-                        <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                        <div className={`${isNewMember ? 'bg-green-50 border border-green-200' : 'bg-gray-50'} rounded-lg p-4 mb-6`}>
                             <p className="text-sm text-gray-600 mb-1">Usuario seleccionado:</p>
                             <p className="font-semibold text-gray-800">
                                 {editingUser.first_name} {editingUser.first_last_name}
                             </p>
                             <p className="text-sm text-gray-600">{editingUser.user_email_address}</p>
+                            {isNewMember && (
+                                <p className="text-sm text-green-600 mt-2 font-semibold">
+                                    Este usuario será agregado a la clínica
+                                </p>
+                            )}
                         </div>
 
                         {/* Role Selection */}

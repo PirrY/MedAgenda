@@ -76,15 +76,12 @@ export default function CreateClinicPage() {
     loadSpecialties();
   }, []);
 
-  // Redirect if admin or not authenticated
+  // Redirect if not authenticated
   useEffect(() => {
     if (!isLoading && !user) {
       router.push('/login');
     }
-    if (!isLoading && isAdmin) {
-      router.push('/homeAdmin');
-    }
-  }, [user, isLoading, isAdmin, router]);
+  }, [user, isLoading, router]);
 
   // Handle city search with debounce
   useEffect(() => {
@@ -393,9 +390,11 @@ export default function CreateClinicPage() {
       console.log('🎉 Clinic creation process completed!');
       setSuccess(true);
 
-      // Redirect to admin home after success
+      // Redirect to appropriate dashboard after success
+      // Note: The backend should update the user's role to admin/owner after clinic creation
       setTimeout(() => {
-        router.push('/homeAdmin');
+        // Refresh the page to reload cookies/roles, then redirect
+        window.location.href = '/homeAdmin';
       }, 2000);
     } catch (err: any) {
       setError(err?.message || 'Error al crear la clínica');
@@ -412,7 +411,7 @@ export default function CreateClinicPage() {
     );
   }
 
-  if (!user || isAdmin) {
+  if (!user) {
     return null;
   }
 

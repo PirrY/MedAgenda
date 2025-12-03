@@ -9,16 +9,25 @@ export function middleware(req: NextRequest) {
   const isAdmin = req.cookies.get("isAdmin")?.value === "true";
   const isDoctor = req.cookies.get("isDoctor")?.value === "true";
 
+  // Usuarios sin token no pueden acceder a rutas protegidas
+  if (!token) {
+    const url = req.nextUrl.clone();
+    url.pathname = "/";
+    return NextResponse.redirect(url);
+  }
+
+  // Rutas de admin: permitir si es admin (puede ser también doctor)
   if (ADMIN_PATHS.some((path) => pathname.startsWith(path))) {
-    if (!token || !isAdmin) {
+    if (!isAdmin) {
       const url = req.nextUrl.clone();
       url.pathname = "/";
       return NextResponse.redirect(url);
     }
   }
 
+  // Rutas de doctor: permitir si es doctor O admin (admin = doctor con privilegios)
   if (DOCTOR_PATHS.some((path) => pathname.startsWith(path))) {
-    if (!token || !isDoctor) {
+    if (!isDoctor && !isAdmin) {
       const url = req.nextUrl.clone();
       url.pathname = "/";
       return NextResponse.redirect(url);

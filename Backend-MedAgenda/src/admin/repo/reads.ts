@@ -20,6 +20,13 @@ export interface Specialty {
     specialty_description: string | null;
 }
 
+export interface AdminClinic {
+    clinic_id: number;
+    clinic_name: string;
+    role_within_clinic: 'Admin' | 'Owner';
+    role_description: string | null;
+}
+
 /**
  * Get all users from a specific clinic
  */
@@ -142,4 +149,41 @@ export async function isUserMemberOfClinic(db: Db, userId: number, clinicId: num
         [userId, clinicId]
     );
     return result.length > 0;
+}
+
+/**
+ * Get all clinics where user is Admin or Owner
+ */
+export async function getUserAdminClinics(db: Db, userId: number): Promise<AdminClinic[]> {
+    const clinics = await db.query<any>(
+        `SELECT
+            c.clinic_id,
+            c.clinic_name,
+            cm.role_within_clinic,
+            cm.role_description
+        FROM clinic_members cm
+        JOIN clinics c ON cm.clinic_id = c.clinic_id
+        WHERE cm.user_id = ?
+        AND cm.role_within_clinic = 'Admin'
+
+        UNION
+
+        SELECT
+            c.clinic_id,
+            c.clinic_name,
+            'Owner' as role_within_clinic,
+            'Propietario' as role_description
+        FROM clinics c
+        WHERE c.clinic_owner = ?
+
+        ORDER BY clinic_name`,
+        [userId, userId]
+    );
+
+    return clinics.map(clinic => ({
+        clinic_id: clinic.clinic_id,
+        clinic_name: clinic.clinic_name,
+        role_within_clinic: clinic.role_within_clinic,
+        role_description: clinic.role_description
+    }));
 }
