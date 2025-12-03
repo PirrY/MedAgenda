@@ -89,6 +89,7 @@ CREATE TABLE prescriptions (
     clinic_id INT NOT NULL,
     patient_id INT NOT NULL,
     prescription_description TEXT NOT NULL,
+    date_emitted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (doctor_id) REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (patient_id) REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (clinic_id) REFERENCES clinics(clinic_id) ON UPDATE CASCADE ON DELETE CASCADE

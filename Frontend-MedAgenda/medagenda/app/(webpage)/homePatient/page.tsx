@@ -51,33 +51,6 @@ export default function PHome() {
           </div>
         </div>
 
-        {!loadingAppointments && (
-          <div className="w-full max-w-7xl mt-12">
-            <div className="bg-gradient-to-r from-blue-600 to-cyan-500 rounded-2xl p-8 text-white shadow-xl">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                <div>
-                  <p className="text-4xl font-bold mb-2">{appointments.length}</p>
-                  <p className="text-blue-100">
-                    {appointments.length === 1 ? "Cita Agendada" : "Citas Agendadas"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-4xl font-bold mb-2">{clinicsVisited}</p>
-                  <p className="text-blue-100">
-                    {clinicsVisited === 1 ? "Clinica Visitada" : "Clinicas Visitadas"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-4xl font-bold mb-2">{upcomingCount}</p>
-                  <p className="text-blue-100">
-                    {upcomingCount === 1 ? "Cita Proxima" : "Citas Proximas"}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
         <div id="formulas" className="w-full max-w-7xl mt-12">
           <div className="bg-white rounded-2xl p-8 shadow-xl">
             <div className="flex items-center gap-3 mb-6">
