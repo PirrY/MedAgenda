@@ -310,7 +310,7 @@ export default function CreateClinicPage() {
       console.log('🏥 Starting clinic creation process...');
 
       // STEP 1: Create/Get Country ID
-      let countryId: number;
+      let countryId: number = 0;
       if (showNewStateFields && !selectedCountry) {
         // Need to create country
         console.log('🌍 Creating new country:', countrySearch.trim());
@@ -323,7 +323,7 @@ export default function CreateClinicPage() {
       }
 
       // STEP 2: Create/Get State ID
-      let stateId: number;
+      let stateId: number = 0;
       if (showNewCityFields) {
         if (showNewStateFields) {
           // Need to create state
@@ -345,7 +345,7 @@ export default function CreateClinicPage() {
       }
 
       // STEP 3: Create/Get City ID
-      let cityId: number;
+      let cityId: number = 0;
       if (showNewCityFields) {
         // Need to create city
         console.log('🏙️ Creating new city:', {

@@ -1,6 +1,6 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import React from "react";
+import React, { Suspense } from "react";
 import Heading from "../../../components/atoms/Heading";
 
 const doctors = [
@@ -26,8 +26,8 @@ const doctors = [
     { name: "Dra. Daniela Rincón", specialty: "Pediatría" },
 ];
 
-export default function Page() {
-    const searchParams = useSearchParams();
+function DoctorsList() {
+    const searchParams = useSearchParams(); // <--- El hook se mueve aquí
     const selectedSpecialty = searchParams.get("specialty");
 
     const filteredDoctors = selectedSpecialty
@@ -35,7 +35,7 @@ export default function Page() {
         : doctors;
 
     return (
-        <main className="min-h-screen bg-gray-50 px-6 py-16 flex flex-col items-center">
+        <>
             <Heading
                 text="Doctores"
                 highlight={selectedSpecialty ? `de ${selectedSpecialty}` : ""}
@@ -58,6 +58,16 @@ export default function Page() {
                     </div>
                 ))}
             </div>
+        </>
+    );
+}
+
+export default function Page() {
+    return (
+        <main className="min-h-screen bg-gray-50 px-6 py-16 flex flex-col items-center">
+            <Suspense fallback={<p className="text-center mt-10">Cargando doctores...</p>}>
+                <DoctorsList />
+            </Suspense>
         </main>
     );
 }
