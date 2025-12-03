@@ -1,13 +1,45 @@
 "use client";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import Cookies from "js-cookie";
+import AuthModal from "../../../../components/organisms/AuthModal";
 import { useClinicDetail } from "../../../../hooks/useClinicDetail";
+import useAuth from "../../../../hooks/useAuth";
 
 export default function ClinicDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const clinicId = Number(params.clinic_id);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [pendingDoctorId, setPendingDoctorId] = useState<number | null>(null);
+  const { isAuthenticated, isLoading } = useAuth();
   const { clinic, doctors, clinicSpecialties, loadingClinic, loadingDoctors, errorClinic, errorDoctors, refetch } = useClinicDetail(clinicId);
+
+  const closeAuthModal = () => {
+    setIsAuthModalOpen(false);
+    setPendingDoctorId(null);
+  };
+
+  const handleAuthSuccess = () => {
+    setIsAuthModalOpen(false);
+    if (pendingDoctorId !== null) {
+      router.push(`/Clinics/${clinicId}/schedule/${pendingDoctorId}`);
+      setPendingDoctorId(null);
+    }
+  };
+
+  const handleScheduleClick = (doctorId: number) => {
+    // Fallback to cookie check while auth hook finishes loading
+    const hasToken = isAuthenticated || (isLoading && Boolean(Cookies.get("token")));
+    if (hasToken) {
+      router.push(`/Clinics/${clinicId}/schedule/${doctorId}`);
+      return;
+    }
+    setPendingDoctorId(doctorId);
+    setIsAuthModalOpen(true);
+  };
 
   return (
     <main className="min-h-screen bg-gray-50 px-6 py-12">
@@ -98,12 +130,13 @@ export default function ClinicDetailPage() {
                   )}
                   <div className="mt-4">
                     {Number.isFinite(d.doctor_id) ? (
-                      <Link
-                        href={`/Clinics/${clinicId}/schedule/${d.doctor_id}`}
+                      <button
+                        type="button"
+                        onClick={() => handleScheduleClick(Number(d.doctor_id))}
                         className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-br from-[#259487] to-indigo-700 px-4 py-2 text-sm font-semibold text-white shadow hover:opacity-95"
                       >
                         Agendar con este doctor
-                      </Link>
+                      </button>
                     ) : (
                       <p className="text-sm text-gray-500">Sin identificador de doctor disponible.</p>
                     )}
@@ -114,6 +147,7 @@ export default function ClinicDetailPage() {
           </div>
         </section>
       </div>
+      <AuthModal isOpen={isAuthModalOpen} onClose={closeAuthModal} onSuccess={handleAuthSuccess} defaultTab="login" />
     </main>
   );
 }

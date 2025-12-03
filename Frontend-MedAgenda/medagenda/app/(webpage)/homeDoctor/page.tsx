@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import {
   ArrowPathIcon,
@@ -35,31 +35,15 @@ export default function DHome() {
     prescriptionError,
     prescriptionSuccess,
     submitPrescription,
+    activePatient,
+    selectedClinicId,
+    prescriptionDescription,
+    openPrescriptionModal,
+    closePrescriptionModal,
+    handleSubmitPrescription,
+    setSelectedClinicId,
+    setPrescriptionDescription,
   } = useDoctorDashboard();
-
-  const [activePatient, setActivePatient] = useState<{
-    patientId: number;
-    patientName: string;
-    clinics: { clinicId: number; clinicName: string }[];
-  } | null>(null);
-  const [selectedClinicId, setSelectedClinicId] = useState<number | undefined>();
-  const [prescriptionDescription, setPrescriptionDescription] = useState("");
-
-  const closeModal = () => {
-    setActivePatient(null);
-    setSelectedClinicId(undefined);
-    setPrescriptionDescription("");
-  };
-
-  const handleSubmitPrescription = async () => {
-    if (!activePatient || !selectedClinicId || !prescriptionDescription.trim()) return;
-    const ok = await submitPrescription({
-      patientId: activePatient.patientId,
-      clinicId: selectedClinicId,
-      description: prescriptionDescription.trim(),
-    });
-    if (ok) closeModal();
-  };
 
   return (
     <main className="min-h-screen bg-gray-50 px-6 py-14">
@@ -312,11 +296,13 @@ export default function DHome() {
                     </div>
                     <button
                       type="button"
-                      onClick={() => {
-                        setActivePatient({ patientId: group.patientId, patientName: group.patientName, clinics: group.clinics });
-                        setSelectedClinicId(group.clinics[0]?.clinicId);
-                        setPrescriptionDescription("");
-                      }}
+                      onClick={() =>
+                        openPrescriptionModal({
+                          patientId: group.patientId,
+                          patientName: group.patientName,
+                          clinics: group.clinics,
+                        })
+                      }
                       className="inline-flex items-center gap-2 rounded-full border border-[#2e7bb4] px-3 py-1.5 text-xs font-semibold text-[#2e7bb4] hover:bg-[#2e7bb4]/10"
                     >
                       <PlusIcon className="h-4 w-4" />
@@ -379,14 +365,14 @@ export default function DHome() {
                 <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Asignar receta</p>
                 <h3 className="text-lg font-semibold text-gray-900">{activePatient.patientName}</h3>
               </div>
-              <button
-                type="button"
-                onClick={closeModal}
-                className="rounded-full p-1 text-gray-500 hover:bg-gray-100"
-              >
-                <XMarkIcon className="h-5 w-5" />
-              </button>
-            </div>
+                  <button
+                    type="button"
+                    onClick={closePrescriptionModal}
+                    className="rounded-full p-1 text-gray-500 hover:bg-gray-100"
+                  >
+                    <XMarkIcon className="h-5 w-5" />
+                  </button>
+                </div>
 
             <div className="mt-4 space-y-3">
               <label className="block text-sm text-gray-700">
@@ -430,7 +416,7 @@ export default function DHome() {
               <div className="flex justify-end gap-3 pt-2">
                 <button
                   type="button"
-                  onClick={closeModal}
+                  onClick={closePrescriptionModal}
                   className="rounded-full border border-gray-200 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                 >
                   Cancelar

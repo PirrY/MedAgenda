@@ -1,62 +1,24 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import React from "react";
 import { FaCalendarCheck, FaFileMedical } from "react-icons/fa";
 import CalendarComponent from "../../../components/organisms/Calendar";
 import useAuth from "../../../hooks/useAuth";
-import { getPatientAppointments } from "../../../libs/appointmentService";
-import { DoctorAppointmentView } from "../../../interfaces/appointment";
 import { usePatientPrescriptions } from "../../../hooks/usePatientPrescriptions";
-
-const formatDateTime = (value: string) => {
-  const d = new Date(value);
-  if (Number.isNaN(d.getTime())) return value;
-  return new Intl.DateTimeFormat("es-ES", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(d);
-};
+import { usePatientDashboard } from "../../../hooks/usePatientDashboard";
 
 export default function PHome() {
-  const router = useRouter();
   const { getFirstName, isLoading: authLoading } = useAuth();
-  const [appointments, setAppointments] = useState<DoctorAppointmentView[]>([]);
-  const [isLoadingAppointments, setIsLoadingAppointments] = useState(true);
   const prescriptions = usePatientPrescriptions();
-
-  useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        const data = await getPatientAppointments();
-        setAppointments(data ?? []);
-      } catch (error) {
-        console.error("Error fetching appointments:", error);
-        setAppointments([]);
-      } finally {
-        setIsLoadingAppointments(false);
-      }
-    };
-
-    fetchAppointments();
-  }, []);
+  const {
+    appointments,
+    loadingAppointments,
+    upcomingCount,
+    clinicsVisited,
+    pastAppointments,
+  } = usePatientDashboard();
 
   const firstName = getFirstName();
-
-  const upcomingCount = appointments.filter((a) => new Date(a.start_date_time) > new Date()).length;
-  const clinicsVisited = new Set(appointments.map((a) => a.clinic_id)).size;
-
-  const pastAppointments = useMemo(
-    () =>
-      appointments
-        .map((a) => ({
-          ...a,
-          startDate: new Date(a.start_date_time),
-        }))
-        .filter((a) => a.startDate <= new Date())
-        .sort((a, b) => b.startDate.getTime() - a.startDate.getTime()),
-    [appointments],
-  );
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50">
@@ -85,11 +47,11 @@ export default function PHome() {
               <FaCalendarCheck className="text-blue-600 text-3xl" />
               <h2 className="text-2xl font-bold text-gray-800">Tus Proximas Citas</h2>
             </div>
-            <CalendarComponent appointments={appointments} isLoading={isLoadingAppointments} />
+            <CalendarComponent appointments={appointments} isLoading={loadingAppointments} />
           </div>
         </div>
 
-        {!isLoadingAppointments && (
+        {!loadingAppointments && (
           <div className="w-full max-w-7xl mt-12">
             <div className="bg-gradient-to-r from-blue-600 to-cyan-500 rounded-2xl p-8 text-white shadow-xl">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
@@ -167,26 +129,26 @@ export default function PHome() {
               <FaCalendarCheck className="text-blue-600 text-3xl" />
               <h2 className="text-2xl font-bold text-gray-800">Historial de Citas</h2>
             </div>
-            {isLoadingAppointments ? (
+            {loadingAppointments ? (
               <p className="text-sm text-gray-600">Cargando historial...</p>
             ) : pastAppointments.length === 0 ? (
               <p className="text-sm text-gray-600">Aun no tienes citas pasadas.</p>
             ) : (
               <div className="space-y-3">
                 {pastAppointments.map((appt) => (
-                  <div key={appt.appointment_id} className="rounded-xl border border-gray-200 p-4 shadow-sm bg-gray-50">
+                  <div key={appt.appointmentId} className="rounded-xl border border-gray-200 p-4 shadow-sm bg-gray-50">
                     <div className="flex items-center justify-between">
-                      <p className="text-sm font-semibold text-gray-900">{appt.clinic_name}</p>
-                      <p className="text-xs text-gray-500">ID: {appt.appointment_id}</p>
+                      <p className="text-sm font-semibold text-gray-900">{appt.clinicName}</p>
+                      <p className="text-xs text-gray-500">ID: {appt.appointmentId}</p>
                     </div>
                     <p className="text-sm text-gray-700 mt-1">
-                      {formatDateTime(appt.start_date_time)} - {formatDateTime(appt.end_date_time)}
+                      {appt.startDisplay} - {appt.endDisplay}
                     </p>
                     <p className="text-sm text-gray-700 mt-1">
-                      Doctor: {[appt.first_name, appt.second_name, appt.first_last_name, appt.second_last_name].filter(Boolean).join(" ")}
+                      Doctor: {appt.doctorName}
                     </p>
-                    {appt.appointment_description && (
-                      <p className="text-sm text-gray-600 mt-1">Notas: {appt.appointment_description}</p>
+                    {appt.description && (
+                      <p className="text-sm text-gray-600 mt-1">Notas: {appt.description}</p>
                     )}
                   </div>
                 ))}

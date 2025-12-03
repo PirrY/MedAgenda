@@ -43,6 +43,12 @@ export type PatientHistoryGroup = {
   }[];
 };
 
+type ActivePatient = {
+  patientId: number;
+  patientName: string;
+  clinics: { clinicId: number; clinicName: string }[];
+};
+
 const toLocalInputValue = (date: Date) => {
   const pad = (num: number) => num.toString().padStart(2, "0");
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
@@ -94,6 +100,9 @@ export function useDoctorDashboard() {
   const [assigningPrescription, setAssigningPrescription] = useState(false);
   const [prescriptionError, setPrescriptionError] = useState<string | null>(null);
   const [prescriptionSuccess, setPrescriptionSuccess] = useState<string | null>(null);
+  const [activePatient, setActivePatient] = useState<ActivePatient | null>(null);
+  const [selectedClinicId, setSelectedClinicId] = useState<number | undefined>();
+  const [prescriptionDescription, setPrescriptionDescription] = useState("");
 
   const refresh = useCallback(async () => {
     setLoading(true);
@@ -314,6 +323,35 @@ export function useDoctorDashboard() {
     [refresh],
   );
 
+  const openPrescriptionModal = (patient: ActivePatient) => {
+    setActivePatient(patient);
+    setSelectedClinicId(patient.clinics[0]?.clinicId);
+    setPrescriptionDescription("");
+    setPrescriptionError(null);
+    setPrescriptionSuccess(null);
+  };
+
+  const closePrescriptionModal = () => {
+    setActivePatient(null);
+    setSelectedClinicId(undefined);
+    setPrescriptionDescription("");
+    setPrescriptionError(null);
+    setPrescriptionSuccess(null);
+  };
+
+  const handleSubmitPrescription = useCallback(async () => {
+    if (!activePatient || !selectedClinicId || !prescriptionDescription.trim()) return false;
+    const ok = await submitPrescription({
+      patientId: activePatient.patientId,
+      clinicId: selectedClinicId,
+      description: prescriptionDescription.trim(),
+    });
+    if (ok) {
+      closePrescriptionModal();
+    }
+    return ok;
+  }, [activePatient, selectedClinicId, prescriptionDescription, submitPrescription]);
+
   return {
     loading,
     error,
@@ -334,5 +372,13 @@ export function useDoctorDashboard() {
     prescriptionError,
     prescriptionSuccess,
     submitPrescription,
+    activePatient,
+    selectedClinicId,
+    prescriptionDescription,
+    openPrescriptionModal,
+    closePrescriptionModal,
+    handleSubmitPrescription,
+    setSelectedClinicId,
+    setPrescriptionDescription,
   };
 }
