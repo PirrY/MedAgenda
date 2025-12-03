@@ -89,11 +89,16 @@ export async function getClinicDoctorAppointmentsForDay(db: Db, clinic_id: numbe
         `
         SELECT 
             a.appointment_id, 
-            a.scheduled_time_date AS start_date_time, 
-            DATE_ADD(a.scheduled_time_date, INTERVAL c.clinic_average_appointment_time MINUTE) AS end_date_time
+            DATE_FORMAT(CONVERT_TZ(a.scheduled_time_date, '+00:00', '-05:00'), '%Y-%m-%dT%H:%i:%s-05:00') AS start_date_time, 
+            DATE_FORMAT(
+                DATE_ADD(CONVERT_TZ(a.scheduled_time_date, '+00:00', '-05:00'), INTERVAL c.clinic_average_appointment_time MINUTE),
+                '%Y-%m-%dT%H:%i:%s-05:00'
+            ) AS end_date_time
         FROM appointments a
         JOIN clinics c ON a.clinic_id = c.clinic_id
-        WHERE a.clinic_id = ? AND a.doctor_id = ? AND DATE(a.scheduled_time_date) = DATE(?)
+        WHERE a.clinic_id = ? 
+          AND a.doctor_id = ? 
+          AND DATE(CONVERT_TZ(a.scheduled_time_date, '+00:00', '-05:00')) = DATE(STR_TO_DATE(?, '%Y-%m-%d'))
         ORDER BY a.scheduled_time_date ASC
         `,
         [clinic_id, doctor_id, appointment_date]

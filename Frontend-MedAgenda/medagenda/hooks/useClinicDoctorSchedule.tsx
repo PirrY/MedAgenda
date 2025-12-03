@@ -49,9 +49,9 @@ const parseTimeToMinutes = (value?: string | null): number | null => {
 const minutesBetween = (base: Date, target: Date) =>
   Math.floor((target.getTime() - base.getTime()) / 60000);
 
-const formatRangeLabel = (start: Date, end: Date) => {
-  const startLabel = `${pad(start.getUTCHours())}:${pad(start.getUTCMinutes())}`;
-  const endLabel = `${pad(end.getUTCHours())}:${pad(end.getUTCMinutes())}`;
+const formatRangeLabel = (startMin: number, endMin: number) => {
+  const startLabel = `${pad(Math.floor(startMin / 60))}:${pad(startMin % 60)}`;
+  const endLabel = `${pad(Math.floor(endMin / 60))}:${pad(endMin % 60)}`;
   return `${startLabel} - ${endLabel}`;
 };
 
@@ -68,7 +68,7 @@ const formatRuleDuration = (value?: string | null) => {
 };
 
 const formatDisplayDate = (date: Date) =>
-  `${WEEKDAY_LABELS[date.getUTCDay()]}, ${date.getUTCDate()} ${MONTH_LABELS[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
+  `${WEEKDAY_LABELS[date.getDay()]}, ${date.getDate()} ${MONTH_LABELS[date.getMonth()]} ${date.getFullYear()}`;
 
 const buildMonths = (): MonthOption[] => {
   const now = new Date();
@@ -137,12 +137,9 @@ const buildSlots = (
   if (opening === null || closing === null || slotMinutes <= 0 || opening >= closing) return [];
 
   const breakEnd = breakStart !== null && breakDuration !== null ? breakStart + breakDuration : null;
-  const dayStart = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0));
+  const dateParam = formatDateParam(date);
+  const dayStart = new Date(`${dateParam}T00:00:00-05:00`);
   const now = new Date();
-  const isSameDayUtc =
-    dayStart.getUTCFullYear() === now.getUTCFullYear() &&
-    dayStart.getUTCMonth() === now.getUTCMonth() &&
-    dayStart.getUTCDate() === now.getUTCDate();
   const normalizedAppointments = normalizeAppointments(appointments, slotMinutes, dayStart);
 
   const slots: SlotView[] = [];
@@ -153,7 +150,7 @@ const buildSlots = (
 
     const overlapsBreak = breakEnd !== null && breakStart !== null && startMin < breakEnd && endMin > breakStart;
     const overlapsAppointment = normalizedAppointments.some((appt) => startMin < appt.endMin && endMin > appt.startMin);
-    const isPast = isSameDayUtc && startDate < now;
+    const isPast = startDate < now;
 
     let status: SlotStatus = "available";
     let note: string | undefined;
@@ -173,7 +170,7 @@ const buildSlots = (
       id: startDate.toISOString(),
       start: startDate,
       end: endDate,
-      label: formatRangeLabel(startDate, endDate),
+      label: formatRangeLabel(startMin, endMin),
       status,
       note,
     });

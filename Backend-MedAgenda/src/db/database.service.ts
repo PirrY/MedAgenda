@@ -16,6 +16,8 @@ export class DatabaseService implements OnModuleInit, Db {
       user: this.config.get<string>('DB_USER'),
       password: this.config.get<string>('DB_PASS'),
       database: this.config.get<string>('DB_NAME'),
+      // Return DATETIME/TIMESTAMP columns as strings to avoid implicit timezone shifts
+      dateStrings: true,
       waitForConnections: true,
       connectionLimit: 10,
       queueLimit: 0,

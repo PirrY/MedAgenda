@@ -1,3 +1,4 @@
+import { PrescriptionsDoctorView, PrescriptionsPatientView } from "../interfaces/prescriptions";
 import { User, UpdateUserDTO, ChangePasswordDTO } from "../interfaces/user";
 import { apiFetch } from "./singletonFetch";
 
@@ -11,4 +12,8 @@ export const updateUserProfile = (data: UpdateUserDTO): Promise<User> => {
 
 export const changePassword = (data: ChangePasswordDTO): Promise<void> => {
     return apiFetch('/users/change-password', 'PUT', data);
+};
+
+export const getUserPrescriptions = (): Promise<PrescriptionsPatientView[]> => {
+    return apiFetch('/prescriptions/getUserPrescriptions', 'GET')
 };

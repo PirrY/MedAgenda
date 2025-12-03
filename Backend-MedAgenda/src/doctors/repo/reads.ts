@@ -27,6 +27,8 @@ export type PatientHistoryRow = {
   first_name: string,
   second_name?: string,
   first_last_name: string,
+  clinic_id: number,
+  clinic_name: string,
   appointment_description?: string,
   appointment_date: string,
 };
@@ -35,8 +37,11 @@ export async function getAllDoctorAppointments(db: Db, doctor_id: number): Promi
   return await db.query<Appointment>(
     `
     SELECT a.appointment_id, c.clinic_id, c.clinic_name, p.first_name, p.second_name, p.first_last_name, p.second_last_name,
-           a.scheduled_time_date AS start_date_time,
-           DATE_ADD(a.scheduled_time_date, INTERVAL c.clinic_average_appointment_time MINUTE) AS end_date_time,
+           DATE_FORMAT(CONVERT_TZ(a.scheduled_time_date, @@session.time_zone, '+00:00'), '%Y-%m-%dT%H:%i:%sZ') AS start_date_time,
+           DATE_FORMAT(
+             DATE_ADD(CONVERT_TZ(a.scheduled_time_date, @@session.time_zone, '+00:00'), INTERVAL c.clinic_average_appointment_time MINUTE),
+             '%Y-%m-%dT%H:%i:%sZ'
+           ) AS end_date_time,
            a.appointment_description
     FROM appointments a 
     JOIN users p ON a.patient_id = p.user_id
@@ -48,9 +53,11 @@ export async function getAllDoctorAppointments(db: Db, doctor_id: number): Promi
 export async function getDoctorPatientHistory(db: Db, doctor_id: number): Promise<PatientHistoryRow[]> {
   return await db.query<PatientHistoryRow>(
     `
-    SELECT u.user_id, u.first_name, u.second_name, u.first_last_name, a.appointment_description, a.scheduled_time_date AS appointment_date 
-    FROM users u JOIN appointments a 
-    ON u.user_id = a.patient_id 
+    SELECT u.user_id, u.first_name, u.second_name, u.first_last_name, a.clinic_id, c.clinic_name, a.appointment_description, 
+           DATE_FORMAT(CONVERT_TZ(a.scheduled_time_date, @@session.time_zone, '+00:00'), '%Y-%m-%dT%H:%i:%sZ') AS appointment_date 
+    FROM users u 
+    JOIN appointments a ON u.user_id = a.patient_id 
+    JOIN clinics c ON a.clinic_id = c.clinic_id
     WHERE a.doctor_id = ?
     `, [doctor_id]);
 }

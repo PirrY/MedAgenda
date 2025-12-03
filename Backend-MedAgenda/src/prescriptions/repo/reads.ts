@@ -1,0 +1,35 @@
+import { Db } from "src/db/types/types";
+
+export type PrescriptionUserView = {
+    date_emitted: string,
+    doctor_first_name: string,
+    doctor_second_name?: string,
+    doctor_last_name: string,
+    prescription_description: string,
+}
+
+export type PrescriptionDoctorView = {
+    patient_id: number,
+    clinic_id: number,
+    date_emitted: string,
+    prescription_description: string,
+
+} 
+export async function readUserPrescriptions(db: Db, user_id: number): Promise<PrescriptionUserView[]> {
+    return await db.query<PrescriptionUserView>(
+        `
+        SELECT DATE_FORMAT(CONVERT_TZ(p.date_emitted, @@session.time_zone, '+00:00'), '%Y-%m-%dT%H:%i:%sZ') AS date_emitted, 
+               d.first_name AS doctor_first_name , d.second_name AS doctor_second_name, d.first_last_name AS doctor_last_name, p.prescription_description 
+        FROM prescriptions p JOIN users d ON p.doctor_id = d.user_id
+        WHERE patient_id = ?
+        `, [user_id]
+    );
+}
+
+export async function readDoctorPrescriptions(db: Db, doctor_id: number): Promise<PrescriptionDoctorView[]> {
+    return await db.query<PrescriptionDoctorView>(
+        `SELECT p.patient_id, p.clinic_id, DATE_FORMAT(CONVERT_TZ(p.date_emitted, @@session.time_zone, '+00:00'), '%Y-%m-%dT%H:%i:%sZ') AS date_emitted, p.prescription_description 
+         FROM prescriptions p WHERE doctor_id = ?`,
+        [doctor_id]
+    );
+}

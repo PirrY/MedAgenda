@@ -14,6 +14,8 @@ export interface PatientHistory {
     first_name: string,
     second_name?: string,
     first_last_name: string,
+    clinic_id: number,
+    clinic_name: string,
     appointment_description?: string,
     appointment_date: string,
 }

@@ -83,6 +83,17 @@ CREATE TABLE clinic_specialties(
     PRIMARY KEY (clinic_id, specialty_id)
 );
 
+CREATE TABLE prescriptions (
+	prescription_id INT AUTO_INCREMENT PRIMARY KEY,
+    doctor_id INT NOT NULL,
+    clinic_id INT NOT NULL,
+    patient_id INT NOT NULL,
+    prescription_description TEXT NOT NULL,
+    FOREIGN KEY (doctor_id) REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (patient_id) REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (clinic_id) REFERENCES clinics(clinic_id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
 CREATE TABLE countries(
     country_id INT AUTO_INCREMENT PRIMARY KEY,
     country_name VARCHAR(20) NOT NULL
