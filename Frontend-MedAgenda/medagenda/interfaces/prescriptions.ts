@@ -6,6 +6,8 @@ export interface PrescriptionsDoctorView {
 }
 
 export interface PrescriptionsPatientView {
+    clinic_id: number,
+    clinic_name: string,
     date_emitted: string,
     doctor_first_name: string,
     doctor_second_name?: string,

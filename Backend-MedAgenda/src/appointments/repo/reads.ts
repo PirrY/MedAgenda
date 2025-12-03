@@ -29,8 +29,11 @@ export async function getAppointmentsByPatientId(db: Db, patientId: number): Pro
             u.second_name,
             u.first_last_name,
             u.second_last_name,
-            a.scheduled_time_date as start_date_time,
-            DATE_ADD(a.scheduled_time_date, INTERVAL c.clinic_average_appointment_time MINUTE) as end_date_time,
+            DATE_FORMAT(CONVERT_TZ(a.scheduled_time_date, @@session.time_zone, '-05:00'), '%Y-%m-%dT%H:%i:%s-05:00') as start_date_time,
+            DATE_FORMAT(
+                DATE_ADD(CONVERT_TZ(a.scheduled_time_date, @@session.time_zone, '-05:00'), INTERVAL c.clinic_average_appointment_time MINUTE),
+                '%Y-%m-%dT%H:%i:%s-05:00'
+            ) as end_date_time,
             a.appointment_description
         FROM appointments a
         INNER JOIN clinics c ON a.clinic_id = c.clinic_id
