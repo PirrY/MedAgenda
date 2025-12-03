@@ -14,7 +14,7 @@ interface AdminUsersSectionProps {
   onSearchChange: (value: string) => void;
   onSearch: () => void;
   onClearSearch: () => void;
-  onEditUser: (user: ClinicUser, isNew: boolean) => void;
+  onEditUser: (user: ClinicUser, isNew?: boolean) => void;
 }
 
 export default function AdminUsersSection({

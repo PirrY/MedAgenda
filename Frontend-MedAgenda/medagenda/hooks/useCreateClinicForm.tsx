@@ -236,14 +236,14 @@ export default function useCreateClinicForm() {
     // Validation
     const nameValidation = validateName(sanitizedName);
     if (!nameValidation.valid) {
-      setError(nameValidation.error);
+      setError(nameValidation.error ?? null);
       endSubmission();
       return;
     }
 
     const phoneValidation = validatePhone(sanitizedPhone);
     if (!phoneValidation.valid) {
-      setError(phoneValidation.error);
+      setError(phoneValidation.error ?? null);
       endSubmission();
       return;
     }

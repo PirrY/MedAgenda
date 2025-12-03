@@ -90,7 +90,7 @@ export default function useProfileForm() {
       if (formData.first_name) {
         const validation = validateName(formData.first_name);
         if (!validation.valid) {
-          setError(validation.error);
+          setError(validation.error ?? null);
           profileGuard.endSubmission();
           return;
         }
@@ -100,7 +100,7 @@ export default function useProfileForm() {
       if (formData.first_last_name) {
         const validation = validateName(formData.first_last_name);
         if (!validation.valid) {
-          setError(validation.error);
+          setError(validation.error ?? null);
           profileGuard.endSubmission();
           return;
         }
@@ -110,7 +110,7 @@ export default function useProfileForm() {
       if (formData.user_phone_number) {
         const validation = validatePhone(formData.user_phone_number);
         if (!validation.valid) {
-          setError(validation.error);
+          setError(validation.error ?? null);
           profileGuard.endSubmission();
           return;
         }
@@ -154,7 +154,7 @@ export default function useProfileForm() {
     // Validate password
     const passwordValidation = validatePassword(passwordData.new_password);
     if (!passwordValidation.valid) {
-      setError(passwordValidation.error);
+      setError(passwordValidation.error ?? null);
       passwordGuard.endSubmission();
       return;
     }
