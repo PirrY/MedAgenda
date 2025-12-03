@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, } from 'react'
 import { Dialog, DialogPanel, Popover, PopoverButton, PopoverPanel, PopoverGroup } from '@headlessui/react'
 import { Activity } from "lucide-react";
 import {
@@ -15,6 +15,7 @@ import {
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/navigation'
 import AuthModal from '../organisms/AuthModal'
+import Link from 'next/link'
 
 const navigation = [
   { name: 'Clínicas', href: '/Clinics' },
@@ -61,7 +62,7 @@ export default function HeaderComponent() {
     <header className="bg-[#4682B4] border-b-4 border-[#566794]">
       <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
         <div className="flex lg:flex-1">
-          <a href="/" className="-m-1.5 p-1.5">
+          <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">MedAgenda</span>
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-br from-[#259487] to-indigo-700 rounded-xl flex items-center justify-center shadow-lg">
@@ -69,29 +70,30 @@ export default function HeaderComponent() {
               </div>
               <span className="text-xl font-bold text-white">MedAgenda</span>
             </div>
-          </a>
+          </Link>
+
         </div>
 
         <PopoverGroup className="hidden lg:flex lg:gap-x-12">
           {navigation.map((item) => (
-            <a
+            <Link
               key={item.name}
               href={item.href}
               className="text-sm/6 font-semibold text-white hover:text-blue-300 transition-colors duration-200"
             >
               {item.name}
-            </a>
+            </Link>
           ))}
 
           {/* Link para crear clínica - solo para usuarios autenticados */}
           {hasToken && (
-            <a
+            <Link
               href="/create-clinic"
               className="flex items-center gap-x-2 text-sm/6 font-semibold text-white hover:text-blue-300 transition-colors duration-200"
             >
               <PlusCircleIcon className="h-5 w-5" />
               Crear Clínica
-            </a>
+            </Link>
           )}
         </PopoverGroup>
 
