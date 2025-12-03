@@ -9,6 +9,8 @@ import { getSpecialties, addSpecialtiesToClinic, createSpecialty } from '../../.
 import { SpecialtyDTO } from '../../../interfaces/specialty';
 import { searchStates, searchCountries, createCity as createCityService, createState as createStateService, createCountry as createCountryService } from '../../../libs/locationService';
 import { StateSearchResult, CountrySearchResult } from '../../../interfaces/location';
+import { getUserAdminClinics } from '../../../libs/adminService';
+import Cookies from 'js-cookie';
 import { FaBuilding, FaPhone, FaMapMarkerAlt, FaCity, FaStethoscope, FaPlus, FaMapPin, FaGlobe } from 'react-icons/fa';
 
 export default function CreateClinicPage() {
@@ -390,12 +392,47 @@ export default function CreateClinicPage() {
       console.log('🎉 Clinic creation process completed!');
       setSuccess(true);
 
-      // Redirect to appropriate dashboard after success
-      // Note: The backend should update the user's role to admin/owner after clinic creation
-      setTimeout(() => {
-        // Refresh the page to reload cookies/roles, then redirect
-        window.location.href = '/homeAdmin';
-      }, 2000);
+      // Dar tiempo al backend para procesar el rol, luego verificar
+      console.log('⏳ Esperando que el backend procese el rol de owner...');
+
+      setTimeout(async () => {
+        try {
+          console.log('🔄 Verificando roles del usuario (obteniendo clínicas)...');
+          const userClinics = await getUserAdminClinics();
+          console.log('✅ Clínicas del usuario:', userClinics);
+
+          // Si tiene al menos una clínica, es admin
+          if (userClinics && userClinics.length > 0) {
+            console.log('✅ Usuario ahora es Admin/Owner. Actualizando cookie...');
+            Cookies.set('isAdmin', 'true', { expires: 7 });
+
+            // Verificar si alguna clínica lo tiene como doctor también
+            const hasDoctorRole = userClinics.some(clinic =>
+              clinic.role_within_clinic.toLowerCase() === 'doctor'
+            );
+            if (hasDoctorRole) {
+              console.log('✅ Usuario también tiene rol de Doctor');
+              Cookies.set('isDoctor', 'true', { expires: 7 });
+            }
+
+            console.log('✅ Cookies actualizadas. Redirigiendo a dashboard admin...');
+            router.push('/homeAdmin');
+          } else {
+            // Si no hay clínicas, algo salió mal, pero igual redirigir con recarga
+            console.warn('⚠️ No se encontraron clínicas. Forzando recarga completa...');
+            window.location.href = '/homeAdmin';
+          }
+        } catch (refreshError: any) {
+          console.error('⚠️ Error al verificar clínicas:', refreshError);
+          console.log('📍 Asumiendo que es admin y forzando recarga de página...');
+
+          // Como la clínica se creó exitosamente, asumimos que es admin
+          Cookies.set('isAdmin', 'true', { expires: 7 });
+
+          // Recargar la página completa para que el backend devuelva las cookies correctas
+          window.location.href = '/homeAdmin';
+        }
+      }, 1000); // Esperar 1 segundo antes de verificar
     } catch (err: any) {
       setError(err?.message || 'Error al crear la clínica');
     } finally {
