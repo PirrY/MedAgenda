@@ -6,13 +6,14 @@ import Cookies from "js-cookie";
 import { RegisterDTO } from "../interfaces/register";
 import { RegisterSchema } from "../schema/register";
 import { registerService, loginService } from "../libs/authService";
+import { useFormGuard } from "./useFormGuard";
 
 type UseRegisterOpts = { onSuccess?: () => void };
 
 export default function useRegisterComponent(opts?: UseRegisterOpts) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const formGuard = useFormGuard(5000);
   const router = useRouter();
 
   const {
@@ -27,7 +28,13 @@ export default function useRegisterComponent(opts?: UseRegisterOpts) {
   const onSubmit: SubmitHandler<RegisterDTO> = async (data) => {
     setError("");
     setSuccess("");
-    setIsSubmitting(true);
+
+    // Check form guard
+    if (!formGuard.startSubmission()) {
+      setError('Formulario ya está siendo enviado. Por favor espera.');
+      return;
+    }
+
     try {
       const resp = await registerService(data);
       // Si tu service retorna algo tipo fetch Response:
@@ -62,8 +69,7 @@ export default function useRegisterComponent(opts?: UseRegisterOpts) {
     } catch (e: any) {
       setSuccess("");
       setError(e?.message || "Error en la solicitud");
-    } finally {
-      setIsSubmitting(false);
+      formGuard.endSubmission();
     }
   };
 
@@ -71,6 +77,7 @@ export default function useRegisterComponent(opts?: UseRegisterOpts) {
     // validación del form falló antes de llamar al service
     setError("Información incompleta");
     setSuccess("");
+    formGuard.endSubmission();
   };
 
   return {
@@ -81,6 +88,6 @@ export default function useRegisterComponent(opts?: UseRegisterOpts) {
     error,
     success,
     errors,
-    isSubmitting,
+    isSubmitting: formGuard.isSubmitting,
   };
 }

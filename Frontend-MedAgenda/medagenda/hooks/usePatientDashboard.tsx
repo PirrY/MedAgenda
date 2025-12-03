@@ -37,7 +37,6 @@ export function usePatientDashboard() {
       const data = await getPatientAppointments();
       setAppointments(data ?? []);
     } catch (error: any) {
-      console.error("Error fetching appointments:", error);
       setAppointments([]);
       setAppointmentsError(error?.message ?? "No se pudieron cargar tus citas.");
     } finally {

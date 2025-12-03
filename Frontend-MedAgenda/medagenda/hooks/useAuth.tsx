@@ -37,7 +37,6 @@ export default function useAuth() {
         setIsAdmin(isAdminCookie);
       }
     } catch (error) {
-      console.error("Error decoding token:", error);
       setUser(null);
     } finally {
       setIsLoading(false);

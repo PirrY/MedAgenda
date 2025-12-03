@@ -7,11 +7,12 @@ import { useRouter } from "next/navigation";
 import { LoginDTO } from "../interfaces/login";
 import { loginScheme } from "../schema/login";
 import { loginService } from "../libs/authService";
+import { useFormGuard } from "./useFormGuard";
 
 type UseLoginOpts = { onSuccess?: () => void };
 
 export default function useLoginComponent(opts?: UseLoginOpts) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const formGuard = useFormGuard(5000);
   const router = useRouter();
 
   const {
@@ -24,31 +25,20 @@ export default function useLoginComponent(opts?: UseLoginOpts) {
   });
 
   const onSubmit: SubmitHandler<LoginDTO> = async (data) => {
-    setIsSubmitting(true);
+    // Check form guard
+    if (!formGuard.startSubmission()) {
+      return;
+    }
+
     try {
       const info: any = await loginService(data);
-      console.log("Respuesta COMPLETA del login:", JSON.stringify(info, null, 2));
 
       const token = info?.token as string | undefined;
       if (!token) throw new Error("Respuesta inválida del servidor");
       Cookies.set("token", token, { expires: 7 });
 
-      // Decodificar el token para ver si tiene la info del rol
-      try {
-        const tokenParts = token.split('.');
-        if (tokenParts.length === 3) {
-          const payload = JSON.parse(atob(tokenParts[1]));
-          console.log("Payload del JWT:", payload);
-        }
-      } catch (e) {
-        console.error("Error decodificando token:", e);
-      }
-
       const isDoctor = Boolean(info?.isDoctor);
       const isAdmin = Boolean(info?.isAdmin);
-
-      console.log("isDoctor:", isDoctor, "info.isDoctor:", info?.isDoctor);
-      console.log("isAdmin:", isAdmin, "info.isAdmin:", info?.isAdmin);
 
       if (isDoctor) Cookies.set("isDoctor", "true", { expires: 7 });
       else Cookies.remove("isDoctor");
@@ -63,26 +53,22 @@ export default function useLoginComponent(opts?: UseLoginOpts) {
       let destination = "/homePatient";
 
       if (isAdmin) {
-        // Admin siempre va a dashboard de admin (puede acceder a doctor desde el menú)
         destination = "/homeAdmin";
       } else if (isDoctor) {
-        // Solo doctor sin privilegios de admin
         destination = "/homeDoctor";
       }
 
-      console.log("Redirigiendo a:", destination);
       router.push(destination);
-      opts?.onSuccess?.(); // cierra el modal desde el padre
+      opts?.onSuccess?.();
     } catch (e) {
-      console.error("Error en solicitud", e);
-    } finally {
-      setIsSubmitting(false);
+      formGuard.endSubmission();
     }
   };
 
   const onErrors = () => {
     // opcional: feedback de validación
+    formGuard.endSubmission();
   };
 
-  return { register, handleSubmit, onSubmit, onErrors, errors, isSubmitting };
+  return { register, handleSubmit, onSubmit, onErrors, errors, isSubmitting: formGuard.isSubmitting };
 }
